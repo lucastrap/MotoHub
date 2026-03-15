@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  passwordHash  String
+  name          String?
+  avatar        String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  
+  motorcycles   Motorcycle[]
+  
+  @@index([email])
+}
+
+model Motorcycle {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  brand           String
+  model           String
+  year            Int
+  color           String?
+  
+  vin             String?       @unique
+  licensePlate    String?
+  
+  currentMileage  Int           @default(0)
+  purchaseDate    DateTime?
+  purchasePrice   Float?
+  
+  photoUrl        String?
+  
+  maintenances    Maintenance[]
+  reminders       Reminder[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([userId])
+}
+
+model Maintenance {
+  id              String        @id @default(uuid())
+  motorcycleId    String
+  motorcycle      Motorcycle    @relation(fields: [motorcycleId], references: [id], onDelete: Cascade)
+  
+  type            MaintenanceType
+  date            DateTime
+  mileage         Int
+  description     String        @db.Text
+  cost            Float?
+  
+  invoiceUrl      String?
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([motorcycleId])
+  @@index([date])
+}
+
+model Reminder {
+  id              String        @id @default(uuid())
+  motorcycleId    String
+  motorcycle      Motorcycle    @relation(fields: [motorcycleId], references: [id], onDelete: Cascade)
+  
+  type            MaintenanceType
+  name            String
+  thresholdMileage Int?
+  frequencyMonths  Int?
+  
+  isActive        Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@index([motorcycleId])
+}
+
+enum MaintenanceType {
+  OIL_CHANGE
+  TIRE_CHANGE
+  BRAKE_SERVICE
+  CHAIN_SERVICE
+  GENERAL_SERVICE
+  REPAIR
+  OTHER
+}

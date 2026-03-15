@@ -1,0 +1,58 @@
+name: MotoTracker Pro CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: mototracker
+          POSTGRES_PASSWORD: mototracker_password
+          POSTGRES_DB: mototracker_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Set up environment variables
+      run: |
+        echo "DATABASE_URL=postgresql://mototracker:mototracker_password@localhost:5432/mototracker_db?schema=public" >> $GITHUB_ENV
+        echo "JWT_SECRET=test-jwt-secret-for-ci" >> $GITHUB_ENV
+        
+    - name: Generate Prisma Client
+      run: npx prisma generate
+      
+    - name: Run Prisma migrations
+      run: npx prisma migrate deploy
+      
+    - name: Run Linter
+      run: npm run lint
+      
+    - name: Run Tests
+      run: npm run test
+      
+    - name: Build
+      run: npm run build
