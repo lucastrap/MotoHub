@@ -11,8 +11,8 @@ import { Label } from "@/components/ui/label";
 import { AppLayout } from "@/components/layout/AppLayout";
 
 const motorcycleSchema = z.object({
-  brand: z.string().min(1, { message: "Brand is required" }),
-  model: z.string().min(1, { message: "Model is required" }),
+  brand: z.string().min(1, { message: "La marque est requise" }),
+  model: z.string().min(1, { message: "Le modèle est requis" }),
   year: z.coerce.number().min(1900).max(new Date().getFullYear() + 1),
   color: z.string().optional(),
   vin: z.string().optional(),
@@ -50,7 +50,7 @@ export default function AddMotorcyclePage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to add motorcycle");
+        throw new Error("Échec de l'ajout de la moto");
       }
 
       router.push("/garage");
@@ -61,65 +61,65 @@ export default function AddMotorcyclePage() {
   }
 
   return (
-    <AppLayout title="Add New Motorcycle">
+    <AppLayout title="Ajouter une nouvelle moto">
       <div className="bg-card rounded-xl border p-6 md:p-8 max-w-2xl shadow-sm">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Brand */}
             <div className="space-y-2">
-              <Label htmlFor="brand">Brand *</Label>
-              <Input id="brand" placeholder="e.g. Yamaha" {...register("brand")} />
+              <Label htmlFor="brand">Marque *</Label>
+              <Input id="brand" placeholder="ex. Honda" {...register("brand")} />
               {errors.brand && <p className="text-sm text-destructive">{errors.brand.message}</p>}
             </div>
 
             {/* Model */}
             <div className="space-y-2">
-              <Label htmlFor="model">Model *</Label>
-              <Input id="model" placeholder="e.g. MT-07" {...register("model")} />
+              <Label htmlFor="model">Modèle *</Label>
+              <Input id="model" placeholder="ex. CBR600RR" {...register("model")} />
               {errors.model && <p className="text-sm text-destructive">{errors.model.message}</p>}
             </div>
 
             {/* Year */}
             <div className="space-y-2">
-              <Label htmlFor="year">Year *</Label>
+              <Label htmlFor="year">Année *</Label>
               <Input id="year" type="number" {...register("year")} />
               {errors.year && <p className="text-sm text-destructive">{errors.year.message}</p>}
             </div>
 
             {/* Current Mileage */}
             <div className="space-y-2">
-              <Label htmlFor="currentMileage">Current Mileage (km) *</Label>
+              <Label htmlFor="currentMileage">Kilométrage actuel (km) *</Label>
               <Input id="currentMileage" type="number" {...register("currentMileage")} />
               {errors.currentMileage && <p className="text-sm text-destructive">{errors.currentMileage.message}</p>}
             </div>
 
             {/* License Plate */}
             <div className="space-y-2">
-              <Label htmlFor="licensePlate">License Plate</Label>
-              <Input id="licensePlate" placeholder="e.g. AB-123-CD" {...register("licensePlate")} />
+              <Label htmlFor="licensePlate">Immatriculation</Label>
+              <Input id="licensePlate" placeholder="ex. AB-123-CD" {...register("licensePlate")} />
             </div>
 
             {/* Color */}
             <div className="space-y-2">
-              <Label htmlFor="color">Color</Label>
-              <Input id="color" placeholder="e.g. Blue" {...register("color")} />
+              <Label htmlFor="color">Couleur</Label>
+              <Input id="color" placeholder="ex. Rouge" {...register("color")} />
             </div>
 
             {/* VIN */}
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="vin">VIN (Vehicle Identification Number)</Label>
-              <Input id="vin" placeholder="17-character VIN" {...register("vin")} />
+              <Label htmlFor="vin">Numéro de série (VIN)</Label>
+              <Input id="vin" placeholder="17 caractères" {...register("vin")} />
             </div>
 
             {/* Purchase Date */}
             <div className="space-y-2">
-              <Label htmlFor="purchaseDate">Purchase Date</Label>
+              <Label htmlFor="purchaseDate">Date d'achat</Label>
               <Input id="purchaseDate" type="date" {...register("purchaseDate")} />
             </div>
 
             {/* Purchase Price */}
             <div className="space-y-2">
-              <Label htmlFor="purchasePrice">Purchase Price (€)</Label>
+              <Label htmlFor="purchasePrice">Prix d'achat (€)</Label>
               <Input id="purchasePrice" type="number" step="0.01" {...register("purchasePrice")} />
             </div>
           </div>
@@ -127,9 +127,9 @@ export default function AddMotorcyclePage() {
           {error && <p className="text-sm text-destructive font-medium">{error}</p>}
 
           <div className="flex justify-end gap-4 pt-4 border-t">
-            <Button variant="outline" type="button" onClick={() => router.back()}>Cancel</Button>
+            <Button variant="outline" type="button" onClick={() => router.back()}>Annuler</Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save Motorcycle"}
+              {isSubmitting ? "Enregistrement..." : "Enregistrer la moto"}
             </Button>
           </div>
         </form>

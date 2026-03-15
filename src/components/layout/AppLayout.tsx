@@ -1,30 +1,79 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMotorcycle,
+  faGaugeHigh,
+  faWrench,
+  faCogs,
+  faNewspaper,
+  faCloudSun,
+  faArrowRightFromBracket
+} from "@fortawesome/free-solid-svg-icons";
 
 export function AppLayout({ children, title }: { children: React.ReactNode; title: string }) {
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: "/dashboard", label: "Tableau de Bord", icon: faGaugeHigh },
+    { href: "/garage", label: "Mon Garage", icon: faMotorcycle },
+    { href: "/maintenance", label: "Historique", icon: faWrench },
+    { href: "/pieces", label: "Pièces & Achat", icon: faCogs },
+    { href: "/news", label: "Actu Moto", icon: faNewspaper },
+    { href: "/weather", label: "Météo Pilote", icon: faCloudSun },
+  ];
+
   return (
-    <div className="min-h-screen bg-muted/20">
-      <nav className="bg-card border-b p-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-6">
-          <h1 className="font-bold text-xl text-primary">MotoTracker Pro</h1>
-          <div className="hidden md:flex gap-4">
-            <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">Dashboard</Link>
-            <Link href="/garage" className="text-sm font-medium hover:text-primary transition-colors">My Garage</Link>
-            <Link href="/maintenance" className="text-sm font-medium hover:text-primary transition-colors">Maintenances</Link>
-          </div>
+    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
+      <aside className="w-full md:w-64 bg-card border-r border-border shrink-0 md:h-screen sticky top-0 flex flex-col items-center py-6 md:py-8 shadow-xl z-20">
+        <div className="mb-8 px-6 text-center">
+           <Link href="/dashboard" className="inline-flex items-center gap-3">
+             <div className="bg-primary text-primary-foreground p-2 rounded-xl shadow-lg shadow-primary/30">
+                <FontAwesomeIcon icon={faMotorcycle} className="h-6 w-6" />
+             </div>
+             <h1 className="text-2xl font-black uppercase tracking-tighter">Moto<span className="text-primary">Tracker</span></h1>
+           </Link>
         </div>
-        <div>
-          <Button variant="ghost" asChild>
-            <Link href="/api/auth/logout">Logout</Link>
-          </Button>
+        <nav className="flex flex-row md:flex-col gap-2 w-full px-4 overflow-x-auto scrollbar-hide">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all w-full min-w-max md:min-w-0 ${
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                }`}
+              >
+                <FontAwesomeIcon icon={item.icon} className={`text-lg ${isActive ? "opacity-100" : "opacity-60"}`} />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto px-4 w-full pt-8 hidden md:block">
+          <Link
+            href="/api/auth/logout"
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors w-full"
+          >
+            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            Déconnexion
+          </Link>
         </div>
-      </nav>
-      <main className="max-w-6xl mx-auto p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">{title}</h2>
+      </aside>
+
+      <main className="flex-1 overflow-x-hidden">
+        <header className="h-20 bg-background/80 backdrop-blur border-b flex items-center px-6 md:px-12 sticky top-0 z-10 transition-shadow">
+          <h2 className="text-2xl font-black uppercase tracking-tight">{title}</h2>
+        </header>
+        <div className="p-6 md:p-12 pb-24 md:pb-12 mx-auto max-w-7xl animate-in fade-in duration-500">
+          {children}
         </div>
-        {children}
       </main>
     </div>
   );

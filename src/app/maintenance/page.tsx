@@ -6,6 +6,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 type MaintenanceWithMoto = {
   id: string;
@@ -30,7 +31,7 @@ export default function MaintenancePage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const url = motoId ? `/api/maintenances?motoId=${motoId}` : `/api/maintenances`;
+        const url = motoId ? `/api/maintenances?motoId=${motoId}` : "/api/maintenances";
         const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();
@@ -46,19 +47,19 @@ export default function MaintenancePage() {
   }, [motoId]);
 
   return (
-    <AppLayout title="Maintenance Log">
+    <AppLayout title="Carnet d'entretien">
       <div className="mb-6 flex gap-4">
         <Button asChild>
-          <Link href={`/maintenance/new${motoId ? `?motoId=${motoId}` : ''}`}>Log New Service</Link>
+          <Link href={`/maintenance/new${motoId ? `?motoId=${motoId}` : ''}`}>Ajouter une intervention</Link>
         </Button>
       </div>
 
       {loading ? (
-        <p>Loading maintenances...</p>
+        <p>Chargement des entretiens...</p>
       ) : maintenances.length === 0 ? (
         <div className="text-center p-12 bg-card rounded-xl border border-dashed">
-          <h3 className="text-lg font-medium mb-2">No maintenance records</h3>
-          <p className="text-muted-foreground mb-4">You haven't logged any service entries yet.</p>
+          <h3 className="text-lg font-medium mb-2">Aucun historique d'entretien</h3>
+          <p className="text-muted-foreground mb-4">Vous n'avez pas encore enregistré d'intervention.</p>
         </div>
       ) : (
         <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
@@ -67,17 +68,17 @@ export default function MaintenancePage() {
               <thead className="bg-muted/50 text-muted-foreground uppercase text-xs">
                 <tr>
                   <th className="px-6 py-4 font-medium">Date</th>
-                  <th className="px-6 py-4 font-medium">Motorcycle</th>
-                  <th className="px-6 py-4 font-medium">Service Type</th>
-                  <th className="px-6 py-4 font-medium">Mileage</th>
-                  <th className="px-6 py-4 font-medium">Cost</th>
+                  <th className="px-6 py-4 font-medium">Moto</th>
+                  <th className="px-6 py-4 font-medium">Type de service</th>
+                  <th className="px-6 py-4 font-medium">Kilométrage</th>
+                  <th className="px-6 py-4 font-medium">Coût</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {maintenances.map((m) => (
                   <tr key={m.id} className="hover:bg-muted/30 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {format(new Date(m.date), "MMM d, yyyy")}
+                      {format(new Date(m.date), "d MMM yyyy", { locale: fr })}
                     </td>
                     <td className="px-6 py-4 font-medium">
                       {m.motorcycle.brand} {m.motorcycle.model}

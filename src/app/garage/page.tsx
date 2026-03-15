@@ -28,21 +28,21 @@ export default function GaragePage() {
   }, []);
 
   return (
-    <AppLayout title="My Garage">
+    <AppLayout title="Mon Garage">
       <div className="mb-6">
         <Button asChild>
-          <Link href="/garage/new">Add Motorcycle</Link>
+          <Link href="/garage/new">Ajouter une Moto</Link>
         </Button>
       </div>
 
       {loading ? (
-        <p>Loading your garage...</p>
+        <p>Chargement de votre garage...</p>
       ) : motorcycles.length === 0 ? (
         <div className="text-center p-12 bg-card rounded-xl border border-dashed">
-          <h3 className="text-lg font-medium mb-2">No motorcycles yet</h3>
-          <p className="text-muted-foreground mb-4">Add your first motorcycle to start tracking its maintenance.</p>
+          <h3 className="text-lg font-medium mb-2">Aucune moto pour le moment</h3>
+          <p className="text-muted-foreground mb-4">Ajoutez votre première moto pour commencer à suivre son entretien.</p>
           <Button asChild variant="outline">
-            <Link href="/garage/new">Add Motorcycle</Link>
+            <Link href="/garage/new">Ajouter ma moto</Link>
           </Button>
         </div>
       ) : (
@@ -55,22 +55,22 @@ export default function GaragePage() {
               </div>
               <div className="space-y-2 mt-auto text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Mileage</span>
+                  <span className="text-muted-foreground">Kilométrage</span>
                   <span className="font-medium">{moto.currentMileage.toLocaleString()} km</span>
                 </div>
                 {moto.licensePlate && (
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">License Plate</span>
+                    <span className="text-muted-foreground">Immatriculation</span>
                     <span className="font-medium uppercase">{moto.licensePlate}</span>
                   </div>
                 )}
               </div>
               <div className="mt-6 flex gap-2">
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href={`/garage/${moto.id}`}>Details</Link>
+                <Button variant="outline" className="w-full" disabled>
+                  Détails
                 </Button>
                 <Button variant="secondary" className="w-full" asChild>
-                  <Link href={`/maintenance?motoId=${moto.id}`}>Log Service</Link>
+                  <Link href={`/maintenance/new?motoId=${moto.id}`}>Entretien</Link>
                 </Button>
               </div>
             </div>

@@ -12,7 +12,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Motorcycle } from "@prisma/client";
 
 const maintenanceSchema = z.object({
-  motorcycleId: z.string().min(1, { message: "Please select a motorcycle" }),
+  motorcycleId: z.string().min(1, { message: "Veuillez sélectionner une moto" }),
   type: z.enum([
     "OIL_CHANGE", 
     "TIRE_CHANGE", 
@@ -21,10 +21,10 @@ const maintenanceSchema = z.object({
     "GENERAL_SERVICE", 
     "REPAIR", 
     "OTHER"
-  ], { required_error: "Please select a maintenance type" }),
-  date: z.string().min(1, { message: "Date is required" }),
+  ], { required_error: "Veuillez sélectionner un type d'entretien" }),
+  date: z.string().min(1, { message: "La date est requise" }),
   mileage: z.coerce.number().min(0),
-  description: z.string().min(1, { message: "Description is required" }),
+  description: z.string().min(1, { message: "La description est requise" }),
   cost: z.coerce.number().optional()
 });
 
@@ -79,7 +79,7 @@ export default function AddMaintenancePage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to log maintenance");
+        throw new Error("Échec de l'enregistrement de l'entretien");
       }
 
       router.push("/maintenance");
@@ -90,14 +90,14 @@ export default function AddMaintenancePage() {
   }
 
   return (
-    <AppLayout title="Log Maintenance Service">
+    <AppLayout title="Prochain entretien">
       <div className="bg-card rounded-xl border p-6 md:p-8 max-w-2xl shadow-sm">
         {loading ? (
-          <p>Loading your garage...</p>
+          <p>Chargement de votre garage...</p>
         ) : motorcycles.length === 0 ? (
           <div className="text-center py-8">
-            <p className="mb-4">You need to add a motorcycle first before logging maintenance.</p>
-            <Button onClick={() => router.push("/garage/new")}>Add Motorcycle</Button>
+            <p className="mb-4">Vous devez d'abord ajouter une moto avant d'enregistrer un entretien.</p>
+            <Button onClick={() => router.push("/garage/new")}>Ajouter une moto</Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -105,13 +105,13 @@ export default function AddMaintenancePage() {
               
               {/* Motorcycle Selection */}
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="motorcycleId">Motorcycle *</Label>
+                <Label htmlFor="motorcycleId">Moto *</Label>
                 <select
                   id="motorcycleId"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
                   {...register("motorcycleId")}
                 >
-                  <option value="">Select a motorcycle...</option>
+                  <option value="">Sélectionner une moto...</option>
                   {motorcycles.map(moto => (
                     <option key={moto.id} value={moto.id}>
                       {moto.brand} {moto.model} ({moto.licensePlate || moto.year})
@@ -123,20 +123,20 @@ export default function AddMaintenancePage() {
 
               {/* Service Type */}
               <div className="space-y-2">
-                <Label htmlFor="type">Service Type *</Label>
+                <Label htmlFor="type">Type d'entretien *</Label>
                 <select
                   id="type"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
                   {...register("type")}
                 >
-                  <option value="">Select type...</option>
-                  <option value="OIL_CHANGE">Oil Change</option>
-                  <option value="TIRE_CHANGE">Tire Change</option>
-                  <option value="BRAKE_SERVICE">Brake Service</option>
-                  <option value="CHAIN_SERVICE">Chain Service</option>
-                  <option value="GENERAL_SERVICE">General Service</option>
-                  <option value="REPAIR">Repair</option>
-                  <option value="OTHER">Other</option>
+                  <option value="">Sélectionner le type...</option>
+                  <option value="OIL_CHANGE">Vidange</option>
+                  <option value="TIRE_CHANGE">Changement de pneu</option>
+                  <option value="BRAKE_SERVICE">Entretien freins</option>
+                  <option value="CHAIN_SERVICE">Kit chaîne</option>
+                  <option value="GENERAL_SERVICE">Révision générale</option>
+                  <option value="REPAIR">Réparation</option>
+                  <option value="OTHER">Autre</option>
                 </select>
                 {errors.type && <p className="text-sm text-destructive">{errors.type.message}</p>}
               </div>
@@ -150,14 +150,14 @@ export default function AddMaintenancePage() {
 
               {/* Mileage */}
               <div className="space-y-2">
-                <Label htmlFor="mileage">Mileage at Service (km) *</Label>
+                <Label htmlFor="mileage">Kilométrage (km) *</Label>
                 <Input id="mileage" type="number" {...register("mileage")} />
                 {errors.mileage && <p className="text-sm text-destructive">{errors.mileage.message}</p>}
               </div>
 
               {/* Cost */}
               <div className="space-y-2">
-                <Label htmlFor="cost">Total Cost (€)</Label>
+                <Label htmlFor="cost">Coût total (€)</Label>
                 <Input id="cost" type="number" step="0.01" {...register("cost")} />
               </div>
 
@@ -168,7 +168,7 @@ export default function AddMaintenancePage() {
                   id="description"
                   rows={4}
                   className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Details about the service performed..."
+                  placeholder="Détails de l'intervention..."
                   {...register("description")}
                 />
                 {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
@@ -179,9 +179,9 @@ export default function AddMaintenancePage() {
             {error && <p className="text-sm text-destructive font-medium">{error}</p>}
 
             <div className="flex justify-end gap-4 pt-4 border-t">
-              <Button variant="outline" type="button" onClick={() => router.back()}>Cancel</Button>
+              <Button variant="outline" type="button" onClick={() => router.back()}>Annuler</Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Log Maintenance"}
+                {isSubmitting ? "Enregistrement..." : "Enregistrer"}
               </Button>
             </div>
           </form>
