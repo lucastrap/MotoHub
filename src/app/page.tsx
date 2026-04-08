@@ -2,131 +2,257 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import MotorcycleScene from "@/components/3d/MotorcycleScene";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMotorcycle, faWrench, faCogs, faGaugeHigh, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMotorcycle,
+  faWrench,
+  faCogs,
+  faGaugeHigh,
+  faShieldHalved,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Navbar Minimaliste */}
-      <header className="px-6 lg:px-14 h-20 flex items-center border-b bg-background/95 backdrop-blur z-50 sticky top-0 justify-between">
-        <Link className="flex items-center justify-center gap-3" href="/">
-          <div className="bg-primary p-2 rounded-xl text-primary-foreground shadow-lg shadow-primary/30">
-            <FontAwesomeIcon icon={faMotorcycle} className="h-6 w-6" />
+    <div className="flex flex-col min-h-screen bg-[#090909] text-white overflow-x-hidden">
+      {/* Barre d'accent en haut */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-primary to-transparent" />
+
+      {/* Navbar */}
+      <header className="px-6 lg:px-16 h-[72px] flex items-center z-50 sticky top-0 justify-between bg-[#090909]/80 backdrop-blur-md border-b border-white/[0.06]">
+        <Link className="flex items-center gap-3" href="/">
+          <div className="bg-primary p-2 rounded text-white shadow-lg shadow-primary/40">
+            <FontAwesomeIcon icon={faMotorcycle} className="h-5 w-5" />
           </div>
-          <span className="font-black text-2xl tracking-tighter uppercase">Moto<span className="text-primary text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">Tracker</span> Pro</span>
+          <span className="font-display font-black text-xl tracking-tight uppercase">
+            Moto<span className="text-primary">Hub</span>
+          </span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Button variant="ghost" asChild className="hidden sm:inline-flex rounded-full">
+        <nav className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            asChild
+            className="text-white/50 hover:text-white hover:bg-white/5 rounded"
+          >
             <Link href="/login">Connexion</Link>
           </Button>
-          <Button asChild className="rounded-full shadow-lg hover:shadow-primary/25 transition-all">
+          <Button
+            asChild
+            className="bg-primary hover:bg-primary/90 text-white rounded shadow-lg shadow-primary/20 border-0 font-bold"
+          >
             <Link href="/register">Commencer</Link>
           </Button>
         </nav>
       </header>
 
       <main className="flex-1">
-        {/* Section Hero */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 overflow-hidden relative">
-          <div className="absolute top-0 right-0 -z-10 w-full h-[800px] opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/40 via-background to-background" />
-          
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-12 lg:grid-cols-[1fr_1fr] items-center">
-              
-              {/* Contenu Texte */}
-              <div className="flex flex-col justify-center space-y-8 z-10">
-                <div className="space-y-4">
-                  <div className="inline-flex items-center rounded-full border px-3 py-1 font-semibold text-primary text-sm shadow-sm">
-                    <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-                    La nouvelle référence pour votre garage
-                  </div>
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight uppercase leading-[1.1]">
-                    Gérez votre <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500 drop-shadow-sm">bécane</span> <br />
-                    comme un pro.
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Le tableau de bord ultime pour le suivi de vos entretiens, des coûts et pour dénicher les meilleures pièces détachées de votre marque.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="h-14 px-8 text-lg rounded-full shadow-lg shadow-primary/25 transition-transform hover:scale-105" asChild>
-                    <Link href="/register">Créer mon garage</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full" asChild>
-                    <Link href="/login">Accéder à mon tableau de bord</Link>
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t border-muted/50">
-                  <div className="flex items-center gap-2">
-                     <FontAwesomeIcon icon={faWrench} className="text-primary h-5 w-5" />
-                     <span className="text-sm font-medium">Carnet d'entretien</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                     <FontAwesomeIcon icon={faCogs} className="text-primary h-5 w-5" />
-                     <span className="text-sm font-medium">Pièces détachées</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                     <FontAwesomeIcon icon={faGaugeHigh} className="text-primary h-5 w-5" />
-                     <span className="text-sm font-medium">Suivi kilométrage</span>
-                  </div>
-                </div>
-              </div>
+        {/* ── HERO ── */}
+        <section className="relative min-h-[calc(100vh-72px)] grid lg:grid-cols-[1fr_1fr] items-center overflow-hidden">
+          {/* Effets de fond */}
+          <div className="absolute inset-0 -z-10 pointer-events-none">
+            <div className="absolute top-1/2 right-1/3 -translate-y-1/2 w-[700px] h-[700px] bg-primary/8 rounded-full blur-[140px]" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-900/8 rounded-full blur-[100px]" />
+            {/* Lignes de vitesse */}
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute left-0 w-full h-px bg-gradient-to-r from-transparent via-white/[0.025] to-transparent"
+                style={{ top: `${20 + i * 18}%` }}
+              />
+            ))}
+          </div>
 
-              {/* Scène 3D */}
-              <div className="flex justify-center xl:justify-end relative rounded-2xl">
-                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-transparent rounded-3xl blur-3xl -z-10"></div>
-                 <MotorcycleScene />
-              </div>
+          {/* Contenu gauche */}
+          <div className="flex flex-col justify-center gap-8 px-8 lg:px-16 xl:px-24 py-20 z-10">
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 text-primary text-xs font-bold tracking-[0.2em] uppercase w-fit">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              Tableau de bord moto nouvelle génération
+            </div>
+
+            {/* Titre principal */}
+            <div>
+              <h1 className="font-display font-black uppercase leading-[0.88] tracking-tight text-[clamp(3.8rem,8.5vw,7.5rem)] text-white">
+                Ton garage.
+              </h1>
+              <h1 className="font-display font-black uppercase leading-[0.88] tracking-tight text-[clamp(3.8rem,8.5vw,7.5rem)] text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">
+                Ton contrôle.
+              </h1>
+            </div>
+
+            <p className="text-white/45 text-lg max-w-md leading-relaxed">
+              Suivi d&apos;entretien, historique complet, recherche de pièces et rappels
+              intelligents. Tout ce qu&apos;il faut pour garder ta moto au top.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-1">
+              <Button
+                size="lg"
+                asChild
+                className="bg-primary hover:bg-primary/90 text-white h-14 px-8 text-base font-bold rounded group border-0 shadow-2xl shadow-primary/20"
+              >
+                <Link href="/register" className="flex items-center gap-3">
+                  Créer mon garage
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    className="h-4 w-4 group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="h-14 px-8 text-base rounded border-white/10 text-white/60 hover:text-white hover:bg-white/5 hover:border-white/20 bg-transparent"
+              >
+                <Link href="/login">Accéder au dashboard</Link>
+              </Button>
+            </div>
+
+            {/* Stats */}
+            <div className="flex gap-10 pt-6 border-t border-white/[0.08]">
+              {[
+                { value: "100%", label: "Gratuit" },
+                { value: "∞", label: "Motos" },
+                { value: "24/7", label: "Accès" },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <div className="font-display text-2xl font-black text-white">
+                    {stat.value}
+                  </div>
+                  <div className="text-[11px] text-white/35 uppercase tracking-widest mt-0.5">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Scène 3D droite */}
+          <div className="relative h-[480px] lg:h-full min-h-[480px] lg:min-h-[calc(100vh-72px)]">
+            {/* Dégradé de fondu vers la gauche */}
+            <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#090909] to-transparent z-10 pointer-events-none" />
+            <MotorcycleScene />
+          </div>
+        </section>
+
+        {/* ── FEATURES ── */}
+        <section className="py-28 px-8 lg:px-16 xl:px-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-14">
+              <p className="text-primary text-xs font-bold tracking-[0.25em] uppercase mb-4">
+                Fonctionnalités
+              </p>
+              <h2 className="font-display font-black uppercase text-[clamp(2.2rem,5vw,3.8rem)] text-white leading-[0.92]">
+                Tout ce dont
+                <br />
+                tu as besoin.
+              </h2>
+            </div>
+
+            {/* Grille de features — séparations fines */}
+            <div className="grid gap-px bg-white/[0.06] rounded-2xl overflow-hidden sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                {
+                  icon: faShieldHalved,
+                  title: "Carnet d'entretien",
+                  desc: "Historique complet de toutes tes interventions, réparations et factures. Sécurisé, accessible partout.",
+                  highlight: false,
+                },
+                {
+                  icon: faCogs,
+                  title: "Pièces détachées",
+                  desc: "Accès direct aux meilleurs revendeurs de pièces adaptés à la marque de ta moto.",
+                  highlight: true,
+                },
+                {
+                  icon: faGaugeHigh,
+                  title: "Rappels intelligents",
+                  desc: "Notifications pour ton kit chaîne, l'huile moteur et ta prochaine révision. Ne rate plus rien.",
+                  highlight: false,
+                },
+              ].map((feature) => (
+                <div
+                  key={feature.title}
+                  className={`p-8 lg:p-10 flex flex-col gap-6 transition-colors ${
+                    feature.highlight
+                      ? "bg-primary/10 hover:bg-primary/15"
+                      : "bg-[#0e0e0e] hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <div
+                    className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+                      feature.highlight
+                        ? "bg-primary text-white shadow-lg shadow-primary/30"
+                        : "bg-white/5 text-white/50"
+                    }`}
+                  >
+                    <FontAwesomeIcon icon={feature.icon} className="h-5 w-5" />
+                  </div>
+
+                  <div className="flex-1">
+                    <h3 className="font-display text-base font-bold uppercase tracking-widest text-white mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-white/45 leading-relaxed text-sm">{feature.desc}</p>
+                  </div>
+
+                  <div
+                    className={`pt-4 border-t ${
+                      feature.highlight ? "border-primary/20" : "border-white/[0.06]"
+                    }`}
+                  >
+                    <span
+                      className={`text-[11px] font-bold uppercase tracking-wider ${
+                        feature.highlight ? "text-primary" : "text-white/20"
+                      }`}
+                    >
+                      {feature.highlight ? "Disponible →" : "Inclus →"}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Section Features */}
-        <section className="w-full py-24 bg-muted/40 border-y">
-          <div className="container px-4 md:px-6">
-            <div className="text-center mb-16 space-y-4">
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight">Pourquoi MotoTracker ?</h2>
-              <p className="text-muted-foreground md:text-xl max-w-2xl mx-auto text-balance">
-                Des outils pensés pour les passionnés. Ne perdez plus jamais l'historique de vos factures et interventions.
-              </p>
-            </div>
-            
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col items-center text-center p-8 bg-card rounded-3xl shadow-sm border transform hover:-translate-y-2 transition-all duration-300">
-                <div className="bg-primary/10 p-5 rounded-full mb-6">
-                  <FontAwesomeIcon icon={faShieldHalved} className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 uppercase tracking-wide">Suivi Sécurisé</h3>
-                <p className="text-muted-foreground">Enregistrez toutes vos interventions, réparations et factures dans un espace sûr accessible partout.</p>
-              </div>
+        {/* ── CTA ── */}
+        <section className="py-28 px-8 lg:px-16 xl:px-24 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-orange-900/10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[120px]" />
+          </div>
 
-              <div className="flex flex-col items-center text-center p-8 bg-card rounded-3xl shadow-sm border transform hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent z-0"></div>
-                <div className="bg-primary p-5 rounded-full mb-6 shadow-lg shadow-primary/30 z-10 text-primary-foreground">
-                  <FontAwesomeIcon icon={faCogs} className="h-8 w-8" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 uppercase tracking-wide z-10">Recherche de Pièces</h3>
-                <p className="text-muted-foreground z-10">Accédez directement aux meilleurs sites de revendeurs de pièces détachées adaptés à la marque de votre précieuse.</p>
-              </div>
-
-              <div className="flex flex-col items-center text-center p-8 bg-card rounded-3xl shadow-sm border transform hover:-translate-y-2 transition-all duration-300">
-                <div className="bg-primary/10 p-5 rounded-full mb-6">
-                  <FontAwesomeIcon icon={faGaugeHigh} className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-3 uppercase tracking-wide">Rappels Automatiques</h3>
-                <p className="text-muted-foreground">Soyez notifié pour l'entretien de votre kit chaîne ou de votre prochaine révision moteur.*</p>
-                <div className="mt-4 text-[10px] text-muted-foreground/60 w-full text-right">*À venir</div>
-              </div>
-            </div>
+          <div className="max-w-4xl mx-auto text-center flex flex-col items-center gap-8">
+            <h2 className="font-display font-black uppercase text-[clamp(3rem,7vw,6rem)] text-white leading-[0.88]">
+              Prêt à tout
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">
+                maîtriser ?
+              </span>
+            </h2>
+            <p className="text-white/45 text-lg max-w-md">
+              Rejoins les passionnés qui ne laissent plus rien au hasard.
+            </p>
+            <Button
+              size="lg"
+              asChild
+              className="bg-primary hover:bg-primary/90 text-white h-16 px-14 text-lg font-bold rounded shadow-2xl shadow-primary/25 border-0"
+            >
+              <Link href="/register">Démarrer maintenant →</Link>
+            </Button>
           </div>
         </section>
       </main>
 
-      <footer className="w-full py-8 text-center border-t bg-card text-muted-foreground text-sm flex items-center justify-center gap-2">
-         © {new Date().getFullYear()} MotoTracker Pro <span className="mx-2">•</span> Conçu pour les pilotes passionnés
-         <FontAwesomeIcon icon={faMotorcycle} className="text-primary/50 ml-1" />
+      {/* Footer */}
+      <footer className="border-t border-white/[0.06] py-8 px-8 lg:px-16">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/20 text-sm">
+          <div className="flex items-center gap-2">
+            <FontAwesomeIcon icon={faMotorcycle} className="text-primary/40" />
+            <span>© {new Date().getFullYear()} MotoHub Pro</span>
+          </div>
+          <span>Conçu pour les pilotes passionnés</span>
+        </div>
       </footer>
     </div>
   );

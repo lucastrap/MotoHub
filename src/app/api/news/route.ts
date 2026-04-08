@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 
-// Format d'une actualité moto
 export type MotoNews = {
   id: string;
   title: string;
@@ -12,82 +11,97 @@ export type MotoNews = {
   source: string;
 };
 
-// Instance de rss-parser pour lire plusieurs champs spécifiques
 const parser = new Parser({
   customFields: {
-    item: ['media:content', 'content:encoded', 'description']
-  }
+    item: ['media:content', 'media:thumbnail', 'content:encoded', 'enclosure'],
+  },
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (compatible; MotoHub/1.0)',
+  },
+  timeout: 8000,
 });
 
-// Liste des flux RSS spécialisés en motos
 const RSS_FEEDS = [
-  { name: 'Moto-Station', url: 'https://moto-station.com/feed' },
-  { name: 'Motoservices', url: 'http://www.motoservices.com/actualite-moto/rss.xml' },
-  // Vous pouvez en ajouter d'autres ici (Le Repaire, Caradisiac, etc.)
+  {
+    name: 'Moto Magazine',
+    url: 'https://news.google.com/rss/search?q=moto+magazine+actualité&hl=fr&gl=FR&ceid=FR:fr',
+  },
+  {
+    name: 'MotoGP',
+    url: 'https://news.google.com/rss/search?q=MotoGP+2025&hl=fr&gl=FR&ceid=FR:fr',
+  },
+  {
+    name: 'Actu Moto',
+    url: 'https://news.google.com/rss/search?q=moto+sportive+nouveauté+2025&hl=fr&gl=FR&ceid=FR:fr',
+  },
+  {
+    name: 'Essais Moto',
+    url: 'https://news.google.com/rss/search?q=essai+moto+test+2025&hl=fr&gl=FR&ceid=FR:fr',
+  },
 ];
+
+function extractThumbnail(item: any): string {
+  if (item['media:content']?.$?.url) return item['media:content'].$.url;
+  if (item['media:thumbnail']?.$?.url) return item['media:thumbnail'].$.url;
+  if (item.enclosure?.url && item.enclosure.type?.startsWith('image')) return item.enclosure.url;
+  if (item['content:encoded']) {
+    const match = item['content:encoded'].match(/<img[^>]+src="([^">]+)"/);
+    if (match) return match[1];
+  }
+  if (item.description) {
+    const match = item.description.match(/<img[^>]+src="([^">]+)"/);
+    if (match) return match[1];
+  }
+  return '';
+}
+
+function cleanDescription(item: any): string {
+  const raw = item.contentSnippet || item.description || '';
+  return raw
+    .replace(/<[^>]*>?/gm, '')
+    .replace(/&nbsp;|&#160;/gi, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .trim()
+    .substring(0, 220) + '...';
+}
 
 export async function GET() {
   try {
-    let allArticles: MotoNews[] = [];
+    const allArticles: MotoNews[] = [];
+    const seenLinks = new Set<string>();
 
-    // On boucle sur tous nos flux RSS pour récupérer les actualités
-    for (const feed of RSS_FEEDS) {
-      try {
-        const parsedFeed = await parser.parseURL(feed.url);
-        
-        const articles = parsedFeed.items.map((item: any) => {
-          // Extraction d'une image miniature
-          let thumbnail = '';
-          
-          if (item['media:content'] && item['media:content'].$) {
-             thumbnail = item['media:content'].$.url; // Standard Media RSS
-          } 
-          else if (item['content:encoded']) {
-             // Extraction via Regex si l'image est perdue dans le contenu HTML
-             const imgMatch = item['content:encoded'].match(/<img[^>]+src="([^">]+)"/);
-             if (imgMatch) thumbnail = imgMatch[1];
-          } 
-          else if (item.description) {
-            const imgMatch = item.description.match(/<img[^>]+src="([^">]+)"/);
-             if (imgMatch) thumbnail = imgMatch[1];
+    await Promise.allSettled(
+      RSS_FEEDS.map(async (feed) => {
+        try {
+          const parsedFeed = await parser.parseURL(feed.url);
+          for (const item of parsedFeed.items) {
+            if (!item.link || seenLinks.has(item.link)) continue;
+            seenLinks.add(item.link);
+            allArticles.push({
+              id: item.guid || item.link,
+              title: item.title || '',
+              link: item.link,
+              pubDate: item.pubDate || new Date().toISOString(),
+              description: cleanDescription(item),
+              thumbnail: extractThumbnail(item),
+              source: feed.name,
+            });
           }
+        } catch (err) {
+          console.error(`[news] Feed failed: ${feed.name}`, err);
+        }
+      })
+    );
 
-          // Nettoyage de la description HTML pour n'avoir que du texte
-          const cleanDesc = (item.contentSnippet || item.description || "")
-            .replace(/<[^>]*>?/gm, '') // Enlever les balises HTML restantes
-            .replace(/&nbsp;|&#160;/gi, ' ') // Nettoyer les espaces insécables
-            .substring(0, 200) + "..."; // Garder juste un extrait
+    allArticles.sort(
+      (a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+    );
 
-          return {
-            id: item.guid || item.link || Math.random().toString(),
-            title: item.title,
-            link: item.link,
-            pubDate: item.pubDate,
-            description: cleanDesc,
-            thumbnail,
-            source: feed.name
-          };
-        });
-
-        allArticles = [...allArticles, ...articles];
-      } catch (feedError) {
-        console.error(`Erreur lors de la lecture du flux ${feed.name}:`, feedError);
-        // On continue même si un flux échoue
-      }
-    }
-
-    // On trie tous les articles du plus récent au plus ancien
-    allArticles.sort((a, b) => {
-       const dateA = new Date(a.pubDate || 0).getTime();
-       const dateB = new Date(b.pubDate || 0).getTime();
-       return dateB - dateA;
-    });
-
-    // On retourne les 20 meilleurs articles
-    return NextResponse.json(allArticles.slice(0, 20));
-    
+    return NextResponse.json(allArticles.slice(0, 24));
   } catch (error) {
-    console.error("Erreur Globale RSS API:", error);
-    return NextResponse.json({ error: "Impossible de récupérer les actualités" }, { status: 500 });
+    console.error('[news] Global error:', error);
+    return NextResponse.json({ error: 'Impossible de récupérer les actualités' }, { status: 500 });
   }
 }

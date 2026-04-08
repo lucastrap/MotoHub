@@ -1,80 +1,85 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Stage, Float, useGLTF } from "@react-three/drei";
-import { Suspense } from "react";
-import * as THREE from "three";
+import { OrbitControls, Environment, ContactShadows, useGLTF } from "@react-three/drei";
+import { Suspense, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import type { Group } from "three";
 
-// Vous pouvez remplacer ce composant de secours par useGLTF
-// si vous avez un vrai fichier de modèle 3D de moto
-function FallbackMotorcycle() {
+useGLTF.preload("/motorcycle.glb");
+
+function MotorcycleModel() {
+  const { scene } = useGLTF("/motorcycle.glb");
+  const ref = useRef<Group>(null);
+
+  useFrame((_, delta) => {
+    if (ref.current) {
+      ref.current.rotation.y += delta * 0.25;
+    }
+  });
+
   return (
-    <group>
-      {/* Roue arrière */}
-      <mesh position={[-2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[1.2, 1.2, 0.4, 32]} />
-        <meshStandardMaterial color="#111" roughness={0.9} />
-      </mesh>
-      
-      {/* Roue avant */}
-      <mesh position={[2.5, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[1.2, 1.2, 0.4, 32]} />
-        <meshStandardMaterial color="#111" roughness={0.9} />
-      </mesh>
+    <group ref={ref}>
+      <primitive object={scene} scale={0.05} position={[0, -1.2, 0]} />
+    </group>
+  );
+}
 
-      {/* Cadre central */}
-      <mesh position={[0.2, 0.8, 0]}>
-        <boxGeometry args={[3, 1, 0.8]} />
-        <meshStandardMaterial color="#cc0000" metalness={0.8} roughness={0.2} />
-      </mesh>
-
-      {/* Réservoir */}
-      <mesh position={[0.5, 1.6, 0]}>
-        <sphereGeometry args={[0.8, 32, 32]} />
-        <meshStandardMaterial color="#E60000" metalness={0.9} roughness={0.1} />
-      </mesh>
-
-      {/* Fourche */}
-      <mesh position={[2.2, 1.2, 0]} rotation={[0, 0, -Math.PI / 6]}>
-        <cylinderGeometry args={[0.1, 0.1, 2.5]} />
-        <meshStandardMaterial color="#ccc" metalness={0.9} roughness={0.1} />
+function LoadingCube() {
+  const ref = useRef<Group>(null);
+  useFrame((_, delta) => {
+    if (ref.current) ref.current.rotation.y += delta * 2;
+  });
+  return (
+    <group ref={ref}>
+      <mesh>
+        <boxGeometry args={[0.4, 0.4, 0.4]} />
+        <meshStandardMaterial color="#E5001E" wireframe />
       </mesh>
     </group>
   );
 }
 
-function MotorcycleModel() {
-  try {
-    // Si vous téléchargez un modèle de moto gratuit en .glb (par exemple depuis Sketchfab)
-    // placez-le dans le dossier "public" et nommez-le "motorcycle.glb".
-    // La ligne suivante essaiera de le charger :
-    const { scene } = useGLTF("/motorcycle.glb");
-    return <primitive object={scene} scale={1.5} />;
-  } catch (error) {
-    // S'il n'y a pas de fichier, on affiche un objet abstrait générique qui ressemble très vaguement à une moto
-    return <FallbackMotorcycle />;
-  }
-}
-
 export default function MotorcycleScene() {
   return (
-    <div className="h-full w-full min-h-[500px] md:min-h-[700px] relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-black to-zinc-900 border border-zinc-800">
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-900/20 via-black to-black opacity-60"></div>
-      
-      <div className="absolute top-4 left-4 z-10 text-white/50 text-xs tracking-wider uppercase">
-        <p>Aperçu Interactif</p>
-        <p className="text-[10px] opacity-60">Glissez pour tourner</p>
+    <div className="h-full w-full min-h-[500px] md:min-h-[700px] relative overflow-hidden bg-[#080808]">
+      {/* Glow de fond */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-primary/10 rounded-full blur-[80px]" />
       </div>
 
-      <Canvas camera={{ position: [0, 2, 8], fov: 45 }} className="relative z-10">
-        <Suspense fallback={null}>
-          <Stage environment="city" intensity={0.5}>
-            <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-              <MotorcycleModel />
-            </Float>
-          </Stage>
+      <div className="absolute top-4 left-4 z-10 text-white/25 text-xs tracking-wider uppercase select-none">
+        <p className="font-display font-bold">Ducati Panigale V4R</p>
+        <p className="text-[10px] opacity-60">Glisse pour explorer</p>
+      </div>
+
+      <Canvas
+        camera={{ position: [2.5, 0.8, 2.5], fov: 65 }}
+        className="relative z-10"
+        gl={{ antialias: true, alpha: true }}
+      >
+        <Suspense fallback={<LoadingCube />}>
+          <MotorcycleModel />
+          <ContactShadows
+            position={[0, -1.2, 0]}
+            opacity={0.5}
+            scale={12}
+            blur={2.5}
+            far={6}
+            color="#000000"
+          />
+          <Environment preset="city" />
         </Suspense>
-        <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 4} />
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          maxPolarAngle={Math.PI / 2.1}
+          minPolarAngle={Math.PI / 5}
+          autoRotate={false}
+        />
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
+        <directionalLight position={[-5, 3, -5]} intensity={0.4} color="#ff2200" />
       </Canvas>
     </div>
   );

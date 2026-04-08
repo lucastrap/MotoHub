@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
-  title: "MotoTracker Pro",
+  title: "MotoHub Pro",
   description: "Professional motorcycle maintenance tracking",
   manifest: "/manifest.json",
 };
@@ -16,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="fr">
+      <body className={`${inter.variable} ${barlowCondensed.variable} font-sans`}>{children}</body>
     </html>
   );
 }
