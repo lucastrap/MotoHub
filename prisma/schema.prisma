@@ -39,7 +39,8 @@ model Motorcycle {
   purchasePrice   Float?
   
   photoUrl        String?
-  
+  isPrimary       Boolean       @default(false)
+
   maintenances    Maintenance[]
   reminders       Reminder[]
   
