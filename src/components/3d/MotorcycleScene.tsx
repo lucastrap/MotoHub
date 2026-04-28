@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows, useGLTF } from "@react-three/drei";
+import { OrbitControls, ContactShadows, useGLTF } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
@@ -68,7 +68,6 @@ export default function MotorcycleScene() {
             far={6}
             color="#000000"
           />
-          <Environment preset="city" />
         </Suspense>
         <OrbitControls
           enableZoom={false}
@@ -77,9 +76,13 @@ export default function MotorcycleScene() {
           minPolarAngle={Math.PI / 5}
           autoRotate={false}
         />
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
-        <directionalLight position={[-5, 3, -5]} intensity={0.4} color="#ff2200" />
+        <ambientLight intensity={1.2} />
+        <directionalLight position={[5, 5, 5]} intensity={2.5} color="#ffffff" />
+        <directionalLight position={[-5, 5, -5]} intensity={1.5} color="#ffffff" />
+        <directionalLight position={[0, 8, 0]} intensity={2.0} color="#ffffff" />
+        <directionalLight position={[0, 2, 6]} intensity={1.8} color="#ffe8d0" />
+        <pointLight position={[-3, 3, 3]} intensity={1.5} color="#ffffff" />
+        <pointLight position={[3, 1, -3]} intensity={0.8} color="#ff2200" />
       </Canvas>
     </div>
   );
