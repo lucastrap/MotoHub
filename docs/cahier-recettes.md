@@ -1,0 +1,194 @@
+# Cahier de recettes — MotoHub Pro
+
+## Informations générales
+
+| Champ | Valeur |
+|---|---|
+| Projet | MotoHub Pro |
+| Client | MotoClub Alpes |
+| Version testée | 1.0.0 |
+| Environnement | localhost:3000 + PostgreSQL Docker |
+| Rédactrice | Julie Fontaine (QA) |
+| Validé par | Sophie Arnaud (MotoClub Alpes) |
+| Date | 18 avril 2026 |
+
+---
+
+## Module 1 — Authentification
+
+### RT-01 : Inscription d'un nouvel utilisateur
+
+| Champ | Détail |
+|---|---|
+| Précondition | Aucun compte existant avec cet email |
+| Étapes | 1. Accéder à `/register` · 2. Renseigner nom, email, mot de passe · 3. Soumettre |
+| Résultat attendu | Redirection vers `/dashboard`, cookie `token` posé |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-02 : Inscription avec email déjà utilisé
+
+| Champ | Détail |
+|---|---|
+| Précondition | Compte existant avec l'email `test@motoclub-alpes.fr` |
+| Étapes | 1. Accéder à `/register` · 2. Saisir l'email déjà enregistré · 3. Soumettre |
+| Résultat attendu | Message d'erreur affiché, pas de redirection |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-03 : Connexion avec identifiants valides
+
+| Champ | Détail |
+|---|---|
+| Précondition | Compte existant |
+| Étapes | 1. Accéder à `/login` · 2. Saisir email et mot de passe corrects · 3. Soumettre |
+| Résultat attendu | Redirection vers `/dashboard` |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-04 : Connexion avec mot de passe incorrect
+
+| Champ | Détail |
+|---|---|
+| Précondition | Compte existant |
+| Étapes | 1. Accéder à `/login` · 2. Saisir mot de passe erroné · 3. Soumettre |
+| Résultat attendu | Message d'erreur, pas de redirection |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-05 : Accès à une page protégée sans être connecté
+
+| Champ | Détail |
+|---|---|
+| Précondition | Utilisateur non connecté (pas de cookie `token`) |
+| Étapes | 1. Accéder directement à `/dashboard` |
+| Résultat attendu | Redirection automatique vers `/login` |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+---
+
+## Module 2 — Gestion du garage
+
+### RT-06 : Ajout d'une moto — formulaire complet
+
+| Champ | Détail |
+|---|---|
+| Précondition | Utilisateur connecté |
+| Données de test | Marque : Yamaha · Modèle : MT-07 · Année : 2022 · Kilométrage : 12 500 · Plaque : AB-123-CD |
+| Étapes | 1. Accéder à `/garage/new` · 2. Compléter les 3 étapes du wizard · 3. Soumettre |
+| Résultat attendu | Moto créée, visible dans `/garage` |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-07 : Ajout d'une moto — format immatriculation invalide
+
+| Champ | Détail |
+|---|---|
+| Données de test | Plaque : `123ABC` (hors format SIV) |
+| Étapes | 1. Saisir une immatriculation invalide · 2. Soumettre |
+| Résultat attendu | Erreur de validation affichée, formulaire non soumis |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-08 : Définir une moto comme principale
+
+| Champ | Détail |
+|---|---|
+| Précondition | Compte avec 2 motos : Yamaha MT-07 et Honda CB650R |
+| Étapes | 1. Accéder à `/garage` · 2. Cliquer "Définir comme moto principale" sur la Honda |
+| Résultat attendu | Badge "Principale" sur la Honda, retiré de la Yamaha |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-09 : Autocomplete modèle via NHTSA
+
+| Champ | Détail |
+|---|---|
+| Étapes | 1. Wizard step 1 — sélectionner "Yamaha" + année 2022 · 2. Cliquer dans le champ Modèle |
+| Résultat attendu | Liste de modèles Yamaha 2022 proposée (MT-07, MT-09, R1…) |
+| Résultat obtenu | Conforme — 12 modèles retournés |
+| Statut | ✅ Passé |
+
+---
+
+## Module 3 — Entretien
+
+### RT-10 : Ajout d'une intervention
+
+| Champ | Détail |
+|---|---|
+| Données de test | Moto : Yamaha MT-07 · Type : Vidange · Date : 15/04/2026 · Km : 13 200 · Coût : 89€ |
+| Étapes | 1. Accéder à `/maintenance/new` · 2. Remplir le formulaire · 3. Soumettre |
+| Résultat attendu | Intervention enregistrée, visible dans le carnet |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-11 : Mise à jour automatique du kilométrage
+
+| Champ | Détail |
+|---|---|
+| Précondition | Moto à 12 500 km |
+| Étapes | 1. Ajouter une intervention à 13 200 km · 2. Consulter la fiche moto |
+| Résultat attendu | Kilométrage moto mis à jour à 13 200 km automatiquement |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+### RT-12 : Filtre par moto dans l'historique
+
+| Champ | Détail |
+|---|---|
+| Précondition | 2 motos avec des interventions distinctes |
+| Étapes | 1. Accéder à `/maintenance` · 2. Cliquer sur le chip "Yamaha MT-07" |
+| Résultat attendu | Seules les interventions de la MT-07 affichées |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+---
+
+## Module 4 — Tableau de bord
+
+### RT-13 : Affichage de la dernière intervention
+
+| Champ | Détail |
+|---|---|
+| Précondition | Au moins une intervention enregistrée pour la moto principale |
+| Étapes | 1. Accéder à `/dashboard` |
+| Résultat attendu | Type, description, date et kilométrage de la dernière intervention affichés |
+| Résultat obtenu | Conforme — vidange du 15/04/2026 affichée |
+| Statut | ✅ Passé |
+
+### RT-14 : Affichage des prochaines échéances
+
+| Champ | Détail |
+|---|---|
+| Étapes | 1. Accéder à `/dashboard` |
+| Résultat attendu | 4 échéances calculées (vidange, chaîne, freins, pneus) avec km cible |
+| Résultat obtenu | Conforme — prochaine vidange à 19 200 km affichée |
+| Statut | ✅ Passé |
+
+---
+
+## Module 5 — Supervision
+
+### RT-15 : Endpoint de santé
+
+| Champ | Détail |
+|---|---|
+| Étapes | 1. Appeler `GET /api/health` |
+| Résultat attendu | HTTP 200 · `{ status: "ok", db: "connected", latencyMs: <100 }` |
+| Résultat obtenu | HTTP 200 · `{ status: "ok", db: "connected", latencyMs: 4 }` |
+| Statut | ✅ Passé |
+
+---
+
+## Bilan
+
+| Statut | Nombre |
+|---|---|
+| Passé | 15 |
+| Echoué | 0 |
+| Non testé | 0 |
+| **Total** | **15** |
+
+**Conclusion** : L'ensemble des scénarios de recette est passé sans anomalie. L'application est conforme aux spécifications fonctionnelles validées par Sophie Arnaud (MotoClub Alpes) le 18 avril 2026.
