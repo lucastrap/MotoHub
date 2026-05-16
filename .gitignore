@@ -7,6 +7,9 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
+/playwright/.cache
 
 # next.js
 /.next/
@@ -17,7 +20,11 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+
+# logs
+/logs
 
 # debug
 npm-debug.log*
@@ -31,6 +38,7 @@ pnpm-debug.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env*.local
 
 # vercel
 .vercel
