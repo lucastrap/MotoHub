@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   
   const verifiedToken = token &&
     (await verifyAuth(token).catch((err) => {
-      console.log(err);
+      console.error("[middleware] token verification failed:", err);
     }));
 
   if (req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname.startsWith("/register")) {
