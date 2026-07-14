@@ -249,7 +249,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/20 text-sm">
           <div className="flex items-center gap-2">
             <FontAwesomeIcon icon={faMotorcycle} className="text-primary/40" />
-            <span>© {new Date().getFullYear()} MotoHub Pro</span>
+            <span>© {new Date().getFullYear()} MotoTrack</span>
           </div>
           <span>Conçu pour les pilotes passionnés</span>
         </div>

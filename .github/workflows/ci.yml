@@ -1,4 +1,4 @@
-name: MotoTracker Pro CI
+name: MotoTrack CI
 
 on:
   push:
@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_USER: mototracker
-          POSTGRES_PASSWORD: mototracker_password
-          POSTGRES_DB: mototracker_db
+          POSTGRES_USER: mototrack
+          POSTGRES_PASSWORD: mototrack_password
+          POSTGRES_DB: mototrack_db
         ports:
           - 5432:5432
         options: >-
@@ -39,7 +39,7 @@ jobs:
 
     - name: Set up environment variables
       run: |
-        echo "DATABASE_URL=postgresql://mototracker:mototracker_password@localhost:5432/mototracker_db?schema=public" >> $GITHUB_ENV
+        echo "DATABASE_URL=postgresql://mototrack:mototrack_password@localhost:5432/mototrack_db?schema=public" >> $GITHUB_ENV
         echo "JWT_SECRET=test-jwt-secret-for-ci" >> $GITHUB_ENV
 
     - name: Generate Prisma Client
@@ -51,8 +51,20 @@ jobs:
     - name: Run Linter
       run: npm run lint
 
+    - name: Security audit (dépendances — OWASP A06)
+      run: npm audit --audit-level=high
+      continue-on-error: true
+
     - name: Run unit tests
       run: npm run test
+
+    - name: Upload coverage report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: coverage/
+        retention-days: 7
 
     - name: Build
       run: npm run build

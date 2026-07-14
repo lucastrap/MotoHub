@@ -4,9 +4,21 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { formatPlate, PLATE_REGEX } from "@/lib/formatPlate";
+import { formatPlate } from "@/lib/formatPlate";
+import {
+  BRANDS,
+  COLORS,
+  buildYears,
+  motorcycleWizardSchema,
+  type MotorcycleFormValues,
+  STEP_FIELDS,
+  evaluatePlate,
+  isKnownModel,
+  filterModels,
+  buildModelsUrl,
+  parseSubmitError,
+} from "./wizardLogic";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMotorcycle,
@@ -20,72 +32,10 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 
-const BRANDS: { name: string; origin?: string }[] = [
-  // Japonaises
-  { name: "Yamaha",          origin: "🇯🇵" },
-  { name: "Honda",           origin: "🇯🇵" },
-  { name: "Kawasaki",        origin: "🇯🇵" },
-  { name: "Suzuki",          origin: "🇯🇵" },
-  // Européennes
-  { name: "BMW",             origin: "🇩🇪" },
-  { name: "Ducati",          origin: "🇮🇹" },
-  { name: "KTM",             origin: "🇦🇹" },
-  { name: "Triumph",         origin: "🇬🇧" },
-  { name: "Aprilia",         origin: "🇮🇹" },
-  { name: "Husqvarna",       origin: "🇦🇹" },
-  { name: "MV Agusta",       origin: "🇮🇹" },
-  { name: "Beta",            origin: "🇮🇹" },
-  // Américaines
-  { name: "Harley-Davidson", origin: "🇺🇸" },
-  // Indiennes
-  { name: "Royal Enfield",   origin: "🇮🇳" },
-  // Chinoises / Taïwanaises
-  { name: "CFMoto",          origin: "🇨🇳" },
-  { name: "Zontes",          origin: "🇨🇳" },
-  { name: "Benelli",         origin: "🇨🇳" },
-  { name: "Voge",            origin: "🇨🇳" },
-  { name: "Kove",            origin: "🇨🇳" },
-  { name: "QJ Motor",        origin: "🇨🇳" },
-  { name: "Keeway",          origin: "🇨🇳" },
-  { name: "Loncin",          origin: "🇨🇳" },
-  { name: "Lifan",           origin: "🇨🇳" },
-  { name: "Niu",             origin: "🇨🇳" },
-  { name: "Kymco",           origin: "🇹🇼" },
-  { name: "SYM",             origin: "🇹🇼" },
-  // Autre
-  { name: "Autre" },
-];
-
-const COLORS = [
-  { label: "Rouge",   hex: "#DC2626" },
-  { label: "Noir",    hex: "#111111" },
-  { label: "Blanc",   hex: "#F5F5F5" },
-  { label: "Bleu",    hex: "#2563EB" },
-  { label: "Vert",    hex: "#16A34A" },
-  { label: "Orange",  hex: "#EA580C" },
-  { label: "Jaune",   hex: "#CA8A04" },
-  { label: "Gris",    hex: "#6B7280" },
-  { label: "Argent",  hex: "#CBD5E1" },
-  { label: "Violet",  hex: "#9333EA" },
-];
-
 const currentYear = new Date().getFullYear();
-const YEARS = Array.from({ length: currentYear - 1989 + 2 }, (_, i) => currentYear + 1 - i);
+const YEARS = buildYears(currentYear);
 
-const schema = z.object({
-  brand:          z.string().min(1, "La marque est requise"),
-  model:          z.string().min(1, "Le modèle est requis"),
-  year:           z.coerce.number().min(1990).max(currentYear + 1),
-  currentMileage: z.coerce.number().min(0).default(0),
-  color:          z.string().optional(),
-  licensePlate:   z.string().optional().transform(v => v || undefined)
-                    .refine(v => !v || /^[A-Z]{2}-\d{3}-[A-Z]{2}$/.test(v), "Format invalide (ex: AB-123-CD)"),
-  vin:            z.string().optional().transform(v => v || undefined),
-  purchaseDate:   z.string().optional().transform(v => v || undefined),
-  purchasePrice:  z.preprocess(v => (v === "" || v === null || v === undefined) ? undefined : Number(v), z.number().positive().optional()),
-});
-
-type FormValues = z.infer<typeof schema>;
+type FormValues = MotorcycleFormValues;
 
 const STEPS = [
   { label: "Identité",  icon: faMotorcycle },
@@ -107,9 +57,7 @@ export default function AddMotorcyclePage() {
     const formatted = formatPlate(raw);
     setPlateInput(formatted);
     setValue("licensePlate", formatted, { shouldValidate: true });
-    if (formatted.length === 0) setPlateValid(null);
-    else if (formatted.length === 9) setPlateValid(PLATE_REGEX.test(formatted));
-    else setPlateValid(null);
+    setPlateValid(evaluatePlate(formatted));
   }
 
   // Autocomplete modèle
@@ -128,7 +76,7 @@ export default function AddMotorcyclePage() {
     trigger,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(motorcycleWizardSchema),
     defaultValues: { currentMileage: 0, year: currentYear },
   });
 
@@ -144,7 +92,7 @@ export default function AddMotorcyclePage() {
     }
     setModelsLoading(true);
     setModelValid(null);
-    fetch(`/api/motorcycle-models?brand=${encodeURIComponent(watchBrand)}&year=${watchYear}`)
+    fetch(buildModelsUrl(watchBrand, watchYear))
       .then((r) => r.json())
       .then((data) => setModels(data.models ?? []))
       .catch(() => setModels([]))
@@ -153,8 +101,7 @@ export default function AddMotorcyclePage() {
 
   // Valider le modèle saisi
   function validateModel(value: string) {
-    if (!value || models.length === 0) { setModelValid(null); return; }
-    setModelValid(models.some((m) => m.toLowerCase() === value.toLowerCase()));
+    setModelValid(isKnownModel(value, models));
   }
 
   function selectModel(model: string) {
@@ -164,17 +111,10 @@ export default function AddMotorcyclePage() {
     setShowSuggestions(false);
   }
 
-  const filteredSuggestions = models.filter((m) =>
-    m.toLowerCase().includes(modelInput.toLowerCase())
-  ).slice(0, 8);
+  const filteredSuggestions = filterModels(models, modelInput);
 
   async function goNext() {
-    const fields: (keyof FormValues)[][] = [
-      ["brand", "model", "year", "currentMileage"],
-      ["color", "licensePlate", "vin"],
-      ["purchaseDate", "purchasePrice"],
-    ];
-    const valid = await trigger(fields[step]);
+    const valid = await trigger(STEP_FIELDS[step]);
     if (valid) setStep((s) => s + 1);
   }
 
@@ -188,10 +128,7 @@ export default function AddMotorcyclePage() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        const msg = Array.isArray(body.error)
-          ? body.error.map((e: any) => e.message).join(", ")
-          : body.error ?? `Erreur ${res.status}`;
-        throw new Error(msg);
+        throw new Error(parseSubmitError(body, res.status));
       }
       router.push("/garage");
       router.refresh();

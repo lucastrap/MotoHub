@@ -127,7 +127,7 @@ red_bar(s)
 add_rect(s, 0, 0, Inches(0.12), H, fill=RED)
 
 # Big title
-add_text(s, "MotoHub Pro", Inches(0.3), Inches(1.0), Inches(8), Inches(2.2),
+add_text(s, "MotoTrack", Inches(0.3), Inches(1.0), Inches(8), Inches(2.2),
          size=90, bold=True, color=WHITE)
 add_text(s, "Application web de gestion de moto",
          Inches(0.3), Inches(3.1), Inches(8), Inches(0.6),
@@ -567,7 +567,7 @@ for title, color, items in phases:
     bullet(s, items, cx+Inches(0.15), Inches(2.12), cw-Inches(0.3), Inches(4.4), size=11.5)
     cx += cw + Inches(0.13)
 
-footer_note(s, "MotoHub Pro est une solution viable, différenciante et maintenable. Next.js + Prisma + PostgreSQL offre un rapport qualité/coût/performance optimal.")
+footer_note(s, "MotoTrack est une solution viable, différenciante et maintenable. Next.js + Prisma + PostgreSQL offre un rapport qualité/coût/performance optimal.")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SLIDE 12 — CONCLUSION (CORRIGÉ)
@@ -577,7 +577,7 @@ bg(s)
 add_rect(s, 0, 0, Inches(0.12), H, fill=RED)
 add_rect(s, 0, H-Inches(0.12), W, Inches(0.12), fill=RED)
 
-add_text(s, "MotoHub Pro", Inches(0.3), Inches(0.8), W-Inches(0.5), Inches(2.0),
+add_text(s, "MotoTrack", Inches(0.3), Inches(0.8), W-Inches(0.5), Inches(2.0),
          size=90, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
 add_text(s, "Une application pensée pour les passionnés de moto",
          Inches(0.3), Inches(2.7), W-Inches(0.5), Inches(0.5),
@@ -605,6 +605,6 @@ add_text(s, "Merci pour votre attention — Questions ?",
 add_rect(s, Inches(5.0), Inches(6.0), Inches(3.3), Inches(0.06), fill=RED)
 
 # ─── Save ──────────────────────────────────────────────────────────────────────
-out = r"c:\Users\lucas\OneDrive\Documents\Ynov_M2\MotoHub\MotoHub_Pro_Presentation.pptx"
+out = r"c:\Users\lucas\OneDrive\Documents\Ynov_M2\MotoTrack\MotoTrack_Presentation.pptx"
 prs.save(out)
 print(f"Saved: {out}")
