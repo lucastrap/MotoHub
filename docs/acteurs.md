@@ -23,7 +23,7 @@
 |---|---|---|
 | Ynov Campus — Jury | Évalue la conformité du projet aux blocs de compétences | Soutenance finale |
 | Référents pédagogiques | Accompagnement méthodologique | Intermittente — jalons |
-| Hébergeur (Vercel / Neon) | Fournit l'infrastructure de production | Technique uniquement |
+| Hébergeur (Vercel / Supabase) | Fournit l'infrastructure de production | Technique uniquement |
 
 ## Utilisateurs finaux
 

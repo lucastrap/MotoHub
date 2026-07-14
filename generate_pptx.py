@@ -277,7 +277,7 @@ cols = [
       "docker-compose.yml",
       "GitHub Actions CI/CD",
       "Winston logger + /api/health",
-      "Prêt déploiement Vercel/Neon"]),
+      "Prêt déploiement Vercel/Supabase"]),
 ]
 cw = Inches(4.1)
 cx = Inches(0.22)

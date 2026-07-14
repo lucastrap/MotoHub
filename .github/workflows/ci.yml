@@ -40,6 +40,7 @@ jobs:
     - name: Set up environment variables
       run: |
         echo "DATABASE_URL=postgresql://mototrack:mototrack_password@localhost:5432/mototrack_db?schema=public" >> $GITHUB_ENV
+        echo "DIRECT_URL=postgresql://mototrack:mototrack_password@localhost:5432/mototrack_db?schema=public" >> $GITHUB_ENV
         echo "JWT_SECRET=test-jwt-secret-for-ci" >> $GITHUB_ENV
 
     - name: Generate Prisma Client
