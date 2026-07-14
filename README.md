@@ -1,4 +1,4 @@
-# MotoHub Pro
+# MotoTrack
 
 Application web de gestion de garage moto — suivi d'entretien, tableau de bord, actualités et météo. Développée pour le MotoClub Alpes dans le cadre d'un projet Master.
 
@@ -26,8 +26,8 @@ Application web de gestion de garage moto — suivi d'entretien, tableau de bord
 ## Installation
 
 ```bash
-git clone https://github.com/<org>/MotoHub.git
-cd MotoHub
+git clone https://github.com/<org>/MotoTrack.git
+cd MotoTrack
 npm install
 ```
 
@@ -41,7 +41,7 @@ cp .env.example .env
 
 | Variable | Description | Exemple |
 |---|---|---|
-| `DATABASE_URL` | URL de connexion PostgreSQL | `postgresql://user:pass@localhost:5432/motohub` |
+| `DATABASE_URL` | URL de connexion PostgreSQL | `postgresql://user:pass@localhost:5432/mototrack` |
 | `JWT_SECRET` | Secret de signature JWT (min. 32 caractères) | `changeme-32-chars-minimum!!` |
 | `LOG_LEVEL` | Niveau de log Winston | `info` |
 

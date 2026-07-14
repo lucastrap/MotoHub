@@ -1,6 +1,6 @@
 {
-  "name": "MotoTracker Pro",
-  "short_name": "MotoTracker",
+  "name": "MotoTrack",
+  "short_name": "MotoTrack",
   "description": "Professional motorcycle maintenance tracking application",
   "start_url": "/dashboard",
   "display": "standalone",

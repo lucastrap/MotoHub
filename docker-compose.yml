@@ -1,11 +1,11 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: mototracker_db
+    container_name: mototrack_db
     environment:
-      POSTGRES_USER: mototracker
-      POSTGRES_PASSWORD: mototracker_password
-      POSTGRES_DB: mototracker_db
+      POSTGRES_USER: mototrack
+      POSTGRES_PASSWORD: mototrack_password
+      POSTGRES_DB: mototrack_db
     ports:
       - "5432:5432"
     volumes:
@@ -14,7 +14,7 @@ services:
 
   adminer:
     image: adminer
-    container_name: mototracker_adminer
+    container_name: mototrack_adminer
     ports:
       - "8080:8080"
     depends_on:

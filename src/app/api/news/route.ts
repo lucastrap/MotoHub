@@ -16,7 +16,7 @@ const parser = new Parser({
     item: ['media:content', 'media:thumbnail', 'content:encoded', 'enclosure'],
   },
   headers: {
-    'User-Agent': 'Mozilla/5.0 (compatible; MotoHub/1.0)',
+    'User-Agent': 'Mozilla/5.0 (compatible; MotoTrack/1.0)',
   },
   timeout: 8000,
 });

@@ -15,18 +15,30 @@ const customJestConfig = {
   transformIgnorePatterns: [
     '/node_modules/(?!(jose)/)',
   ],
+  // Les tests end-to-end sont exécutés par Playwright, pas par Jest
+  testPathIgnorePatterns: ['/node_modules/', '/tests/e2e/'],
   collectCoverage: true,
+  // La couverture unitaire cible la couche logique (métier, API, sécurité).
+  // La couche de présentation (pages/3D) est validée par les tests e2e Playwright.
   collectCoverageFrom: [
-    'src/**/*.{js,jsx,ts,tsx}',
+    'src/lib/**/*.{ts,tsx}',
+    'src/app/api/**/*.ts',
+    'src/middleware.ts',
+    'src/components/ui/**/*.tsx',
+    'src/components/layout/**/*.tsx',
+    'src/app/(auth)/**/*.tsx',
+    'src/app/page.tsx',
+    'src/app/garage/**/*.ts',
     '!src/**/*.d.ts',
-    '!src/**/_*.{js,jsx,ts,tsx}',
+    // Singleton d'infrastructure sans logique métier (instanciation client Prisma)
+    '!src/lib/prisma.ts',
   ],
   coverageThreshold: {
     global: {
-      branches: 3,
-      functions: 5,
-      lines: 5,
-      statements: 5,
+      branches: 80,
+      functions: 90,
+      lines: 90,
+      statements: 90,
     },
   },
 }
