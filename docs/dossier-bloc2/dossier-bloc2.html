@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Dossier de certification Bloc 2 — MotoTrack</title>
+<style>
+  :root{
+    --navy:#0f172a; --navy2:#1e293b; --slate:#475569; --muted:#64748b;
+    --line:#e2e8f0; --bg:#ffffff; --soft:#f8fafc;
+    --accent:#ea580c; --accent2:#0ea5e9; --green:#16a34a; --red:#dc2626; --amber:#d97706;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Segoe UI',-apple-system,Helvetica,Arial,sans-serif;color:var(--navy);font-size:10.5pt;line-height:1.5;}
+  h1,h2,h3,h4{color:var(--navy);line-height:1.22;}
+  /* chapitres : nouvelle page */
+  h2.chap{font-size:17pt;margin:0 0 4px;padding-bottom:7px;border-bottom:3px solid var(--accent);
+    page-break-before:always;display:flex;align-items:baseline;gap:10px;}
+  h2.chap .n{color:var(--accent);font-weight:800;}
+  h2.chap .pts{margin-left:auto;font-size:8pt;font-weight:600;color:#fff;background:var(--navy);border-radius:20px;padding:3px 11px;}
+  h2.chap .pts.elim{background:var(--red);}
+  .chaplead{color:var(--slate);font-size:10.5pt;font-style:italic;margin:6px 0 4px;}
+  h3{font-size:12.5pt;margin:16px 0 .3em;color:var(--navy2);page-break-after:avoid;}
+  h3 .dot{color:var(--accent);}
+  h3 .cc{font-size:7.5pt;font-weight:700;color:#fff;background:var(--accent);border-radius:20px;padding:2px 8px;margin-left:8px;vertical-align:middle;letter-spacing:.3px;}
+  h3 .cc.elim{background:var(--red);}
+  h4{font-size:10.5pt;margin:10px 0 .2em;}
+  p{margin:.45em 0;}
+  ul,ol{margin:.35em 0 .6em;padding-left:20px;}
+  li{margin:.2em 0;}
+  code{font-family:'Cascadia Code','Consolas',monospace;background:#f1f5f9;color:#be123c;padding:1px 5px;border-radius:4px;font-size:9pt;}
+  strong{color:var(--navy);}
+  .lead{color:var(--slate);font-size:11pt;}
+  .small{font-size:9pt;color:var(--slate);}
+  /* COUVERTURE */
+  .cover{background:linear-gradient(160deg,#0f172a 0%,#1e293b 55%,#0b1220 100%);color:#fff;
+    min-height:262mm;border-radius:10px;display:flex;flex-direction:column;justify-content:space-between;
+    padding:20mm 16mm;page-break-after:always;}
+  .cover .kicker{letter-spacing:3px;text-transform:uppercase;font-size:10pt;color:var(--accent);font-weight:700;}
+  .cover h1{color:#fff;font-size:34pt;line-height:1.05;margin:14px 0 10px;letter-spacing:-1px;}
+  .cover h1 span{color:var(--accent);}
+  .cover .sub{font-size:13pt;color:#cbd5e1;font-weight:400;max-width:150mm;}
+  .cover-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+  .cover-badges span{border:1px solid #334155;background:rgba(255,255,255,.04);color:#e2e8f0;font-size:9pt;padding:5px 11px;border-radius:20px;}
+  .cover-meta{border-top:1px solid #334155;padding-top:16px;font-size:10pt;color:#94a3b8;}
+  .cover-meta .row{display:flex;justify-content:space-between;margin:3px 0;}
+  .cover-meta b{color:#fff;font-weight:600;}
+  .cover-logo{font-size:13pt;font-weight:800;letter-spacing:.5px;color:#fff;display:flex;align-items:center;gap:10px;}
+  .cover-logo .mk{width:34px;height:34px;border-radius:9px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:16pt;}
+  /* SOMMAIRE */
+  h2.som{font-size:16pt;border-bottom:3px solid var(--accent);padding-bottom:6px;margin:0 0 10px;}
+  .toc-chap{display:flex;gap:10px;align-items:baseline;margin:9px 0 2px;font-weight:800;font-size:10.5pt;color:var(--navy);}
+  .toc-chap .n{color:var(--accent);min-width:16px;}
+  .toc-sub{margin:1px 0 1px 28px;font-size:9.3pt;color:var(--slate);display:flex;gap:8px;}
+  .toc-sub .b{color:var(--accent2);}
+  .som-wrap{page-break-after:always;}
+  /* CALLOUTS / TABLES */
+  .callout{border-left:4px solid var(--accent);background:var(--soft);padding:9px 13px;border-radius:0 6px 6px 0;margin:11px 0;page-break-inside:avoid;}
+  .callout.win{border-color:var(--green);}
+  .callout.critique{border-color:var(--amber);background:#fffbeb;}
+  .callout .t{font-weight:700;font-size:9.5pt;text-transform:uppercase;letter-spacing:.5px;color:var(--slate);margin-bottom:2px;}
+  table{width:100%;border-collapse:collapse;margin:11px 0;font-size:9.1pt;}
+  th{background:var(--navy);color:#fff;text-align:left;padding:6px 9px;font-weight:600;}
+  td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:nth-child(even) td{background:var(--soft);}
+  tr{page-break-inside:avoid;}
+  .eval td .met{color:var(--green);font-weight:700;}
+  .eval td .part{color:var(--amber);font-weight:700;}
+  .gloss td:first-child{font-weight:700;color:var(--navy);white-space:nowrap;}
+  .matrix td.c{text-align:center;font-weight:700;color:var(--accent);}
+  .tag{display:inline-block;font-size:8pt;font-weight:700;padding:2px 8px;border-radius:20px;}
+  .tag.crit{background:#fee2e2;color:var(--red);}
+  .tag.high{background:#ffedd5;color:var(--amber);}
+  .tag.ok{background:#dcfce7;color:var(--green);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:11px 0;}
+  .card{border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:#fff;page-break-inside:avoid;}
+  .card h4{margin:0 0 4px;font-size:10pt;color:var(--navy);}
+  .card p{margin:0;font-size:9.2pt;color:var(--slate);}
+  .pill{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:8.5pt;color:var(--slate);}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:13px 0;page-break-inside:avoid;}
+  .kpi{border:1px solid var(--line);border-radius:9px;padding:11px;text-align:center;}
+  .kpi .big{font-size:17pt;font-weight:800;color:var(--accent);line-height:1;}
+  .kpi .lbl{font-size:8pt;color:var(--slate);margin-top:4px;}
+  .figidx{width:100%;border-collapse:collapse;font-size:9pt;margin:8px 0;}
+  .figidx td{padding:5px 8px;border-bottom:1px dashed var(--line);vertical-align:top;}
+  .figidx td.ref{font-weight:800;color:var(--accent);white-space:nowrap;width:90px;}
+  .shot{border:2px dashed var(--accent2);background:#f0f9ff;border-radius:9px;padding:11px 14px;margin:10px 0;color:#0369a1;font-size:9pt;page-break-inside:avoid;}
+  .shot .st{font-weight:800;text-transform:uppercase;letter-spacing:.5px;font-size:8.5pt;color:var(--accent2);display:block;margin-bottom:3px;}
+  .shot b{color:#075985;}
+</style>
+</head>
+<body>
+
+<!-- ============ COUVERTURE ============ -->
+<div class="cover">
+  <div class="cover-logo"><span class="mk">🏍️</span> MotoTrack</div>
+  <div>
+    <div class="kicker">Bloc 2 — RNCP 39583 · Expert en développement logiciel</div>
+    <h1>Concevoir et développer<br><span>des applications logicielles</span></h1>
+    <div class="sub">Dossier professionnel de certification appliqué au projet <b>MotoTrack</b> :
+    environnements &amp; CI/CD, conception d'un prototype sécurisé, développement testé, recette
+    fonctionnelle et documentation technique.</div>
+    <div class="cover-badges">
+      <span>Next.js 14 · App Router</span>
+      <span>TypeScript 5</span>
+      <span>PostgreSQL 15 · Prisma 5</span>
+      <span>Jest · Playwright</span>
+      <span>GitHub Actions · Vercel · Supabase</span>
+      <span>RGAA · OWASP Top 10 · ISO/IEC 25010</span>
+    </div>
+  </div>
+  <div class="cover-meta">
+    <div class="row"><span>Auteur</span><b>Luca Straputicari</b></div>
+    <div class="row"><span>Établissement</span><b>Ynov Campus — Mastère Expert en développement logiciel</b></div>
+    <div class="row"><span>Nature du projet</span><b>Initiative personnelle issue d'une analyse de marché</b></div>
+    <div class="row"><span>Version applicative</span><b>1.0.0</b></div>
+    <div class="row"><span>Dépôt</span><b>github.com/&lt;org&gt;/MotoTrack</b></div>
+  </div>
+</div>
+
+<!-- ============ SOMMAIRE ============ -->
+<div class="som-wrap">
+  <h2 class="som">Sommaire</h2>
+
+  <div class="toc-chap"><span class="n">1</span><span>Introduction et cadrage</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Présentation de MotoTrack et du contexte</div>
+  <div class="toc-sub"><span class="b">▹</span>Objectifs fonctionnels et périmètre de l'application</div>
+  <div class="toc-sub"><span class="b">▹</span>Stack technique et justification des choix</div>
+  <div class="toc-sub"><span class="b">▹</span>Méthodologie et organisation du travail</div>
+
+  <div class="toc-chap"><span class="n">2</span><span>Préparation des environnements &amp; CI/CD</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Environnement de développement local (outillage, conteneurisation Docker)</div>
+  <div class="toc-sub"><span class="b">▹</span>Environnements de test et de déploiement (dev / staging / prod)</div>
+  <div class="toc-sub"><span class="b">▹</span>Outils de suivi de performance et de qualité (KPI, linting, monitoring)</div>
+  <div class="toc-sub"><span class="b">▹</span>Pipeline d'intégration continue (GitHub Actions : build, tests, lint)</div>
+  <div class="toc-sub"><span class="b">▹</span>Gestion du code source (Git Flow, branches, PR &amp; review)</div>
+
+  <div class="toc-chap"><span class="n">3</span><span>Conception &amp; architecture</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Architecture logicielle (App Router, couches, modèle de données Prisma)</div>
+  <div class="toc-sub"><span class="b">▹</span>Choix ergonomiques et cibles (web / mobile, PWA)</div>
+  <div class="toc-sub"><span class="b">▹</span>Sécurité pensée dès la conception (auth JWT, validation SIV)</div>
+  <div class="toc-sub"><span class="b">▹</span>Design patterns, best practices et prototype</div>
+
+  <div class="toc-chap"><span class="n">4</span><span>Développement des fonctionnalités</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Implémentation des fonctionnalités clés (Auth, Mon Garage, Carnet d'entretien, Tableau de bord)</div>
+  <div class="toc-sub"><span class="b">▹</span>Sécurisation du code (OWASP, validation, gestion des secrets)</div>
+  <div class="toc-sub"><span class="b">▹</span>Accessibilité (RGAA / WCAG)</div>
+  <div class="toc-sub"><span class="b">▹</span>Évolutivité et maintenabilité</div>
+  <div class="toc-sub"><span class="b">▹</span>Harnais de tests unitaires et code coverage</div>
+  <div class="toc-sub"><span class="b">▹</span>Déploiement continu et progressif + vérification auprès des utilisateurs</div>
+
+  <div class="toc-chap"><span class="n">5</span><span>Recette des fonctionnalités</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Cahier de recettes (scénarios de tests, résultats attendus)</div>
+  <div class="toc-sub"><span class="b">▹</span>Exécution de la recette et détection des anomalies</div>
+  <div class="toc-sub"><span class="b">▹</span>Analyse des anomalies et régressions</div>
+  <div class="toc-sub"><span class="b">▹</span>Plan de correction des bogues (processus, priorisation, suivi)</div>
+
+  <div class="toc-chap"><span class="n">6</span><span>Documentation technique</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Stratégie et outils de documentation</div>
+  <div class="toc-sub"><span class="b">▹</span>Synthèse des manuels (réalisation / utilisation / déploiement)</div>
+  <div class="toc-sub"><span class="b">▹</span>Traçabilité et support aux évolutions futures</div>
+
+  <div class="toc-chap"><span class="n">7</span><span>Conclusion</span></div>
+  <div class="toc-sub"><span class="b">▹</span>Bilan technique et fonctionnel</div>
+  <div class="toc-sub"><span class="b">▹</span>Difficultés rencontrées et solutions</div>
+  <div class="toc-sub"><span class="b">▹</span>Perspectives d'évolution de MotoTrack</div>
+  <div class="toc-sub"><span class="b">▹</span>Bilan personnel / montée en compétences</div>
+
+  <div class="toc-chap"><span class="n">8</span><span>Annexes</span></div>
+
+  <h3><span class="dot">▹</span> Matrice de traçabilité des compétences</h3>
+  <table class="matrix">
+    <tr><th>Compétence</th><th>Chapitre</th><th>Preuve principale dans le dépôt</th></tr>
+    <tr><td>C2.1.1 — Environnements &amp; suivi qualité/perf</td><td class="c">2</td><td><code>docker-compose.yml</code>, <code>next.config.js</code>, <code>/api/health</code>, <code>/api/monitoring/vitals</code></td></tr>
+    <tr><td>C2.1.2 — Intégration continue &amp; sources</td><td class="c">2</td><td><code>.github/workflows/ci.yml</code>, Pull Requests</td></tr>
+    <tr><td>C2.2.1 ⚠ — Prototype &amp; architecture</td><td class="c">3</td><td><code>src/app</code>, <code>prisma/schema.prisma</code>, <code>src/lib</code>, <code>middleware.ts</code></td></tr>
+    <tr><td>C2.2.2 ⚠ — Tests unitaires &amp; couverture</td><td class="c">4</td><td><code>tests/unit</code> (146 tests), <code>jest.config.js</code></td></tr>
+    <tr><td>C2.2.3 ⚠ — Sécurité &amp; accessibilité</td><td class="c">4</td><td><code>rateLimit.ts</code>, <code>next.config.js</code>, <code>auth.ts</code>, <code>accessibility.spec.ts</code></td></tr>
+    <tr><td>C2.2.4 — Déploiement progressif &amp; users</td><td class="c">4</td><td>job <code>deploy</code> Vercel, campagne de tests utilisateurs</td></tr>
+    <tr><td>C2.3.1 ⚠ — Cahier de recettes</td><td class="c">5</td><td><code>docs/cahier-recettes.md</code>, <code>tests/e2e</code></td></tr>
+    <tr><td>C2.3.2 — Correction des bogues</td><td class="c">5</td><td><code>docs/plan-correction-bogues.md</code>, <code>CHANGELOG.md</code></td></tr>
+    <tr><td>C2.4.1 — Documentation technique</td><td class="c">6</td><td><code>README.md</code>, <code>docs/manuel-*.md</code></td></tr>
+  </table>
+</div>
+
+<!-- ============ 1. INTRODUCTION ET CADRAGE ============ -->
+<h2 class="chap"><span class="n">1.</span> Introduction et cadrage</h2>
+
+<h3><span class="dot">▹</span> Présentation de MotoTrack et du contexte</h3>
+<p><strong>MotoTrack</strong> est une application web progressive (PWA) de gestion de garage moto :
+suivi d'entretien, historique kilométrique, rappels d'échéances, recherche de pièces, actualités et
+météo « pilote ». Le projet n'émane pas d'un client contractuel : il résulte d'une
+<strong>analyse de marché</strong> que j'ai menée en amont et dont j'ai <strong>déduit un besoin
+réel</strong>, avant d'endosser moi-même le rôle de commanditaire pour cadrer le produit.</p>
+<p>Le constat de départ : l'entretien d'une moto repose encore massivement sur des carnets papier
+ou des tableurs épars. Les motards perdent l'historique lors d'une revente, oublient des échéances
+critiques (chaîne, plaquettes, vidange) et n'ont pas de vue consolidée de leur parc. Les solutions
+existantes sont soit généralistes (automobile), soit payantes, soit non francophones. Pour ancrer
+les décisions produit dans un usage concret, j'ai formalisé le besoin autour d'une cible
+représentative — un club de motards de loisir pris à titre <strong>d'exemple</strong>
+(« MotoClub Alpes ») : il s'agit d'un <em>persona d'illustration</em>, non d'un donneur d'ordre.</p>
+<div class="callout">
+  <div class="t">Problème adressé</div>
+  Centraliser, fiabiliser et rendre <em>portable</em> l'historique d'entretien d'une ou plusieurs
+  motos, avec des rappels proactifs, sur un outil accessible partout et installable comme une
+  application mobile.
+</div>
+
+<h3><span class="dot">▹</span> Objectifs fonctionnels et périmètre de l'application</h3>
+<p>Objectifs directeurs : fiabilité de la donnée (modèle relationnel plutôt que tableur), mobilité
+(PWA installable), proactivité (rappels km/périodicité), sécurité &amp; confidentialité
+(cloisonnement par compte, minimisation RGPD) et accessibilité (produit francophone conforme RGAA).</p>
+<table>
+  <tr><th>Domaine</th><th>Fonctionnalités livrées (v1.0.0)</th><th>Statut</th></tr>
+  <tr><td>Compte &amp; sécurité</td><td>Inscription, connexion, session JWT, protection des routes</td><td><span class="tag ok">Livré</span></td></tr>
+  <tr><td>Mon Garage</td><td>Ajout de moto (assistant multi-étapes), liste, moto principale</td><td><span class="tag ok">Livré</span></td></tr>
+  <tr><td>Carnet d'entretien</td><td>Historique des interventions typées, coût, kilométrage</td><td><span class="tag ok">Livré</span></td></tr>
+  <tr><td>Catalogue modèles</td><td>Suggestion marque/modèle via l'API publique NHTSA vPIC</td><td><span class="tag ok">Livré</span></td></tr>
+  <tr><td>Actualités &amp; météo</td><td>Flux RSS Google News moto, météo pilote</td><td><span class="tag ok">Livré</span></td></tr>
+  <tr><td>Rappels</td><td>Modèle de données prêt (seuils km / périodicité)</td><td><span class="tag high">Socle posé</span></td></tr>
+</table>
+<p class="small">Périmètre volontairement resserré sur un cœur cohérent et démontrable, dans une
+logique de produit minimum viable enrichi de façon incrémentale. Cibles : le motard passionné
+(1 à 3 motos, usage mobile) et le membre de club (sorties de groupe, partage de bons plans).</p>
+
+<h3><span class="dot">▹</span> Stack technique et justification des choix</h3>
+<table>
+  <tr><th>Besoin</th><th>Choix</th><th>Alternative écartée &amp; raison</th></tr>
+  <tr><td>Framework full-stack</td><td><strong>Next.js 14</strong> (App Router)</td><td>SPA React pure : pas de SSR/SEO ni de routes API intégrées. Next unifie front, rendu serveur et back.</td></tr>
+  <tr><td>Langage</td><td><strong>TypeScript 5</strong></td><td>JavaScript : pas de typage → régressions silencieuses. TS documente les contrats.</td></tr>
+  <tr><td>Base de données</td><td><strong>PostgreSQL 15</strong></td><td>NoSQL : domaine fortement relationnel → intégrité référentielle nécessaire.</td></tr>
+  <tr><td>ORM</td><td><strong>Prisma 5</strong></td><td>SQL brut : verbeux, non typé. Prisma = client typé + migrations versionnées.</td></tr>
+  <tr><td>Hébergement</td><td><strong>Vercel + Supabase</strong></td><td>Cohérence avec Next.js (Vercel) et PostgreSQL managé + pooling (Supabase).</td></tr>
+  <tr><td>Validation</td><td><strong>Zod</strong></td><td>Validation manuelle : dispersée, non typée. Zod = source de vérité partagée client/serveur.</td></tr>
+</table>
+<div class="callout critique">
+  <div class="t">Regard critique</div>
+  Supabase via le <em>pooler</em> PgBouncer impose des contraintes et une dépendance à un acteur
+  unique ; le choix est assumé pour la vélocité. La couche d'accès étant isolée derrière Prisma,
+  une migration vers un autre PostgreSQL managé resterait peu coûteuse.
+</div>
+
+<h3><span class="dot">▹</span> Méthodologie et organisation du travail</h3>
+<p>Projet mené en <strong>solo</strong> selon une approche itérative inspirée de Kanban : découpage
+en incréments fonctionnels, chaque incrément développé sur une branche dédiée, validé par la CI puis
+fusionné par Pull Request. La discipline de qualité (tests, revue, lint) est portée par l'outillage
+automatisé — le filet de sécurité d'un développeur unique.</p>
+<div class="kpis">
+  <div class="kpi"><div class="big">146</div><div class="lbl">tests unitaires</div></div>
+  <div class="kpi"><div class="big">96 %</div><div class="lbl">couverture (statements)</div></div>
+  <div class="kpi"><div class="big">10</div><div class="lbl">routes API</div></div>
+  <div class="kpi"><div class="big">4</div><div class="lbl">entités métier</div></div>
+</div>
+<div class="shot"><span class="st">📸 Capture 1.1</span>
+  <b>Page d'accueil de MotoTrack</b> (hero « Ton garage. Ton contrôle. » + scène 3D). 1920×1080.</div>
+
+<!-- ============ 2. ENVIRONNEMENTS & CI/CD ============ -->
+<h2 class="chap"><span class="n">2.</span> Préparation des environnements &amp; CI/CD <span class="pts">C2.1.1 · C2.1.2</span></h2>
+<p class="chaplead">Préparer les environnements de déploiement et de test, outiller le suivi
+qualité/performance, et mettre en place une intégration continue assurant la fusion des sources et
+le déclenchement de tests réguliers.</p>
+
+<h3><span class="dot">▹</span> Environnement de développement local (outillage, conteneurisation Docker) <span class="cc">C2.1.1</span></h3>
+<p>L'environnement local est <strong>reproductible en une commande</strong> grâce à
+<code>docker-compose.yml</code> qui provisionne PostgreSQL 15 et Adminer : tout contributeur obtient
+une base identique sans installation manuelle. Les variables sensibles sont isolées dans
+<code>.env</code> (exclu du versionnement) et documentées via <code>.env.example</code>.</p>
+<div class="callout">
+  <div class="t">Configuration Prisma / Supabase</div>
+  <code>prisma/schema.prisma</code> déclare deux URL : <code>url</code> (connexion <em>pooler</em>
+  PgBouncer, port 6543, à l'exécution en serverless) et <code>directUrl</code> (connexion directe,
+  port 5432, pour les migrations) — configuration recommandée pour Prisma sur hébergement serverless.
+</div>
+<div class="shot"><span class="st">📸 Capture 2.1</span>
+  <b>Terminal <code>docker compose up -d</code></b> : conteneurs <code>mototrack_db</code> et
+  <code>mototrack_adminer</code> démarrés.</div>
+
+<h3><span class="dot">▹</span> Environnements de test et de déploiement (dev / staging / prod) <span class="cc">C2.1.1</span></h3>
+<table>
+  <tr><th>Environnement</th><th>Rôle</th><th>Infrastructure</th><th>Données</th></tr>
+  <tr><td><strong>dev</strong> (local)</td><td>Développer et tester en isolation</td><td>Docker Compose : PostgreSQL + Adminer</td><td>Base jetable</td></tr>
+  <tr><td><strong>staging</strong> (préproduction)</td><td>Valider chaque PR en conditions réelles</td><td>Vercel Preview Deployment (URL éphémère par PR)</td><td>Base de test Supabase</td></tr>
+  <tr><td><strong>prod</strong></td><td>Servir les utilisateurs finaux</td><td>Vercel (serverless) + Supabase managé</td><td>Base de production Supabase</td></tr>
+</table>
+<p class="small">Chaque Pull Request génère un environnement de <em>staging</em> automatique (Preview),
+ce qui permet une validation avant fusion sans mobiliser d'infrastructure dédiée.</p>
+<div class="shot"><span class="st">📸 Capture 2.2</span>
+  <b>Tableau de bord Supabase</b> — vue « Database » (tables User, Motorcycle, Maintenance,
+  Reminder générées par Prisma).</div>
+
+<h3><span class="dot">▹</span> Outils de suivi de performance et de qualité (KPI, linting, monitoring) <span class="cc">C2.1.1</span></h3>
+<table>
+  <tr><th>Dimension</th><th>Outil</th><th>Emplacement</th></tr>
+  <tr><td>Qualité de code</td><td>ESLint (<code>next/core-web-vitals</code>)</td><td><code>.eslintrc.json</code>, étape CI « lint »</td></tr>
+  <tr><td>Typage</td><td>TypeScript strict</td><td><code>next build</code> en CI</td></tr>
+  <tr><td>Sécurité des dépendances</td><td><code>npm audit --audit-level=high</code></td><td>étape CI dédiée (OWASP A06)</td></tr>
+  <tr><td>Couverture (KPI)</td><td>Jest coverage + seuils bloquants</td><td><code>jest.config.js</code></td></tr>
+  <tr><td>Disponibilité (KPI)</td><td>Sonde de santé + latence DB</td><td><code>src/app/api/health/route.ts</code></td></tr>
+  <tr><td>Performance réelle (RUM)</td><td>Core Web Vitals (LCP, CLS, INP…)</td><td><code>src/app/api/monitoring/vitals/route.ts</code></td></tr>
+</table>
+<p>Deux mécanismes de supervision sont implémentés : la <strong>sonde <code>/api/health</code></strong>
+(exécute un <code>SELECT 1</code>, mesure la latence, renvoie un contrat structuré) et le
+<strong>Real User Monitoring</strong> (<code>WebVitals.tsx</code> capte les Core Web Vitals réels et
+les transmet via <code>sendBeacon</code> à <code>/api/monitoring/vitals</code>, validés par Zod et
+journalisés par Winston). Les journaux structurés (Winston, <code>src/lib/logger.ts</code>) sont
+consultables dans les <em>Runtime Logs</em> de Vercel.</p>
+<div class="callout critique">
+  <div class="t">Regard critique</div>
+  La CSP est en <code>Report-Only</code> le temps de fiabiliser la politique ; une supervision par
+  produit dédié (Sentry/Grafana) est l'étape suivante — l'endpoint Web Vitals est conçu pour l'y
+  brancher.
+</div>
+
+<h3><span class="dot">▹</span> Pipeline d'intégration continue (GitHub Actions : build, tests, lint) <span class="cc">C2.1.2</span></h3>
+<p>Le pipeline <code>.github/workflows/ci.yml</code> se déclenche sur chaque <code>push</code> et
+<code>pull_request</code> vers <code>main</code>/<code>develop</code>, provisionne un PostgreSQL
+éphémère et enchaîne des étapes <strong>bloquantes</strong> :</p>
+<table>
+  <tr><th>#</th><th>Étape</th><th>Rôle</th></tr>
+  <tr><td>1–2</td><td>Service <code>postgres:15</code> + <code>npm ci</code></td><td>Base réelle + installation reproductible (lockfile)</td></tr>
+  <tr><td>3</td><td><code>prisma generate</code> + <code>migrate deploy</code></td><td>Client typé + schéma appliqué</td></tr>
+  <tr><td>4–5</td><td><code>lint</code> + <code>npm audit</code></td><td>Qualité de code + vulnérabilités (A06)</td></tr>
+  <tr><td>6</td><td><code>npm run test</code></td><td>146 tests + couverture (seuils bloquants)</td></tr>
+  <tr><td>7–8</td><td><code>next build</code> + <code>playwright test</code></td><td>Compilation/typage + parcours e2e</td></tr>
+  <tr><td>9–10</td><td>Artefacts + job <code>deploy</code></td><td>Rapports archivés ; déploiement Vercel sur <code>main</code> si tout est vert</td></tr>
+</table>
+<div class="shot"><span class="st">📸 Capture 2.3</span>
+  <b>Exécution GitHub Actions réussie</b> : toutes les étapes vertes jusqu'à <code>deploy</code>.</div>
+
+<h3><span class="dot">▹</span> Gestion du code source (Git Flow, branches, PR &amp; review) <span class="cc">C2.1.2</span></h3>
+<p>Modèle de branches discipliné, adapté au solo mais conforme aux pratiques d'équipe :
+<code>main</code> (production, protégée : fusion uniquement par PR avec CI verte),
+<code>develop</code> (intégration), <code>feature/*</code> (un incrément par branche, ex.
+<code>feature/i18n-fr</code>, <code>feature/monitoring-web-vitals</code>), <code>fix/*</code>
+(correctifs traçés au plan de bogues). Chaque branche passe par une <strong>Pull Request</strong>
+décrivant l'intention et la couverture ajoutée ; la PR déclenche CI + Preview ; la fusion exige le
+succès de l'ensemble. Les messages suivent une convention (<code>feat:</code>, <code>fix:</code>,
+<code>test:</code>, <code>docs:</code>, <code>ci:</code>) alimentant le <code>CHANGELOG.md</code>.</p>
+<div class="shot"><span class="st">📸 Capture 2.4</span>
+  <b>Onglet « Pull requests » + « Branch protection » de <code>main</code></b> (« Require a pull
+  request » et « Require status checks » cochés).</div>
+<table class="eval">
+  <tr><th>Attendu (C2.1.1 &amp; C2.1.2)</th><th>Preuve</th><th>Niveau</th></tr>
+  <tr><td>Environnements automatisés + suivi qualité/perf</td><td>Docker, Vercel, Supabase, ESLint, audit, /api/health, RUM</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Intégration continue + fusion des sources</td><td><code>ci.yml</code> bloquant + branches/PR + protection <code>main</code></td><td><span class="met">Maîtrisé</span></td></tr>
+</table>
+
+<!-- ============ 3. CONCEPTION & ARCHITECTURE ============ -->
+<h2 class="chap"><span class="n">3.</span> Conception &amp; architecture <span class="pts elim">C2.2.1 · éliminatoire</span></h2>
+<p class="chaplead">Développer un prototype de l'application en tenant compte de l'ergonomie, des
+différentes cibles et de la sécurité.</p>
+
+<h3><span class="dot">▹</span> Architecture logicielle (App Router, couches, modèle de données Prisma) <span class="cc elim">C2.2.1</span></h3>
+<table>
+  <tr><th>Couche</th><th>Responsabilité</th><th>Implémentation</th></tr>
+  <tr><td>Présentation</td><td>Rendu, interactions, états de formulaire</td><td>RSC + composants clients (<code>src/app/**/page.tsx</code>, <code>src/components</code>)</td></tr>
+  <tr><td>Contrôle / API</td><td>Contrats HTTP, validation, autorisation</td><td>Route Handlers <code>src/app/api/**/route.ts</code></td></tr>
+  <tr><td>Services / domaine</td><td>Règles transverses réutilisables</td><td><code>src/lib</code> (auth, rateLimit, logger, formatPlate)</td></tr>
+  <tr><td>Accès aux données</td><td>Persistance typée &amp; migrations</td><td>Prisma + <code>prisma/schema.prisma</code></td></tr>
+  <tr><td>Transversal</td><td>Sécurité d'accès aux routes</td><td><code>src/middleware.ts</code></td></tr>
+</table>
+<p>Le modèle relie quatre entités : <code>User</code> 1—N <code>Motorcycle</code> 1—N
+<code>Maintenance</code> et <code>Reminder</code>, avec suppression en cascade
+(<code>onDelete: Cascade</code>), index sur les clés d'accès et énumération
+<code>MaintenanceType</code> contraignant les types d'intervention côté base.</p>
+<div class="shot"><span class="st">📸 Capture 3.1</span>
+  <b>Schéma relationnel de la base</b> (export Supabase ou <code>prisma-erd</code>) : User →
+  Motorcycle → Maintenance/Reminder.</div>
+
+<h3><span class="dot">▹</span> Choix ergonomiques et cibles (web / mobile, PWA) <span class="cc elim">C2.2.1</span></h3>
+<table>
+  <tr><th>Cible</th><th>Parti pris ergonomique</th></tr>
+  <tr><td><strong>Desktop</strong></td><td>Navigation latérale persistante (<code>AppLayout</code>), grande zone de contenu, scène 3D sur l'accueil.</td></tr>
+  <tr><td><strong>Mobile</strong></td><td>Mise en page responsive (Tailwind), navigation repliée en barre défilable, cibles tactiles agrandies.</td></tr>
+  <tr><td><strong>PWA</strong></td><td>Installable (<code>public/manifest.json</code> + service worker <code>next-pwa</code>), plein écran, icône dédiée.</td></tr>
+</table>
+<p>Interface <strong>intégralement francophone</strong> (cohérente avec la cible et l'accessibilité) ;
+<code>&lt;html lang="fr"&gt;</code> déclaré et vérifié par test.</p>
+<div class="shot"><span class="st">📸 Capture 3.2</span>
+  <b>Vue mobile responsive (~390px)</b> d'une page authentifiée + <b>installation PWA</b>.</div>
+
+<h3><span class="dot">▹</span> Sécurité pensée dès la conception (auth JWT, validation SIV) <span class="cc elim">C2.2.1</span></h3>
+<p>La sécurité est <em>structurelle</em>, pas ajoutée après coup : le <strong>middleware</strong>
+(<code>src/middleware.ts</code>) conditionne l'accès aux routes ; chaque route API
+<strong>re-vérifie</strong> l'identité (défense en profondeur) et <strong>cloisonne</strong> les
+données par <code>userId</code> ; l'authentification repose sur un <strong>JWT signé (HS256, jose)</strong>
+en cookie <code>httpOnly</code> et des mots de passe <strong>hachés bcrypt</strong>. Les entrées sont
+validées par <strong>Zod</strong> ; la plaque d'immatriculation est normalisée/validée au format
+<strong>SIV</strong> (<code>src/lib/formatPlate.ts</code>), garantissant une donnée propre dès la
+saisie.</p>
+
+<h3><span class="dot">▹</span> Design patterns, best practices et prototype <span class="cc elim">C2.2.1</span></h3>
+<table>
+  <tr><th>Patron / pratique</th><th>Où &amp; pourquoi</th></tr>
+  <tr><td><strong>Singleton</strong></td><td><code>src/lib/prisma.ts</code> : instance Prisma unique, évite l'épuisement du pool (rechargements, serverless).</td></tr>
+  <tr><td><strong>Middleware / chaîne de responsabilité</strong></td><td><code>src/middleware.ts</code> : interception centralisée, vérification JWT, redirection.</td></tr>
+  <tr><td><strong>Validation en frontière</strong></td><td>Zod à l'entrée de chaque route et formulaire (« parse, don't validate »).</td></tr>
+  <tr><td><strong>DTO / projection</strong></td><td>Réponses projetées via <code>select</code> : le <code>passwordHash</code> n'est jamais exposé.</td></tr>
+  <tr><td><strong>Humble Object</strong></td><td>Logique de l'assistant extraite dans <code>garage/new/wizardLogic.ts</code>, testable sans DOM.</td></tr>
+  <tr><td><strong>Composants à variantes</strong></td><td>UI factorisée (<code>src/components/ui</code>) via <em>class-variance-authority</em> + Radix.</td></tr>
+</table>
+<p>Le prototype livré est une application <strong>exécutable de bout en bout</strong> (inscription →
+ajout de moto → historique), déployable en un push et éprouvée par les tests e2e.</p>
+<div class="shot"><span class="st">📸 Capture 3.3</span>
+  <b>Assistant d'ajout de moto</b> (<code>/garage/new</code>) : étape de sélection marque/modèle.</div>
+<table class="eval">
+  <tr><th>Critère C2.2.1</th><th>Preuve</th><th>Niveau</th></tr>
+  <tr><td>Architecture &amp; patterns</td><td>Couches découplées ; Singleton, middleware, validation frontière, DTO, Humble Object</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Ergonomie multi-cibles</td><td>Responsive + PWA + FR</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Sécurité dès la conception</td><td>Middleware + JWT + bcrypt + validation SIV</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Prototype fonctionnel</td><td>Application exécutable de bout en bout, testée e2e</td><td><span class="met">Maîtrisé</span></td></tr>
+</table>
+
+<!-- ============ 4. DEVELOPPEMENT ============ -->
+<h2 class="chap"><span class="n">4.</span> Développement des fonctionnalités <span class="pts elim">C2.2.2 · C2.2.3 · C2.2.4</span></h2>
+<p class="chaplead">Développer les fonctionnalités de manière évolutive, sécurisée et accessible ;
+les doter d'un harnais de tests couvrant l'essentiel du code ; les livrer en continu en vérifiant
+leur fonctionnement auprès des utilisateurs.</p>
+
+<h3><span class="dot">▹</span> Implémentation des fonctionnalités clés (Auth, Mon Garage, Carnet d'entretien, Tableau de bord)</h3>
+<table>
+  <tr><th>Fonctionnalité</th><th>Mise en œuvre</th></tr>
+  <tr><td><strong>Auth</strong></td><td>Inscription/connexion Zod + bcrypt, JWT <code>jose</code> en cookie httpOnly, protection par middleware (<code>api/auth/*</code>, <code>auth.ts</code>).</td></tr>
+  <tr><td><strong>Mon Garage</strong></td><td>Assistant multi-étapes (<code>garage/new</code>), CRUD moto cloisonné par utilisateur (<code>api/motorcycles</code>).</td></tr>
+  <tr><td><strong>Carnet d'entretien</strong></td><td>Interventions typées (enum), coût, kilométrage (<code>api/maintenances</code>).</td></tr>
+  <tr><td><strong>Tableau de bord</strong></td><td>Synthèse du parc et des échéances ; intégrations NHTSA vPIC, actualités RSS, météo.</td></tr>
+</table>
+<div class="shot"><span class="st">📸 Capture 4.1</span>
+  <b>Tableau de bord / Mon Garage</b> listant les motos de l'utilisateur connecté.</div>
+
+<h3><span class="dot">▹</span> Sécurisation du code (OWASP, validation, gestion des secrets) <span class="cc elim">C2.2.3</span></h3>
+<table>
+  <tr><th>Risque OWASP (2021)</th><th>Traitement</th><th>État</th></tr>
+  <tr><td>A01 — Contrôle d'accès</td><td>Middleware + re-vérification + cloisonnement <code>userId</code></td><td><span class="tag ok">Traité</span></td></tr>
+  <tr><td>A02 — Cryptographie</td><td>bcrypt, JWT HS256, cookies <code>secure</code> en prod</td><td><span class="tag ok">Traité</span></td></tr>
+  <tr><td>A03 — Injection</td><td>Requêtes paramétrées Prisma + Zod</td><td><span class="tag ok">Traité</span></td></tr>
+  <tr><td>A05 — Mauvaise configuration</td><td>En-têtes + HSTS + CSP (<code>next.config.js</code>)</td><td><span class="tag ok">Traité</span></td></tr>
+  <tr><td>A06 — Composants vulnérables</td><td><code>npm audit</code> bloquant en CI</td><td><span class="tag ok">Traité</span></td></tr>
+  <tr><td>A07 — Authentification</td><td><em>Rate limiting</em> anti-force brute (429)</td><td><span class="tag ok">Traité</span></td></tr>
+  <tr><td>A09 — Journalisation</td><td>Winston structuré + sonde de santé</td><td><span class="tag high">Partiel</span></td></tr>
+</table>
+<p><strong>Validation</strong> : Zod à chaque frontière. <strong>Secrets</strong> : <code>.env</code>
+hors dépôt, <code>.env.example</code> documenté, secrets prod dans Vercel, <code>getJwtSecretKey()</code>
+échoue si absent. <strong>Moindre exposition</strong> : le <code>passwordHash</code> ne quitte jamais
+le serveur. Analyse complète : <code>docs/securite-owasp.md</code> (annexe).</p>
+<div class="shot"><span class="st">📸 Capture 4.2</span>
+  <b>En-têtes de sécurité en production</b> (Network/securityheaders.com) + <b>réponse 429</b> après
+  tentatives répétées.</div>
+
+<h3><span class="dot">▹</span> Accessibilité (RGAA / WCAG) <span class="cc elim">C2.2.3</span></h3>
+<p>Niveau visé : <strong>RGAA 4.1 / WCAG 2.1 AA</strong> sur les parcours critiques,
+<strong>testé automatiquement</strong> (<code>tests/e2e/accessibility.spec.ts</code>).</p>
+<table>
+  <tr><th>Critère RGAA</th><th>Implémentation</th><th>Test</th></tr>
+  <tr><td>8.3 — Langue</td><td><code>&lt;html lang="fr"&gt;</code></td><td>✔ auto</td></tr>
+  <tr><td>11.1 — Étiquettes</td><td><code>&lt;Label htmlFor&gt;</code> par champ</td><td>✔ auto</td></tr>
+  <tr><td>11.10 — Erreurs</td><td><code>role="alert"</code>, <code>aria-invalid</code>, <code>aria-describedby</code></td><td>✔ auto</td></tr>
+  <tr><td>11.13 — Autocomplétion</td><td><code>autocomplete</code></td><td>✔ auto</td></tr>
+  <tr><td>9.1 — Titres</td><td><code>h1</code> unique</td><td>✔ auto</td></tr>
+  <tr><td>12.7 — Lien d'évitement</td><td>« Aller au contenu principal »</td><td>manuel</td></tr>
+</table>
+<div class="shot"><span class="st">📸 Capture 4.3</span>
+  <b>Formulaire avec erreurs (FR)</b> + <b>Lighthouse Accessibilité</b> sur <code>/login</code>.</div>
+
+<h3><span class="dot">▹</span> Évolutivité et maintenabilité</h3>
+<ul>
+  <li><strong>Typage de bout en bout</strong> : du schéma Prisma aux composants.</li>
+  <li><strong>Découplage</strong> : la logique transverse (<code>src/lib</code>) ne dépend ni du rendu ni du transport HTTP.</li>
+  <li><strong>Contrats explicites</strong> : ajouter un type d'entretien = étendre l'énumération + une migration (impact localisé).</li>
+  <li>La localisation FR récente a prouvé la capacité du code à évoluer sans casse (tests adaptés, CI verte).</li>
+</ul>
+<div class="callout critique">
+  <div class="t">Dette assumée</div>
+  Le <em>rate limiting</em> en mémoire conviendrait à une instance unique ; en serverless
+  multi-instances, un magasin partagé (Redis) serait nécessaire — le contrat de la fonction permet ce
+  remplacement sans toucher aux routes.
+</div>
+
+<h3><span class="dot">▹</span> Harnais de tests unitaires et code coverage <span class="cc elim">C2.2.2</span></h3>
+<p>Harnais <strong>Jest</strong> + <strong>Testing Library</strong> (unitaire/intégration) et
+<strong>Playwright</strong> (e2e), selon la <em>pyramide de tests</em>. Priorisation par risque :
+sécurité/auth d'abord, puis contrats API, logique pure, UI critique. La couverture cible la
+<strong>couche logique</strong> (déclarée dans <code>collectCoverageFrom</code>) et est
+<strong>verrouillée par des seuils bloquants</strong> (branches 80, fonctions/lignes/instructions 90).</p>
+<div class="kpis">
+  <div class="kpi"><div class="big">96,06 %</div><div class="lbl">instructions</div></div>
+  <div class="kpi"><div class="big">96,84 %</div><div class="lbl">lignes</div></div>
+  <div class="kpi"><div class="big">98,18 %</div><div class="lbl">fonctions</div></div>
+  <div class="kpi"><div class="big">87,78 %</div><div class="lbl">branches</div></div>
+</div>
+<p class="small"><strong>146 tests / 24 suites, tous verts.</strong> Ex. n°1 —
+<code>rateLimit.test.ts</code> vérifie le blocage après quota (anti-force brute) ; ex. n°2 —
+<code>api/login.test.ts</code> verrouille le <strong>message d'erreur générique</strong> quel que soit
+l'échec (non-énumération des comptes).</p>
+<div class="shot"><span class="st">📸 Capture 4.4</span>
+  <b>Sortie <code>npm run test</code></b> : tableau de couverture + « 146 passed / 24 suites ».</div>
+
+<h3><span class="dot">▹</span> Déploiement continu et progressif + vérification auprès des utilisateurs <span class="cc">C2.2.4</span></h3>
+<p>Déploiement <strong>continu</strong> (automatisé) et <strong>progressif</strong> : une PR produit
+un Preview (staging) vérifié avant fusion ; la fusion sur <code>main</code> déclenche la production ;
+« Promote to Production » de Vercel permet un <em>rollback</em> immédiat. Une <strong>campagne de test
+auprès de 5 motards</strong> (préproduction) a piloté des évolutions concrètes :</p>
+<table>
+  <tr><th>#</th><th>Retour</th><th>Action</th><th>Suivi</th></tr>
+  <tr><td>R1</td><td>Interface par endroits en anglais</td><td>Localisation FR des pages compte</td><td><span class="tag ok">Corrigé</span></td></tr>
+  <tr><td>R2</td><td>Tentatives de connexion illimitées</td><td><em>Rate limiting</em> (429)</td><td><span class="tag ok">Corrigé</span></td></tr>
+  <tr><td>R3</td><td>Erreurs de formulaire peu visibles</td><td>Messages accessibles renforcés</td><td><span class="tag ok">Corrigé</span></td></tr>
+  <tr><td>R4</td><td>Souhait d'installer sur mobile</td><td>Finalisation du manifeste PWA</td><td><span class="tag ok">Corrigé</span></td></tr>
+  <tr><td>R5</td><td>Saisie du modèle fastidieuse</td><td>Suggestion via l'API NHTSA vPIC</td><td><span class="tag high">Amélioré</span></td></tr>
+</table>
+<div class="shot"><span class="st">📸 Capture 4.5</span>
+  <b>Vercel — Deployments</b> (Preview + Production) &amp; <b>rapport Playwright</b> vert.</div>
+<table class="eval">
+  <tr><th>Critères (C2.2.2 / C2.2.3 / C2.2.4)</th><th>Preuve</th><th>Niveau</th></tr>
+  <tr><td>Harnais &amp; couverture</td><td>146 tests, 96 %, seuils bloquants</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Sécurité &amp; accessibilité</td><td>OWASP traité + RGAA testé</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Déploiement &amp; vérification utilisateurs</td><td>Preview→prod, rollback, campagne 5 testeurs</td><td><span class="met">Maîtrisé</span></td></tr>
+</table>
+
+<!-- ============ 5. RECETTE ============ -->
+<h2 class="chap"><span class="n">5.</span> Recette des fonctionnalités <span class="pts elim">C2.3.1 · C2.3.2</span></h2>
+<p class="chaplead">Élaborer le cahier de recettes, l'exécuter, analyser les anomalies et bâtir un
+plan de correction des bogues.</p>
+
+<h3><span class="dot">▹</span> Cahier de recettes (scénarios de tests, résultats attendus) <span class="cc elim">C2.3.1</span></h3>
+<p>Le cahier complet (<code>docs/cahier-recettes.md</code>) recense <strong>15 scénarios</strong>
+reliés aux fonctionnalités et, quand c'est pertinent, à un test automatisé.</p>
+<table>
+  <tr><th>ID</th><th>Préconditions</th><th>Étapes</th><th>Résultat attendu</th><th>Statut</th></tr>
+  <tr><td>RT-01</td><td>Aucun compte</td><td>Inscription valide</td><td>Compte créé, redirection connexion</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-02</td><td>—</td><td>Inscription e-mail invalide</td><td>« Adresse e-mail invalide »</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-03</td><td>—</td><td>Mots de passe non concordants</td><td>Erreur « ne correspondent pas »</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-04</td><td>Compte existant</td><td>Connexion valide</td><td>Session ouverte, accès dashboard</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-05</td><td>Compte existant</td><td>Mauvais mot de passe</td><td><code>401</code> générique</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-06</td><td>—</td><td><code>/dashboard</code> sans session</td><td>Redirection <code>/login</code></td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-07</td><td>Session</td><td>Ajouter une moto</td><td>Moto listée</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-08</td><td>Moto existante</td><td>Ajouter une intervention</td><td>Entrée dans l'historique</td><td><span class="tag ok">OK</span></td></tr>
+</table>
+
+<h3><span class="dot">▹</span> Exécution de la recette et détection des anomalies <span class="cc elim">C2.3.1</span></h3>
+<table>
+  <tr><th>ID</th><th>Étapes</th><th>Résultat attendu</th><th>Statut</th></tr>
+  <tr><td>RT-11</td><td><code>GET /api/health</code></td><td><code>200</code> + <code>db: connected</code> + latence</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-12</td><td>Accueil au clavier</td><td>Lien d'évitement, focus visible</td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-13</td><td>&gt; 5 connexions rapides</td><td><code>429</code> + <code>Retry-After</code></td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-14</td><td>Langue du document</td><td><code>lang="fr"</code></td><td><span class="tag ok">OK</span></td></tr>
+  <tr><td>RT-15</td><td>Installer la PWA</td><td>Icône ajoutée, plein écran</td><td><span class="tag ok">OK</span></td></tr>
+</table>
+<p>Une partie des scénarios est <strong>rejouée automatiquement</strong> par Playwright
+(<code>tests/e2e</code>) : formulaires, protection des routes, contrat de santé, accessibilité — ce
+qui transforme la recette en filet de non-régression exécuté à chaque CI.</p>
+<div class="shot"><span class="st">📸 Capture 5.1</span>
+  <b>Rapport Playwright</b> (<code>playwright-report</code>) : tests e2e au vert.</div>
+
+<h3><span class="dot">▹</span> Analyse des anomalies et régressions</h3>
+<p>L'exécution manuelle du cahier n'a révélé <strong>aucune anomalie fonctionnelle</strong> : les
+15 scénarios passent. Les anomalies traitées relèvent de la <strong>qualité technique</strong> (tests,
+configuration, accessibilité, sécurité) et ont été détectées par l'outillage (couverture, typage,
+lint, audit) ou par les retours utilisateurs. Chaque correctif est <strong>accompagné d'un test de
+non-régression</strong> garantissant la non-réapparition du défaut.</p>
+
+<h3><span class="dot">▹</span> Plan de correction des bogues (processus, priorisation, suivi) <span class="cc">C2.3.2</span></h3>
+<p>Cycle formalisé : <strong>Détection → Qualification (sévérité) → Analyse (cause racine) →
+Correction sur branche + test → Vérification (CI verte) → Clôture (fusion + CHANGELOG)</strong>.
+Priorisation : <span class="tag crit">Bloquant</span> (immédiat) · <span class="tag high">Majeur</span>
+(48 h) · <span class="tag ok">Mineur</span> (itération suivante).</p>
+<table>
+  <tr><th>ID</th><th>Anomalie</th><th>Origine</th><th>Correctif</th><th>Statut</th></tr>
+  <tr><td>BUG-01</td><td>Couverture insuffisante</td><td>Audit qualité</td><td>146 tests, seuils relevés</td><td><span class="tag ok">Résolu</span></td></tr>
+  <tr><td>BUG-02</td><td>Jest exécutait l'e2e</td><td>CI</td><td><code>testPathIgnorePatterns</code></td><td><span class="tag ok">Résolu</span></td></tr>
+  <tr><td>BUG-03</td><td>Client Prisma périmé</td><td><code>tsc</code></td><td><code>prisma generate</code></td><td><span class="tag ok">Résolu</span></td></tr>
+  <tr><td>BUG-04</td><td>Lint CI bloquant</td><td>CI</td><td>Ajout <code>.eslintrc.json</code></td><td><span class="tag ok">Résolu</span></td></tr>
+  <tr><td>BUG-05</td><td>Formulaires peu accessibles</td><td>Audit RGAA + R3</td><td>Liaisons ARIA, <code>role="alert"</code></td><td><span class="tag ok">Résolu</span></td></tr>
+  <tr><td>BUG-06</td><td>Interface anglophone</td><td>Retour R1</td><td>Localisation FR + tests</td><td><span class="tag ok">Résolu</span></td></tr>
+  <tr><td>BUG-07</td><td>Pas de limite de tentatives</td><td>Retour R2 + revue</td><td><em>Rate limiting</em> 429</td><td><span class="tag ok">Résolu</span></td></tr>
+</table>
+<table class="eval">
+  <tr><th>Critères (C2.3.1 / C2.3.2)</th><th>Preuve</th><th>Niveau</th></tr>
+  <tr><td>Cahier de recettes &amp; exécution</td><td>15 scénarios ID/préconditions/étapes/attendu, rejoués en e2e</td><td><span class="met">Maîtrisé</span></td></tr>
+  <tr><td>Plan de correction</td><td>Processus formalisé + registre traçé + tests de non-régression</td><td><span class="met">Maîtrisé</span></td></tr>
+</table>
+
+<!-- ============ 6. DOCUMENTATION ============ -->
+<h2 class="chap"><span class="n">6.</span> Documentation technique <span class="pts">C2.4.1</span></h2>
+<p class="chaplead">Rédiger la documentation technique d'exploitation : réalisation, utilisation,
+déploiement.</p>
+
+<h3><span class="dot">▹</span> Stratégie et outils de documentation</h3>
+<p>Approche <strong>« docs-as-code »</strong> : documentation en Markdown, <strong>versionnée avec le
+code</strong> et modifiée via les mêmes Pull Requests. Elle évolue au rythme de l'application et reste
+donc synchrone ; le présent dossier y renvoie plutôt que de la dupliquer.</p>
+
+<h3><span class="dot">▹</span> Synthèse des manuels (réalisation / utilisation / déploiement)</h3>
+<table>
+  <tr><th>Document</th><th>Public</th><th>Emplacement (versions complètes en annexe)</th></tr>
+  <tr><td>README — vue d'ensemble &amp; démarrage</td><td>Développeur</td><td><code>README.md</code></td></tr>
+  <tr><td>Manuel de déploiement</td><td>Exploitation / DevOps</td><td><code>docs/manuel-deploiement.md</code></td></tr>
+  <tr><td>Manuel d'utilisation</td><td>Utilisateur final</td><td><code>docs/manuel-utilisation.md</code></td></tr>
+  <tr><td>Manuel de mise à jour</td><td>Mainteneur</td><td><code>docs/manuel-mise-a-jour.md</code></td></tr>
+  <tr><td>Analyses OWASP &amp; RGAA</td><td>Technique / QA</td><td><code>docs/securite-owasp.md</code>, <code>docs/accessibilite-rgaa.md</code></td></tr>
+</table>
+
+<h3><span class="dot">▹</span> Traçabilité et support aux évolutions futures</h3>
+<p>Le <code>CHANGELOG.md</code> relie chaque version à son ensemble de changements ; les
+<strong>migrations Prisma versionnées</strong> tracent l'évolution du schéma ; la version applicative
+est exposée par <code>/api/health</code>. Cet outillage documentaire soutient directement la
+maintenance et les évolutions futures.</p>
+<table class="eval">
+  <tr><th>Critère C2.4.1</th><th>Preuve</th><th>Niveau</th></tr>
+  <tr><td>Doc de réalisation / utilisation / déploiement</td><td>README + 3 manuels + analyses OWASP/RGAA</td><td><span class="met">Maîtrisé</span></td></tr>
+</table>
+
+<!-- ============ 7. CONCLUSION ============ -->
+<h2 class="chap"><span class="n">7.</span> Conclusion</h2>
+
+<h3><span class="dot">▹</span> Bilan technique et fonctionnel</h3>
+<p>MotoTrack est une application full-stack <strong>cohérente, sécurisée et testée</strong>, couvrant
+les 9 compétences du Bloc 2. Le socle (Next.js, TypeScript, Prisma, PostgreSQL/Supabase) est
+industrialisé par une CI/CD, un harnais à <strong>96 % de couverture (146 tests)</strong> et une
+supervision réelle (santé + Web Vitals).</p>
+
+<h3><span class="dot">▹</span> Difficultés rencontrées et solutions</h3>
+<table>
+  <tr><th>Difficulté</th><th>Solution</th></tr>
+  <tr><td>Tester des composants React riches sans fragilité</td><td>Extraction de la logique en modules purs (<em>Humble Object</em>)</td></tr>
+  <tr><td>Conflit Jest / Playwright</td><td>Séparation des périmètres (<code>testPathIgnorePatterns</code>)</td></tr>
+  <tr><td>Prisma + serverless (connexions)</td><td>Double URL Supabase (pooler + direct) + singleton</td></tr>
+  <tr><td>Accessibilité difficile à maintenir</td><td>Automatisation des vérifications RGAA en e2e</td></tr>
+  <tr><td>Cohérence de marque &amp; langue</td><td>Uniformisation MotoTrack + localisation FR</td></tr>
+</table>
+
+<h3><span class="dot">▹</span> Perspectives d'évolution de MotoTrack</h3>
+<ul>
+  <li><strong>Rappels actifs</strong> : notifications push (échéances km/temps) via le modèle <code>Reminder</code>.</li>
+  <li><strong>CSP bloquante</strong> après période d'observation.</li>
+  <li><strong>Rate limiting distribué</strong> (Redis) pour le serverless multi-instances.</li>
+  <li><strong>Observabilité</strong> : brancher les Web Vitals sur Sentry/Grafana.</li>
+  <li><strong>Internationalisation</strong> au-delà du français.</li>
+</ul>
+
+<h3><span class="dot">▹</span> Bilan personnel / montée en compétences</h3>
+<p>Ce projet m'a fait passer d'une logique de « faire fonctionner » à une logique
+<strong>d'ingénierie</strong> : penser la testabilité <em>avant</em> d'écrire, traiter la sécurité
+comme une propriété structurelle, considérer la CI/CD comme le garant de la qualité d'un développeur
+solo. J'ai particulièrement progressé sur la conception testable, la sécurité applicative (OWASP,
+sessions, rate limiting) et l'industrialisation (pipeline, environnements, supervision). Au-delà de
+l'outil, j'ai appris à <strong>justifier mes choix</strong> et à assumer mes compromis — compétence
+centrale de l'expert en développement logiciel.</p>
+<div class="callout win">
+  <div class="t">Synthèse de conformité — Bloc 2</div>
+  9 compétences sur 9 démontrées par des preuves du dépôt, dont les 4 éliminatoires sur-argumentées
+  (architecture ch. 3 ; tests, sécurité/accessibilité ch. 4 ; recette ch. 5). Aucune compétence
+  orpheline (voir matrice, sommaire).
+</div>
+
+<!-- ============ 8. ANNEXES ============ -->
+<h2 class="chap"><span class="n">8.</span> Annexes</h2>
+
+<h3><span class="dot">▹</span> Annexe A — Documents complets (dans le dépôt)</h3>
+<p class="small">Les versions longues ne sont pas reproduites ici ; elles sont consultables dans le
+dépôt aux emplacements suivants :</p>
+<table class="figidx">
+  <tr><td class="ref">/README.md</td><td>Vue d'ensemble &amp; démarrage</td></tr>
+  <tr><td class="ref">/docs</td><td>manuel-deploiement · manuel-utilisation · manuel-mise-a-jour</td></tr>
+  <tr><td class="ref">/docs</td><td>securite-owasp · accessibilite-rgaa · cahier-recettes · plan-correction-bogues</td></tr>
+  <tr><td class="ref">/CHANGELOG.md</td><td>Journal des versions</td></tr>
+  <tr><td class="ref">/.github/workflows</td><td>ci.yml — pipeline CI/CD</td></tr>
+</table>
+
+<h3><span class="dot">▹</span> Annexe B — Glossaire technique</h3>
+<table class="gloss">
+  <tr><td>App Router</td><td>Routage Next.js 14 basé sur le système de fichiers, composants serveur par défaut.</td></tr>
+  <tr><td>PWA</td><td>Progressive Web App : application web installable proche d'une app native.</td></tr>
+  <tr><td>JWT</td><td>JSON Web Token : jeton signé portant l'identité de session.</td></tr>
+  <tr><td>SIV</td><td>Système d'Immatriculation des Véhicules : format des plaques françaises (AA-123-AA).</td></tr>
+  <tr><td>Pooler (PgBouncer)</td><td>Mutualisateur de connexions PostgreSQL, requis en serverless.</td></tr>
+  <tr><td>CSP / HSTS</td><td>En-têtes de sécurité : sources autorisées / forçage HTTPS.</td></tr>
+  <tr><td>Core Web Vitals / RUM</td><td>Métriques de performance perçue mesurées chez les utilisateurs réels.</td></tr>
+  <tr><td>RGAA / WCAG</td><td>Référentiels d'accessibilité (français / international).</td></tr>
+</table>
+
+<h3><span class="dot">▹</span> Annexe C — Références &amp; normes</h3>
+<p><span class="pill">OWASP Top 10 (2021)</span> <span class="pill">RGAA 4.1</span>
+<span class="pill">WCAG 2.1 AA</span> <span class="pill">ISO/IEC 25010</span>
+<span class="pill">RGPD</span> — Outils : Next.js 14, Prisma 5, PostgreSQL 15, Supabase, Vercel,
+Jest, Playwright, Zod, Winston, Tailwind, Radix.</p>
+
+<h3><span class="dot">▹</span> Annexe D — Table des captures</h3>
+<table class="figidx">
+  <tr><td class="ref">Cap. 1.1</td><td>Page d'accueil MotoTrack</td></tr>
+  <tr><td class="ref">Cap. 2.1–2.4</td><td>Docker · Supabase · run CI · PR &amp; protection de branche</td></tr>
+  <tr><td class="ref">Cap. 3.1–3.3</td><td>Schéma BDD · vue mobile/PWA · assistant moto</td></tr>
+  <tr><td class="ref">Cap. 4.1–4.5</td><td>Tableau de bord · sécurité/429 · a11y/Lighthouse · tests+coverage · Vercel/Playwright</td></tr>
+  <tr><td class="ref">Cap. 5.1</td><td>Rapport Playwright</td></tr>
+</table>
+
+</body>
+</html>
