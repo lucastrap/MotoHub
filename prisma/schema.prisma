@@ -3,8 +3,11 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // URL "pooler" (PgBouncer) utilisée à l'exécution — compatible serverless (Vercel)
+  url       = env("DATABASE_URL")
+  // URL directe utilisée par Prisma Migrate (Supabase)
+  directUrl = env("DIRECT_URL")
 }
 
 model User {

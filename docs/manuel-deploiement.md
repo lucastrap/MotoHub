@@ -12,7 +12,7 @@
 | Couche | Technologie | Hébergement |
 |---|---|---|
 | Application | Next.js 14 (App Router, SSR + API Routes) | Vercel |
-| Base de données | PostgreSQL 15 | Neon (managé) en production, Docker en local |
+| Base de données | PostgreSQL 15 | Supabase (managé) en production, Docker en local |
 | ORM / migrations | Prisma 5 | — |
 | CI/CD | GitHub Actions | GitHub |
 
@@ -20,7 +20,7 @@
 
 - **Node.js 20+** et **npm 10+**
 - **Docker Desktop** (base de données locale)
-- Un compte **Vercel** et un compte **Neon** (ou toute base PostgreSQL managée) pour la production
+- Un compte **Vercel** et un projet **Supabase** (PostgreSQL managé) pour la production
 - Accès au dépôt GitHub du projet
 
 ## 3. Variables d'environnement
@@ -81,7 +81,7 @@ push/PR sur main ──▶ Job « test-and-build »
 
 ### 5.2 Configuration initiale (une seule fois)
 
-1. Créer la base de production sur Neon, récupérer sa `DATABASE_URL`.
+1. Créer le projet **Supabase**, puis récupérer `DATABASE_URL` (connexion *pooler*, port 6543) et `DIRECT_URL` (connexion directe, port 5432) depuis **Project Settings → Database**.
 2. Lier le projet à Vercel :
    ```bash
    npm install -g vercel
