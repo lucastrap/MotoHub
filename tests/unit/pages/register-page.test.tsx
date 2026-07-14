@@ -17,32 +17,32 @@ describe("Page d'inscription (intégration)", () => {
 
   it("affiche l'ensemble des champs du formulaire", () => {
     render(<RegisterPage />);
-    expect(screen.getByLabelText(/^name$/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/^email$/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^nom$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^adresse e-mail$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^mot de passe$/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/confirmer le mot de passe/i)).toBeInTheDocument();
   });
 
   it("signale une erreur accessible si les mots de passe diffèrent", async () => {
     render(<RegisterPage />);
-    fill(/^name$/i, "Jean Pilote");
-    fill(/^email$/i, "jean@motoclub-alpes.fr");
-    fill(/^password$/i, "password123");
-    fill(/confirm password/i, "different456");
-    fireEvent.click(screen.getByRole("button", { name: /register/i }));
+    fill(/^nom$/i, "Jean Pilote");
+    fill(/^adresse e-mail$/i, "jean@example.fr");
+    fill(/^mot de passe$/i, "password123");
+    fill(/confirmer le mot de passe/i, "different456");
+    fireEvent.click(screen.getByRole("button", { name: /s'inscrire/i }));
 
-    expect(await screen.findByText(/don't match/i)).toBeInTheDocument();
+    expect(await screen.findByText(/ne correspondent pas/i)).toBeInTheDocument();
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
   it("soumet les données (sans confirmPassword) et redirige vers /login", async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
     render(<RegisterPage />);
-    fill(/^name$/i, "Jean Pilote");
-    fill(/^email$/i, "jean@motoclub-alpes.fr");
-    fill(/^password$/i, "password123");
-    fill(/confirm password/i, "password123");
-    fireEvent.click(screen.getByRole("button", { name: /register/i }));
+    fill(/^nom$/i, "Jean Pilote");
+    fill(/^adresse e-mail$/i, "jean@example.fr");
+    fill(/^mot de passe$/i, "password123");
+    fill(/confirmer le mot de passe/i, "password123");
+    fireEvent.click(screen.getByRole("button", { name: /s'inscrire/i }));
 
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     const [, options] = (global.fetch as jest.Mock).mock.calls[0];
