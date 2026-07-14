@@ -1,4 +1,4 @@
-# Changelog — MotoHub Pro
+# Changelog — MotoTrack
 
 Toutes les modifications notables sont documentées ici.  
 Format : [Semantic Versioning](https://semver.org/lang/fr/)

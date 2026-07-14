@@ -10,7 +10,7 @@ const barlowCondensed = Barlow_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: "MotoHub Pro",
+  title: "MotoTrack",
   description: "Professional motorcycle maintenance tracking",
   manifest: "/manifest.json",
 };

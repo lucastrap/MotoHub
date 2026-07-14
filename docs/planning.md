@@ -1,4 +1,4 @@
-# Planning projet — MotoHub Pro
+# Planning projet — MotoTrack
 
 ## Cadre général
 

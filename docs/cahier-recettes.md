@@ -1,10 +1,10 @@
-# Cahier de recettes — MotoHub Pro
+# Cahier de recettes — MotoTrack
 
 ## Informations générales
 
 | Champ | Valeur |
 |---|---|
-| Projet | MotoHub Pro |
+| Projet | MotoTrack |
 | Client | MotoClub Alpes |
 | Version testée | 1.0.0 |
 | Environnement | localhost:3000 + PostgreSQL Docker |
@@ -182,13 +182,54 @@
 
 ---
 
+## Module 6 — Sécurité (contrôle d'accès)
+
+### RT-16 : Isolation des données entre utilisateurs
+
+| Champ | Détail |
+|---|---|
+| Type | Test de sécurité (contrôle d'accès — OWASP A01) |
+| Précondition | Utilisateur A connecté ; une moto appartient à l'utilisateur B |
+| Étapes | 1. Appeler `PATCH /api/motorcycles/{id_moto_B}` avec la session de A |
+| Résultat attendu | HTTP 404 — la ressource d'autrui est invisible, aucune modification |
+| Résultat obtenu | Conforme — 404 retourné |
+| Statut | ✅ Passé |
+
+### RT-17 : Rejet d'un jeton expiré ou invalide
+
+| Champ | Détail |
+|---|---|
+| Type | Test de sécurité (authentification — OWASP A07) |
+| Précondition | Cookie `token` altéré ou expiré |
+| Étapes | 1. Accéder à `/dashboard` avec un jeton invalide |
+| Résultat attendu | Redirection vers `/login` (jeton non vérifié) |
+| Résultat obtenu | Conforme |
+| Statut | ✅ Passé |
+
+---
+
+## Traçabilité — scénarios ↔ tests automatisés
+
+Chaque scénario de recette est rejoué automatiquement (non-régression). Correspondance :
+
+| Scénario | Test automatisé associé |
+|---|---|
+| RT-01 à RT-05 (auth) | `tests/e2e/auth.spec.ts`, `tests/unit/api/login.test.ts`, `register.test.ts` |
+| RT-07 (format SIV) | `tests/unit/formatPlate.test.ts`, `motorcycleSchema.test.ts` |
+| RT-10, RT-11 (entretien, km) | `tests/unit/api/maintenances.test.ts` |
+| RT-15 (santé) | `tests/e2e/api-health.spec.ts`, `tests/unit/api/health.test.ts` |
+| RT-16 (isolation) | `tests/unit/api/motorcycles-id.test.ts` (cas 404), `maintenances.test.ts` (cas 403) |
+| RT-17 (jeton) | `tests/unit/middleware.test.ts`, `tests/unit/auth.test.ts` |
+
+---
+
 ## Bilan
 
 | Statut | Nombre |
 |---|---|
-| Passé | 15 |
+| Passé | 17 |
 | Echoué | 0 |
 | Non testé | 0 |
-| **Total** | **15** |
+| **Total** | **17** |
 
-**Conclusion** : L'ensemble des scénarios de recette est passé sans anomalie. L'application est conforme aux spécifications fonctionnelles validées par Sophie Arnaud (MotoClub Alpes) le 18 avril 2026.
+**Conclusion** : L'ensemble des scénarios de recette (fonctionnels, structurels et de sécurité) est passé sans anomalie. L'application est conforme aux spécifications validées par Sophie Arnaud (MotoClub Alpes) le 18 avril 2026. Les 17 scénarios sont couverts par des tests automatisés garantissant la non-régression.

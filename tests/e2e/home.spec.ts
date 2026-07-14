@@ -6,7 +6,7 @@ test.describe("Page d'accueil", () => {
   });
 
   test("affiche le nom de l'application dans la navbar", async ({ page }) => {
-    await expect(page.locator("header")).toContainText("MotoHub");
+    await expect(page.locator("header")).toContainText("MotoTrack");
   });
 
   test("le lien Connexion pointe vers /login", async ({ page }) => {

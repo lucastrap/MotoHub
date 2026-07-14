@@ -55,36 +55,63 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-md rounded-xl bg-card p-8 shadow-sm border">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold">MotoTracker Pro</h1>
+          <h1 className="text-2xl font-bold">MotoTrack</h1>
           <p className="text-muted-foreground mt-2">Create a new account</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
-            <Input id="name" {...register("name")} />
-            {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
+            <Input
+              id="name"
+              autoComplete="name"
+              aria-invalid={errors.name ? "true" : undefined}
+              aria-describedby={errors.name ? "name-error" : undefined}
+              {...register("name")}
+            />
+            {errors.name && <p id="name-error" role="alert" className="text-sm text-destructive">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" {...register("email")} />
-            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              aria-invalid={errors.email ? "true" : undefined}
+              aria-describedby={errors.email ? "email-error" : undefined}
+              {...register("email")}
+            />
+            {errors.email && <p id="email-error" role="alert" className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" {...register("password")} />
-            {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
+            <Input
+              id="password"
+              type="password"
+              autoComplete="new-password"
+              aria-invalid={errors.password ? "true" : undefined}
+              aria-describedby={errors.password ? "password-error" : undefined}
+              {...register("password")}
+            />
+            {errors.password && <p id="password-error" role="alert" className="text-sm text-destructive">{errors.password.message}</p>}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
-            {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
+            <Input
+              id="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              aria-invalid={errors.confirmPassword ? "true" : undefined}
+              aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
+              {...register("confirmPassword")}
+            />
+            {errors.confirmPassword && <p id="confirmPassword-error" role="alert" className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
           </div>
 
-          {error && <p className="text-sm text-destructive font-medium">{error}</p>}
+          {error && <p role="alert" aria-live="assertive" className="text-sm text-destructive font-medium">{error}</p>}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? "Creating account..." : "Register"}

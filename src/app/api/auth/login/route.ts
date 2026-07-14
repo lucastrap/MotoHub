@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 import { signToken } from "@/lib/auth";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import z from "zod";
 import { cookies } from "next/headers";
 
@@ -12,6 +13,15 @@ const loginSchema = z.object({
 
 export async function POST(req: Request) {
   try {
+    // OWASP A07 — limitation des tentatives de connexion par IP
+    const rl = checkRateLimit(`login:${getClientIp(req)}`);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(rl.retryAfterMs / 1000)) } }
+      );
+    }
+
     const body = await req.json();
     const { email, password } = loginSchema.parse(body);
 
