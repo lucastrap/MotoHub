@@ -17,7 +17,7 @@ jest.mock("@fortawesome/react-fontawesome", () => ({
 describe("Page d'accueil", () => {
   it("affiche le nom de l'application", () => {
     render(<Home />);
-    expect(screen.getByText(/MotoHub/i)).toBeInTheDocument();
+    expect(screen.getByText(/MotoTrack/i)).toBeInTheDocument();
   });
 
   it("affiche un lien vers la page de connexion", () => {

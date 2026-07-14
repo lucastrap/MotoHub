@@ -27,29 +27,37 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
+      {/* RGAA 12.7 — lien d'évitement vers le contenu principal */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+      >
+        Aller au contenu principal
+      </a>
       <aside className="w-full md:w-64 bg-card border-r border-border shrink-0 md:h-screen sticky top-0 flex flex-col items-center py-6 md:py-8 shadow-xl z-20">
         <div className="mb-8 px-6 text-center">
-           <Link href="/dashboard" className="inline-flex items-center gap-3">
+           <Link href="/dashboard" className="inline-flex items-center gap-3" aria-label="MotoTrack — accueil">
              <div className="bg-primary text-primary-foreground p-2 rounded-xl shadow-lg shadow-primary/30">
-                <FontAwesomeIcon icon={faMotorcycle} className="h-6 w-6" />
+                <FontAwesomeIcon icon={faMotorcycle} className="h-6 w-6" aria-hidden="true" />
              </div>
-             <h1 className="text-2xl font-black uppercase tracking-tighter">Moto<span className="text-primary">Tracker</span></h1>
+             <h1 className="text-2xl font-black uppercase tracking-tighter">Moto<span className="text-primary">Track</span></h1>
            </Link>
         </div>
-        <nav className="flex flex-row md:flex-col gap-2 w-full px-4 overflow-x-auto scrollbar-hide">
+        <nav aria-label="Navigation principale" className="flex flex-row md:flex-col gap-2 w-full px-4 overflow-x-auto scrollbar-hide">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all w-full min-w-max md:min-w-0 ${
                   isActive
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                 }`}
               >
-                <FontAwesomeIcon icon={item.icon} className={`text-lg ${isActive ? "opacity-100" : "opacity-60"}`} />
+                <FontAwesomeIcon icon={item.icon} aria-hidden="true" className={`text-lg ${isActive ? "opacity-100" : "opacity-60"}`} />
                 {item.label}
               </Link>
             );
@@ -61,13 +69,13 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
             href="/api/auth/logout"
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors w-full"
           >
-            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            <FontAwesomeIcon icon={faArrowRightFromBracket} aria-hidden="true" />
             Déconnexion
           </Link>
         </div>
       </aside>
 
-      <main className="flex-1 overflow-x-hidden">
+      <main id="main-content" className="flex-1 overflow-x-hidden">
         <header className="h-20 bg-background/80 backdrop-blur border-b flex items-center px-6 md:px-12 sticky top-0 z-10 transition-shadow">
           <h2 className="text-2xl font-black uppercase tracking-tight">{title}</h2>
         </header>

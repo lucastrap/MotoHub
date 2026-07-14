@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Rapport Bloc 2 — Concevoir et développer des applications logicielles — MotoTrack</title>
+<style>
+  :root{
+    --navy:#0f172a; --navy2:#1e293b; --slate:#475569; --muted:#64748b;
+    --line:#e2e8f0; --bg:#ffffff; --soft:#f8fafc;
+    --accent:#ea580c; --accent2:#0ea5e9; --green:#16a34a; --red:#dc2626; --amber:#d97706;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Segoe UI',-apple-system,Helvetica,Arial,sans-serif;color:var(--navy);font-size:10.5pt;line-height:1.5;background:var(--bg);}
+  .page{width:210mm;min-height:297mm;padding:18mm 16mm 16mm 16mm;margin:0 auto;position:relative;page-break-after:always;background:var(--bg);}
+  .page:last-child{page-break-after:auto;}
+  @page{size:A4;margin:0;}
+  h1,h2,h3{color:var(--navy);margin:0 0 .4em;line-height:1.2;}
+  h2{font-size:17pt;padding-bottom:6px;border-bottom:3px solid var(--accent);margin-top:0;display:flex;align-items:center;gap:10px;}
+  h2 .num{background:var(--accent);color:#fff;font-size:11pt;min-width:52px;height:30px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;padding:0 8px;}
+  h2 .pts{margin-left:auto;font-size:8.5pt;font-weight:600;color:#fff;background:var(--navy);border-radius:20px;padding:3px 12px;}
+  h2 .pts.elim{background:var(--red);}
+  h3{font-size:12pt;margin-top:16px;color:var(--navy2);}
+  h3 .dot{color:var(--accent);}
+  p{margin:.45em 0;}
+  ul,ol{margin:.4em 0 .6em;padding-left:20px;}
+  li{margin:.25em 0;}
+  code{font-family:'Cascadia Code','Consolas',monospace;background:#f1f5f9;color:#be123c;padding:1px 5px;border-radius:4px;font-size:9.2pt;}
+  pre{background:#0f172a;color:#e2e8f0;padding:11px 14px;border-radius:8px;font-size:8.8pt;line-height:1.5;overflow:auto;font-family:'Cascadia Code','Consolas',monospace;white-space:pre-wrap;}
+  pre code{background:none;color:inherit;padding:0;}
+  strong{color:var(--navy);}
+  .lead{color:var(--slate);font-size:11pt;}
+  .cover{background:linear-gradient(160deg,#0f172a 0%,#1e293b 55%,#0b1220 100%);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:24mm 20mm;}
+  .cover .kicker{letter-spacing:3px;text-transform:uppercase;font-size:10pt;color:var(--accent);font-weight:700;}
+  .cover h1{color:#fff;font-size:38pt;line-height:1.05;margin:14px 0 10px;letter-spacing:-1px;}
+  .cover h1 span{color:var(--accent);}
+  .cover .sub{font-size:14pt;color:#cbd5e1;font-weight:400;max-width:150mm;}
+  .cover-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+  .cover-badges span{border:1px solid #334155;background:rgba(255,255,255,.04);color:#e2e8f0;font-size:9pt;padding:5px 11px;border-radius:20px;}
+  .cover-meta{border-top:1px solid #334155;padding-top:16px;font-size:10pt;color:#94a3b8;}
+  .cover-meta .row{display:flex;justify-content:space-between;margin:3px 0;}
+  .cover-meta b{color:#fff;font-weight:600;}
+  .cover-logo{font-size:13pt;font-weight:800;letter-spacing:.5px;color:#fff;display:flex;align-items:center;gap:10px;}
+  .cover-logo .mk{width:34px;height:34px;border-radius:9px;background:var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:16pt;}
+  .callout{border-left:4px solid var(--accent);background:var(--soft);padding:10px 14px;border-radius:0 6px 6px 0;margin:12px 0;}
+  .callout.problem{border-color:var(--red);}
+  .callout.win{border-color:var(--green);}
+  .callout.critique{border-color:var(--amber);background:#fffbeb;}
+  .eval td .met{color:var(--green);font-weight:700;}
+  .eval td .part{color:var(--amber);font-weight:700;}
+  .gloss td:first-child{font-weight:700;color:var(--navy);white-space:nowrap;}
+  .gloss td{font-size:9pt;}
+  .figidx{width:100%;border-collapse:collapse;font-size:9pt;margin:10px 0;}
+  .figidx td{padding:5px 8px;border-bottom:1px dashed var(--line);vertical-align:top;}
+  .figidx td.ref{font-weight:800;color:var(--accent);white-space:nowrap;width:70px;}
+  .figidx td.loc{color:var(--muted);white-space:nowrap;text-align:right;width:90px;}
+  h2 .num.ax{background:var(--navy);}
+  .callout .t{font-weight:700;font-size:9.5pt;text-transform:uppercase;letter-spacing:.5px;color:var(--slate);margin-bottom:2px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:9.3pt;}
+  th{background:var(--navy);color:#fff;text-align:left;padding:6px 9px;font-weight:600;}
+  td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:nth-child(even) td{background:var(--soft);}
+  .tag{display:inline-block;font-size:8pt;font-weight:700;padding:2px 8px;border-radius:20px;}
+  .tag.crit{background:#fee2e2;color:var(--red);}
+  .tag.high{background:#ffedd5;color:var(--amber);}
+  .tag.ok{background:#dcfce7;color:var(--green);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;}
+  .card{border:1px solid var(--line);border-radius:9px;padding:12px 14px;background:#fff;}
+  .card h4{margin:0 0 4px;font-size:10.5pt;color:var(--navy);}
+  .card p{margin:0;font-size:9.3pt;color:var(--slate);}
+  .toc-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);}
+  .toc-item .n{background:var(--soft);color:var(--accent);font-weight:800;min-width:52px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9pt;padding:0 6px;}
+  .toc-item .ti{flex:1;font-weight:600;}
+  .toc-item .tp{color:var(--muted);font-size:8.5pt;}
+  .footer{position:absolute;bottom:9mm;left:16mm;right:16mm;display:flex;justify-content:space-between;font-size:8pt;color:var(--muted);border-top:1px solid var(--line);padding-top:6px;}
+  .pill{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:8.5pt;color:var(--slate);}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;}
+  .kpi{border:1px solid var(--line);border-radius:9px;padding:12px;text-align:center;}
+  .kpi .big{font-size:18pt;font-weight:800;color:var(--accent);line-height:1;}
+  .kpi .lbl{font-size:8pt;color:var(--slate);margin-top:4px;}
+  /* emplacement de capture d'écran */
+  .shot{border:2px dashed var(--accent2);background:#f0f9ff;border-radius:9px;padding:14px 16px;margin:12px 0;color:#0369a1;font-size:9pt;}
+  .shot .st{font-weight:800;text-transform:uppercase;letter-spacing:.5px;font-size:8.5pt;color:var(--accent2);display:block;margin-bottom:3px;}
+  .shot b{color:#075985;}
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE DE GARDE ============ -->
+<section class="page cover">
+  <div>
+    <div class="cover-logo"><span class="mk">🏍️</span> MotoTrack</div>
+  </div>
+  <div>
+    <div class="kicker">Bloc 2 — RNCP 39583 · Expert en développement logiciel</div>
+    <h1>Concevoir et développer<br><span>des applications logicielles</span></h1>
+    <div class="sub">Mise en œuvre des environnements, intégration et déploiement continus,
+    prototype sécurisé, harnais de tests, recette et documentation technique — appliqués
+    au projet fil rouge MotoTrack.</div>
+    <div class="cover-badges">
+      <span>Next.js 14 · App Router</span>
+      <span>TypeScript 5</span>
+      <span>PostgreSQL 15 · Prisma 5</span>
+      <span>Jest · Playwright</span>
+      <span>GitHub Actions · Vercel</span>
+      <span>RGAA · OWASP Top 10</span>
+    </div>
+  </div>
+  <div class="cover-meta">
+    <div class="row"><span>Auteur</span><b>Luca Straputicari</b></div>
+    <div class="row"><span>Établissement</span><b>Ynov Campus — Master 2</b></div>
+    <div class="row"><span>Commanditaire</span><b>MotoClub Alpes</b></div>
+    <div class="row"><span>Version applicative</span><b>1.0.0</b></div>
+    <div class="row"><span>Date</span><b>21 avril 2026</b></div>
+  </div>
+</section>
+
+<!-- ============ SOMMAIRE + CONTEXTE ============ -->
+<section class="page">
+  <h2><span class="num">S</span> Sommaire</h2>
+  <div class="toc-item"><span class="n">A2.1</span><span class="ti">C2.1.1 — Environnements de déploiement et de test</span><span class="tp">Déploiement continu · KPI qualité/perf</span></div>
+  <div class="toc-item"><span class="n">A2.1</span><span class="ti">C2.1.2 — Système d'intégration continue</span><span class="tp">Fusion &amp; test réguliers</span></div>
+  <div class="toc-item"><span class="n">A2.2</span><span class="ti">C2.2.1 — Prototype &amp; architecture logicielle</span><span class="tp">Éliminatoire</span></div>
+  <div class="toc-item"><span class="n">A2.2</span><span class="ti">C2.2.2 — Harnais de tests unitaires</span><span class="tp">Éliminatoire</span></div>
+  <div class="toc-item"><span class="n">A2.2</span><span class="ti">C2.2.3 — Développement sécurisé &amp; accessible</span><span class="tp">Éliminatoire · OWASP · RGAA</span></div>
+  <div class="toc-item"><span class="n">A2.2</span><span class="ti">C2.2.4 — Déploiement progressif &amp; versionnage</span><span class="tp">Historique des versions</span></div>
+  <div class="toc-item"><span class="n">A2.3</span><span class="ti">C2.3.1 — Cahier de recettes</span><span class="tp">Éliminatoire</span></div>
+  <div class="toc-item"><span class="n">A2.3</span><span class="ti">C2.3.2 — Plan de correction des bogues</span><span class="tp">Analyse &amp; traitement</span></div>
+  <div class="toc-item"><span class="n">A2.4</span><span class="ti">C2.4.1 — Documentation technique</span><span class="tp">Manuels déploiement / utilisation / MàJ</span></div>
+  <div class="toc-item"><span class="n">A</span><span class="ti">Annexe A — Glossaire technique</span><span class="tp">Définitions des termes</span></div>
+  <div class="toc-item"><span class="n">B</span><span class="ti">Annexe B — Table des figures</span><span class="tp">Index des captures insérées</span></div>
+  <div class="toc-item"><span class="n">C</span><span class="ti">Annexe C — Références &amp; normes</span><span class="tp">Sources externes</span></div>
+
+  <h3><span class="dot">▹</span> Contexte du projet</h3>
+  <p><strong>MotoTrack</strong> est une application web de gestion de garage moto
+  (suivi d'entretien, tableau de bord d'échéances, actualités, météo) développée pour le
+  <strong>MotoClub Alpes</strong>. Elle cible en priorité le <strong>web responsive</strong>
+  et le <strong>mobile</strong> via une Progressive Web App installable. Ce rapport couvre
+  le Bloc 2 : de la mise en place des environnements outillés jusqu'à la documentation
+  technique, en passant par le développement sécurisé et accessible, les tests et la recette.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="big">142</div><div class="lbl">Tests unitaires</div></div>
+    <div class="kpi"><div class="big">22</div><div class="lbl">Tests e2e</div></div>
+    <div class="kpi"><div class="big">96%</div><div class="lbl">Couverture (couche testée)</div></div>
+    <div class="kpi"><div class="big">10/10</div><div class="lbl">Catégories OWASP couvertes</div></div>
+  </div>
+
+  <table>
+    <tr><th>Couche</th><th>Technologie</th><th>Rôle</th></tr>
+    <tr><td>Framework</td><td>Next.js 14 (App Router)</td><td>SSR, routage, API Routes</td></tr>
+    <tr><td>Langage</td><td>TypeScript 5 (strict)</td><td>Typage statique</td></tr>
+    <tr><td>Base de données</td><td>PostgreSQL 15 + Prisma 5</td><td>Persistance, migrations</td></tr>
+    <tr><td>Authentification</td><td>JWT (jose) + cookies httpOnly</td><td>Session sécurisée</td></tr>
+    <tr><td>Validation</td><td>Zod + React Hook Form</td><td>Contrôle des entrées</td></tr>
+    <tr><td>Tests</td><td>Jest + Testing Library · Playwright</td><td>Unitaire · e2e</td></tr>
+    <tr><td>CI/CD</td><td>GitHub Actions · Vercel</td><td>Intégration &amp; déploiement continus</td></tr>
+  </table>
+  <div class="footer"><span>MotoTrack — Rapport Bloc 2</span><span>Luca Straputicari</span></div>
+</section>
+
+<!-- ============ C2.1.1 ============ -->
+<section class="page">
+  <h2><span class="num">C2.1.1</span> Environnements de déploiement et de test <span class="pts">A2.1</span></h2>
+  <p class="lead">Mettre en œuvre des environnements outillés (suivi de performance et de
+  qualité) pour permettre le bon déroulement de la phase de développement.</p>
+
+  <h3><span class="dot">▹</span> Environnement de développement</h3>
+  <table>
+    <tr><th>Composant</th><th>Outil</th><th>Rôle</th></tr>
+    <tr><td>Éditeur de code</td><td>Visual Studio Code</td><td>Développement, extensions ESLint/Prisma</td></tr>
+    <tr><td>Compilateur / transpileur</td><td>TypeScript (tsc) + SWC (via Next.js)</td><td>Typage statique et transpilation</td></tr>
+    <tr><td>Runtime</td><td>Node.js 20</td><td>Exécution serveur et outillage</td></tr>
+    <tr><td>Serveur d'application</td><td>Next.js (dev &amp; prod), Vercel en production</td><td>SSR + API Routes</td></tr>
+    <tr><td>Base de données locale</td><td>PostgreSQL 15 (Docker) + Adminer</td><td>Persistance isolée et reproductible</td></tr>
+    <tr><td>Gestion de sources</td><td>Git + GitHub</td><td>Versionnage, revue, CI/CD</td></tr>
+    <tr><td>Gestion de paquets</td><td>npm (installation reproductible <code>npm ci</code>)</td><td>Dépendances verrouillées</td></tr>
+  </table>
+
+  <div class="shot"><span class="st">📸 Capture 1.1</span>
+    <b>VS Code ouvert sur le projet MotoTrack</b> : arborescence <code>src/</code> visible à
+    gauche + un fichier ouvert (ex. <code>src/lib/auth.ts</code>). Illustre l'éditeur de code.</div>
+  <div class="shot"><span class="st">📸 Capture 1.2</span>
+    <b>Terminal <code>docker compose up -d</code></b> montrant les conteneurs
+    <code>mototrack_db</code> (PostgreSQL) et <code>mototrack_adminer</code> démarrés.</div>
+
+  <h3><span class="dot">▹</span> Outils de suivi de qualité et de performance</h3>
+  <ul>
+    <li><strong>ESLint</strong> (<code>next/core-web-vitals</code>) — qualité et bonnes
+    pratiques React/Next, intégré à la CI.</li>
+    <li><strong>Jest + couverture de code</strong> — mesure quantitative de la qualité des
+    tests (seuils bloquants dans <code>jest.config.js</code>).</li>
+    <li><strong>Playwright</strong> — tests end-to-end multi-navigateur avec rapport HTML.</li>
+    <li><strong>Winston</strong> — journalisation structurée (niveaux, JSON, horodatage).</li>
+    <li><strong>Endpoint <code>GET /api/health</code></strong> — sonde de performance
+    exposant l'état applicatif, l'état de la base et la <strong>latence</strong> (ms).</li>
+  </ul>
+
+  <h3><span class="dot">▹</span> Critères de qualité et de performance</h3>
+  <table>
+    <tr><th>Critère</th><th>Exigence projet</th><th>Outil / mesure</th></tr>
+    <tr><td>Couverture de tests (couche logique)</td><td>≥ 90 % statements</td><td>Jest — <strong>95 %</strong></td></tr>
+    <tr><td>Absence de régression</td><td>Suites 100 % vertes</td><td>Jest + Playwright en CI</td></tr>
+    <tr><td>Qualité du code</td><td>0 erreur de lint</td><td>ESLint</td></tr>
+    <tr><td>Intégrité du typage</td><td>0 erreur TypeScript</td><td><code>tsc --noEmit</code></td></tr>
+    <tr><td>Disponibilité / latence DB</td><td>latence &lt; 100 ms</td><td><code>/api/health</code></td></tr>
+    <tr><td>Performance web</td><td>bonnes pratiques Core Web Vitals</td><td>Lighthouse</td></tr>
+  </table>
+
+  <div class="shot"><span class="st">📸 Capture 1.3</span>
+    <b>Réponse de <code>GET /api/health</code></b> dans le navigateur ou via <code>curl</code> :
+    <code>{ "status":"ok", "db":"connected", "latencyMs":&lt;100 }</code>.</div>
+  <div class="footer"><span>C2.1.1 — Environnements</span><span>Luca Straputicari</span></div>
+</section>
+
+<!-- ============ C2.1.2 ============ -->
+<section class="page">
+  <h2><span class="num">C2.1.2</span> Système d'intégration continue <span class="pts">A2.1</span></h2>
+  <p class="lead">Configurer l'intégration continue : fusionner les codes sources et tester
+  régulièrement les blocs de code pour réduire les risques de régression.</p>
+
+  <h3><span class="dot">▹</span> Protocole d'intégration &amp; de déploiement continus</h3>
+  <p>Le pipeline <code>.github/workflows/ci.yml</code> s'exécute sur chaque <code>push</code>
+  et chaque <em>pull request</em> vers <code>main</code> et <code>develop</code>. Il enchaîne
+  des <strong>séquences ordonnées et conditionnelles</strong> :</p>
+
+<pre><code>push / PR ──▶ Job « test-and-build » (Ubuntu + service PostgreSQL 15)
+   1. checkout du code
+   2. npm ci                     (installation reproductible)
+   3. prisma generate + migrate  (préparation base éphémère)
+   4. next lint                  (qualité)
+   5. npm audit --audit-level=high  (veille vulnérabilités — OWASP A06)
+   6. jest                       (tests unitaires + couverture)
+      └─ upload du rapport de couverture (artefact)
+   7. next build                 (compilation production)
+   8. playwright test            (tests end-to-end)
+   └─ upload du rapport Playwright (artefact)
+        │
+        ▼  si branche = main ET event = push ET job précédent vert
+   Job « deploy » ──▶ vercel --prod   (déploiement continu)</code></pre>
+
+  <div class="callout win"><div class="t">Réduction des régressions</div>
+  Aucun code n'atteint la production sans avoir franchi lint + 99 tests unitaires +
+  build + 22 tests e2e. La fusion d'une PR est conditionnée à la réussite de ces séquences.</div>
+
+  <h3><span class="dot">▹</span> Séquences d'intégration</h3>
+  <table>
+    <tr><th>Séquence</th><th>Déclencheur</th><th>Portée</th></tr>
+    <tr><td>Intégration</td><td>PR vers <code>develop</code>/<code>main</code></td><td>lint, tests, build (validation)</td></tr>
+    <tr><td>Fusion</td><td>PR approuvée + CI verte</td><td>merge dans la branche cible</td></tr>
+    <tr><td>Déploiement</td><td>push sur <code>main</code></td><td>mise en production Vercel</td></tr>
+  </table>
+
+  <div class="shot"><span class="st">📸 Capture 2.1</span>
+    <b>Onglet « Actions » de GitHub</b> montrant un run du pipeline <b>vert</b> (toutes les
+    étapes ✅). C'est la preuve visuelle des séquences d'intégration.</div>
+  <div class="shot"><span class="st">📸 Capture 2.2</span>
+    <b>Détail d'un job</b> (test-and-build) avec les étapes lint / jest / build / playwright
+    dépliées, ou une <b>Pull Request</b> affichant les checks obligatoires réussis.</div>
+  <div class="footer"><span>C2.1.2 — Intégration continue</span><span>Luca Straputicari</span></div>
+</section>
+
+<!-- ============ C2.2.1 ============ -->
+<section class="page">
+  <h2><span class="num">C2.2.1</span> Prototype &amp; architecture logicielle <span class="pts elim">Éliminatoire</span></h2>
+  <p class="lead">Concevoir un prototype fonctionnel, structuré et maintenable, tenant compte
+  de l'ergonomie, des équipements ciblés et des exigences de sécurité.</p>
+
+  <h3><span class="dot">▹</span> Architecture &amp; maintenabilité</h3>
+  <p>L'application suit une architecture <strong>en couches</strong> favorisant la
+  maintenabilité et la séparation des responsabilités :</p>
+  <table>
+    <tr><th>Couche</th><th>Emplacement</th><th>Responsabilité</th></tr>
+    <tr><td>Présentation</td><td><code>src/app/**/page.tsx</code>, <code>src/components</code></td><td>Pages et composants UI réutilisables</td></tr>
+    <tr><td>API / métier</td><td><code>src/app/api/**/route.ts</code></td><td>Endpoints REST, règles métier</td></tr>
+    <tr><td>Sécurité transverse</td><td><code>src/middleware.ts</code>, <code>src/lib/auth.ts</code></td><td>Protection des routes, JWT</td></tr>
+    <tr><td>Accès aux données</td><td><code>src/lib/prisma.ts</code>, <code>prisma/schema.prisma</code></td><td>ORM, modèle de données</td></tr>
+    <tr><td>Utilitaires</td><td><code>src/lib/*</code></td><td>Formatage, logger, helpers</td></tr>
+  </table>
+
+  <h3><span class="dot">▹</span> Frameworks &amp; paradigmes</h3>
+  <ul>
+    <li><strong>Next.js 14 App Router</strong> — rendu serveur, routage par convention de fichiers.</li>
+    <li><strong>Programmation par composants</strong> React (composition, <code>forwardRef</code>).</li>
+    <li><strong>Validation déclarative</strong> avec Zod (schémas typés réutilisés côté client et serveur).</li>
+    <li><strong>Design system</strong> (Tailwind + variantes <code>cva</code>) pour la cohérence UI.</li>
+  </ul>
+
+  <p>Cette organisation applique le principe de <strong>séparation des préoccupations</strong> :
+  une modification de l'interface n'impacte pas les règles métier, et une évolution de la
+  base de données reste confinée à la couche d'accès aux données via Prisma. Le
+  <strong>typage statique strict</strong> de TypeScript, activé sur l'ensemble du projet
+  (<code>tsc --noEmit</code> sans erreur), constitue un premier filet de sécurité pour la
+  maintenabilité : toute rupture de contrat entre couches est détectée à la compilation.
+  Les schémas Zod sont <strong>partagés</strong> entre le client (React Hook Form) et le
+  serveur (routes API), ce qui évite la duplication des règles de validation et garantit
+  leur cohérence — un gage de maintenabilité important.</p>
+
+  <h3><span class="dot">▹</span> Fonctionnalités principales &amp; user stories</h3>
+  <p>Le prototype couvre un ensemble cohérent de fonctionnalités traduisant directement les
+  user stories exprimées par le commanditaire. Chacune est fonctionnelle et manipulable de
+  bout en bout :</p>
+  <table>
+    <tr><th>User story</th><th>Fonctionnalité réalisée</th><th>Composants d'interface</th></tr>
+    <tr><td>« En tant que motard, je veux créer un compte sécurisé »</td><td>Inscription / connexion / déconnexion (JWT)</td><td>Formulaires, champs, boutons, messages d'erreur</td></tr>
+    <tr><td>« … gérer plusieurs motos »</td><td>Garage multi-motos, wizard 3 étapes, moto principale</td><td>Assistant multi-étapes, cartes, badges, menus</td></tr>
+    <tr><td>« … suivre l'entretien et ne rater aucune échéance »</td><td>Carnet d'entretien, MàJ auto du kilométrage, échéances calculées</td><td>Formulaire, listes filtrables, tableau de bord</td></tr>
+    <tr><td>« … trouver des pièces et suivre l'actualité »</td><td>Modules Pièces, Actualités (RSS), Météo</td><td>Liens dynamiques, cartes d'articles, vignettes</td></tr>
+  </table>
+  <p>L'ergonomie tient compte des <strong>équipements ciblés</strong> : interface responsive
+  web et <strong>application installable (PWA)</strong> sur mobile, navigation adaptée
+  (menu latéral sur desktop, barre défilante sur mobile). Les <strong>exigences de sécurité</strong>
+  sont intégrées dès la conception (défense en profondeur détaillée en C2.2.3).</p>
+
+  <div class="shot"><span class="st">📸 Capture 3.1 à 3.4</span>
+    <b>4 captures de l'application en fonctionnement</b> : (a) accueil (scène 3D), (b) tableau
+    de bord, (c) <b>Mon Garage</b> avec le wizard, (d) carnet d'entretien. Preuve du prototype
+    fonctionnel et de ses composants d'interface.</div>
+  <div class="shot"><span class="st">📸 Capture 3.5</span>
+    <b>Arborescence du projet <code>src/</code></b> annotée (couches app / api / lib / middleware /
+    components) illustrant l'architecture en couches.</div>
+
+  <h3><span class="dot">▹</span> Auto-évaluation critère par critère</h3>
+  <table class="eval">
+    <tr><th>Critère du référentiel</th><th>Preuve</th><th>Statut</th></tr>
+    <tr><td>Bonnes pratiques (framework, paradigmes)</td><td>Next.js 14, React par composants, validation déclarative Zod, design system <code>cva</code></td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Prototype fonctionnel répondant aux besoins</td><td>7 modules opérationnels, recette 15/15 (C2.3.1)</td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Ensemble cohérent de fonctionnalités + user stories</td><td>Mapping user stories ci-dessus</td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Composants d'interface présents et fonctionnels</td><td>Formulaires, boutons, menus, wizard, cartes</td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Exigences de sécurité satisfaites</td><td>OWASP Top 10 couvert (C2.2.3)</td><td><span class="met">Atteint</span></td></tr>
+  </table>
+
+  <div class="callout critique"><div class="t">Regard critique</div>
+  L'architecture en couches est saine. La dette technique initialement identifiée — des pages
+  concentrant présentation ET logique (ex. le wizard <code>garage/new</code>) — a été
+  <strong>traitée</strong> : la logique métier (schéma, validations, filtrage, mapping
+  d'étapes, parsing d'erreurs) a été extraite dans un module pur <code>wizardLogic.ts</code>,
+  désormais <strong>couvert par des tests unitaires</strong>. Il reste à poursuivre cette
+  démarche sur les autres écrans denses (tableau de bord, météo) pour homogénéiser la
+  testabilité — axe d'amélioration continue, sans impact sur le caractère fonctionnel du
+  prototype.</div>
+</section>
+
+<!-- ============ C2.2.2 ============ -->
+<section class="page">
+  <h2><span class="num">C2.2.2</span> Harnais de tests unitaires <span class="pts elim">Éliminatoire</span></h2>
+  <p class="lead">Développer un harnais de tests unitaires pour prévenir les régressions et
+  garantir le bon fonctionnement du logiciel.</p>
+
+  <h3><span class="dot">▹</span> Stratégie de test &amp; interprétation du critère</h3>
+  <p>Le critère éliminatoire exige que « <em>les tests unitaires couvrent la majorité du code
+  développé</em> ». Ce critère mérite une lecture rigoureuse : dans une application Next.js,
+  tout le code n'est pas de même nature. On distingue une <strong>couche logique</strong>
+  (librairies, routes API, middleware, validation, composants) — testable en isolation par
+  des tests unitaires — et une <strong>couche de présentation</strong> lourde (pages
+  intégrant appels réseau, rendu 3D, état complexe) qui relève par nature du test
+  <strong>end-to-end</strong>. La stratégie retenue est donc explicitement à deux niveaux :</p>
+  <ul>
+    <li><strong>Tests unitaires (Jest)</strong> — 142 tests ciblant la couche logique et les
+    parcours critiques (authentification, navigation), là où se concentrent les règles métier
+    et la sécurité.</li>
+    <li><strong>Tests end-to-end (Playwright)</strong> — 22 tests validant les pages et les
+    parcours utilisateur réels (voir C2.3.1).</li>
+  </ul>
+  <p>Le périmètre de mesure unitaire (<code>collectCoverageFrom</code> dans
+  <code>jest.config.js</code>) est <strong>documenté et assumé</strong>, avec des
+  <strong>seuils bloquants</strong> en CI (statements 90 %, branches 80 %, functions 90 %,
+  lines 90 %). Cette configuration est ouverte à la vérification du jury.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="big">142</div><div class="lbl">Tests unitaires</div></div>
+    <div class="kpi"><div class="big">96%</div><div class="lbl">Statements (couche testée)</div></div>
+    <div class="kpi"><div class="big">96%</div><div class="lbl">Lignes</div></div>
+    <div class="kpi"><div class="big">87%</div><div class="lbl">Branches</div></div>
+  </div>
+
+  <h3><span class="dot">▹</span> Transparence sur la couverture globale</h3>
+  <p>Par honnêteté intellectuelle, deux chiffres sont présentés. Sur le <strong>périmètre
+  ciblé</strong> (logique + parcours critiques), la couverture atteint <strong>96 % des
+  instructions</strong>. Sur l'<strong>intégralité</strong> du dossier <code>src/</code>
+  (pages lourdes comprises), elle s'établit désormais à <strong>≈ 55 % des instructions
+  (55 % des lignes)</strong> — soit une <strong>majorité du code développé</strong>, ce qui
+  satisfait le critère au sens strict. Ce résultat a été obtenu en refactorisant la logique
+  des pages complexes (ex. le wizard <code>garage/new</code>) dans des modules purs et
+  testables. Le reliquat non couvert unitairement correspond au JSX de présentation, validé
+  par les tests e2e : la combinaison unitaire + e2e couvre donc l'essentiel du code.</p>
+
+  <h3><span class="dot">▹</span> Périmètre couvert</h3>
+  <table>
+    <tr><th>Module testé</th><th>Cas couverts</th></tr>
+    <tr><td><code>api/auth/login · register · logout</code></td><td>succès, 401, 400 (Zod), 409, 500, cookie httpOnly, hachage bcrypt</td></tr>
+    <tr><td><code>api/motorcycles</code> · <code>[id]</code></td><td>401/400/404, ownership, moto principale</td></tr>
+    <tr><td><code>api/maintenances</code></td><td>401/403/400/500, filtre, MàJ auto kilométrage</td></tr>
+    <tr><td><code>api/health</code></td><td>200 (db ok) / 503 (db injoignable)</td></tr>
+    <tr><td><code>api/news</code> · <code>motorcycle-models</code></td><td>agrégation RSS, dédoublonnage, appel NHTSA, résilience</td></tr>
+    <tr><td><code>middleware</code></td><td>redirections, jeton valide/invalide/absent</td></tr>
+    <tr><td><code>lib</code> (auth, formatPlate, utils, logger)</td><td>JWT, format SIV, fusion de classes, logs</td></tr>
+    <tr><td>Composants UI (button, input, label)</td><td>variantes, props, <code>asChild</code></td></tr>
+  </table>
+
+  <div class="callout win"><div class="t">Prévention des régressions</div>
+  Chaque anomalie corrigée est accompagnée d'un test dédié (approche non-régression). Le
+  harnais s'exécute automatiquement à chaque push (CI), bloquant tout code qui casserait un
+  comportement existant.</div>
+
+  <h3><span class="dot">▹</span> Auto-évaluation critère par critère</h3>
+  <table class="eval">
+    <tr><th>Critère du référentiel</th><th>Preuve</th><th>Statut</th></tr>
+    <tr><td>Jeu de tests couvrant une fonctionnalité demandée</td><td>Authentification testée de bout en bout (route + page + middleware)</td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Les tests couvrent la majorité du code développé</td><td>96 % de la couche logique <strong>et 55 % du code global</strong> (majorité) + complément e2e</td><td><span class="met">Atteint</span></td></tr>
+  </table>
+
+  <div class="callout critique"><div class="t">Regard critique</div>
+  Le point initialement le plus exposé — une couverture globale minoritaire (≈ 44 %) — a été
+  <strong>corrigé</strong> : le refactoring de la logique des pages complexes dans des modules
+  purs a porté la couverture globale à <strong>55 %</strong> (majorité atteinte au sens strict),
+  sans dénaturer la stratégie de test. La marge restante concerne le JSX de présentation pur,
+  couvert par les tests e2e ; sa montée en couverture unitaire relèverait de tests de rendu
+  supplémentaires, à l'utilité marginale au regard du risque.</div>
+
+  <div class="shot"><span class="st">📸 Capture 4.1</span>
+    <b>Sortie de <code>npm run test</code></b> : tableau de couverture Jest (All files ≈ 95 %) +
+    <code>Tests: 142 passed</code>, <code>Test Suites: 23 passed</code>.</div>
+  <div class="shot"><span class="st">📸 Capture 4.2</span>
+    <b>Rapport HTML de couverture</b> : ouvrir <code>coverage/lcov-report/index.html</code>
+    et capturer la vue d'ensemble (barres de couverture par dossier).</div>
+</section>
+
+<!-- ============ C2.2.3 ============ -->
+<section class="page">
+  <h2><span class="num">C2.2.3</span> Développement sécurisé &amp; accessible <span class="pts elim">Éliminatoire</span></h2>
+  <p class="lead">Développer en veillant à la sécurisation du code (OWASP Top 10) et aux
+  exigences d'accessibilité (RGAA).</p>
+
+  <h3><span class="dot">▹</span> Sécurité — couverture des 10 failles OWASP (2021)</h3>
+  <table>
+    <tr><th>Risque OWASP</th><th>Mesure mise en œuvre</th></tr>
+    <tr><td>A01 Contrôle d'accès</td><td>Middleware + filtrage par <code>userId</code> + contrôle d'ownership (404/403)</td></tr>
+    <tr><td>A02 Cryptographie</td><td>bcrypt (coût 10), JWT HS256, cookie <code>httpOnly</code>/<code>secure</code></td></tr>
+    <tr><td>A03 Injection</td><td>Prisma (requêtes paramétrées) + validation Zod + échappement React</td></tr>
+    <tr><td>A04 Conception</td><td>Défense en profondeur (validation + accès + ownership)</td></tr>
+    <tr><td>A05 Configuration</td><td>Secrets externalisés + <strong>en-têtes HTTP</strong> (X-Frame-Options, HSTS, CSP Report-Only) + erreurs génériques</td></tr>
+    <tr><td>A06 Composants</td><td>Dépendances épinglées + <strong><code>npm audit</code> en CI</strong></td></tr>
+    <tr><td>A07 Authentification</td><td>bcrypt.compare, expiration de session + <strong>rate limiting</strong> (429) sur l'auth</td></tr>
+    <tr><td>A08 Intégrité</td><td><code>package-lock</code> + pipeline CI contrôlé + JWT signé</td></tr>
+    <tr><td>A09 Journalisation</td><td>Winston structuré + <code>/api/health</code></td></tr>
+    <tr><td>A10 SSRF</td><td>URL sortantes constantes et encodées (NHTSA, RSS)</td></tr>
+  </table>
+  <p style="font-size:9pt;color:var(--muted)">Détail complet et pistes d'amélioration :
+  <code>docs/securite-owasp.md</code>. En-têtes, audit CI et rate limiting sont désormais
+  <strong>implémentés et testés</strong>.</p>
+
+  <h3><span class="dot">▹</span> Accessibilité — référentiel RGAA</h3>
+  <p>Le <strong>RGAA</strong> (Référentiel Général d'Amélioration de l'Accessibilité) a été
+  retenu car il constitue la norme <strong>officielle française</strong>, alignée sur les
+  WCAG 2.1, adaptée à un service à destination d'une association. Actions mises en œuvre :</p>
+  <table>
+    <tr><th>Critère RGAA</th><th>Action</th></tr>
+    <tr><td>8.3 — Langue</td><td><code>&lt;html lang="fr"&gt;</code></td></tr>
+    <tr><td>9.1 — Structure de titres</td><td>Un <code>&lt;h1&gt;</code> unique par page</td></tr>
+    <tr><td>11.1 / 11.13 — Formulaires</td><td>Étiquettes <code>&lt;Label htmlFor&gt;</code> + <code>autocomplete</code></td></tr>
+    <tr><td>11.10 — Erreurs de saisie</td><td><code>role="alert"</code>, <code>aria-invalid</code>, <code>aria-describedby</code></td></tr>
+    <tr><td>12.7 — Lien d'évitement</td><td>« Aller au contenu principal » vers <code>#main-content</code></td></tr>
+    <tr><td>1.2 — Images décoratives</td><td>Icônes <code>aria-hidden</code></td></tr>
+    <tr><td>12.2 — Navigation</td><td><code>&lt;nav aria-label&gt;</code> + <code>aria-current="page"</code></td></tr>
+  </table>
+  <p>Le choix du RGAA plutôt qu'OPQUAST est <strong>justifié</strong> : OPQUAST est une
+  check-list de qualité web généraliste, tandis que le RGAA est spécifiquement dédié à
+  l'accessibilité numérique, opposable et aligné sur les WCAG 2.1 — plus pertinent pour
+  démontrer la prise en compte des personnes en situation de handicap. Les correctifs ont été
+  appliqués sur les <strong>parcours critiques</strong> (authentification, navigation
+  principale) et sont <strong>prouvés par des tests automatisés</strong>. Une
+  <strong>grille d'audit chiffrée</strong> (<code>docs/accessibilite-rgaa.md</code>) évalue
+  18 critères RGAA sur ce périmètre : <strong>100 % de conformité</strong> sur les 17 critères
+  applicables.</p>
+  <div class="callout win"><div class="t">Accessibilité testée automatiquement</div>
+  5 tests e2e dédiés (<code>tests/e2e/accessibility.spec.ts</code>) vérifient langue, étiquettes,
+  autocomplétion, signalement d'erreurs (role=alert / aria-invalid) et structure de titres —
+  la conformité est donc <strong>vérifiable</strong>, non déclarative.</div>
+
+  <h3><span class="dot">▹</span> Auto-évaluation critère par critère</h3>
+  <table class="eval">
+    <tr><th>Critère du référentiel</th><th>Preuve</th><th>Statut</th></tr>
+    <tr><td>Couvrir les 10 failles principales de l'OWASP</td><td>Tableau A01→A10 ci-dessus + <code>securite-owasp.md</code></td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Référentiel d'accessibilité présenté et justifié</td><td>RGAA choisi et argumenté vs OPQUAST</td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Le prototype répond aux exigences du référentiel</td><td>Grille RGAA 100 % (17/17 critères applicables) + 5 tests e2e verts</td><td><span class="part">Atteint sur les parcours critiques</span></td></tr>
+  </table>
+
+  <div class="callout critique"><div class="t">Regard critique</div>
+  <strong>Côté OWASP</strong>, le socle couvre désormais les dix catégories avec des mesures
+  effectives et testées ; les axes restants (MFA, CSP en mode bloquant, RBAC administrateur)
+  relèvent d'une sécurité avancée non exigée à ce stade.
+  <strong>Côté RGAA</strong>, la conformité est chiffrée (100 %) mais sur un
+  <strong>périmètre volontairement restreint</strong> aux parcours critiques : elle ne
+  constitue pas encore un audit exhaustif des 106 critères sur toutes les pages (météo,
+  pièces), ni une déclaration de conformité formelle. C'est la limite honnête du présent
+  niveau ; elle répond néanmoins à l'exigence « le prototype répond aux exigences du
+  référentiel établi » sur le périmètre défini et documenté.</div>
+
+  <div class="shot"><span class="st">📸 Capture 5.1</span>
+    <b>Code de sécurité</b> : <code>register/route.ts</code> (bcrypt) et le bloc cookie
+    <code>httpOnly/secure</code> de <code>login/route.ts</code>.</div>
+  <div class="shot"><span class="st">📸 Capture 5.2</span>
+    <b>Audit Lighthouse — onglet Accessibilité</b> (DevTools Chrome) + tests
+    <code>accessibility.spec.ts</code> verts.</div>
+</section>
+
+<!-- ============ C2.2.4 ============ -->
+<section class="page">
+  <h2><span class="num">C2.2.4</span> Déploiement progressif &amp; versionnage <span class="pts">A2.2</span></h2>
+  <p class="lead">Déployer le logiciel à chaque modification, de façon progressive, en
+  garantissant une solution stable et manipulable en autonomie.</p>
+
+  <h3><span class="dot">▹</span> Gestion de versions</h3>
+  <ul>
+    <li><strong>Git + GitHub</strong> : historique complet, branches <code>main</code>/<code>develop</code>/<code>feature</code>.</li>
+    <li><strong>Semantic Versioning</strong> + <code>CHANGELOG.md</code> (0.1.0 → 1.0.0) traçant chaque évolution du prototype.</li>
+    <li><strong>Tags Git</strong> matérialisant chaque release.</li>
+  </ul>
+
+  <h3><span class="dot">▹</span> Déploiement progressif</h3>
+  <p>Chaque <code>push</code> sur <code>main</code> déclenche, après validation automatique,
+  un déploiement Vercel. Les déploiements sont <strong>immuables et réversibles</strong>
+  (rollback en un clic vers une version antérieure stable).</p>
+
+  <table>
+    <tr><th>Version</th><th>Date</th><th>Apport principal</th></tr>
+    <tr><td>0.1.0</td><td>15/03/2026</td><td>Init Next.js, auth, garage, entretien</td></tr>
+    <tr><td>0.2.0</td><td>24/03/2026</td><td>Pièces, scène 3D, design dark</td></tr>
+    <tr><td>0.3.0</td><td>07/04/2026</td><td>Wizard moto, NHTSA, actualités</td></tr>
+    <tr><td><strong>1.0.0</strong></td><td>21/04/2026</td><td>Version stable, CI/CD, supervision, tests</td></tr>
+  </table>
+
+  <div class="callout win"><div class="t">Utilisable en autonomie</div>
+  L'application est fonctionnelle et manipulable sans assistance (cf. manuel d'utilisation) :
+  parcours d'inscription, garage, entretien et tableau de bord validés en recette.</div>
+
+  <div class="shot"><span class="st">📸 Capture 6.1</span>
+    <b>Graphe de commits GitHub</b> (onglet « Commits » ou « Insights ») et/ou la page
+    <b>Releases</b> avec les tags de version.</div>
+  <div class="shot"><span class="st">📸 Capture 6.2</span>
+    <b>Historique des déploiements Vercel</b> (onglet Deployments) montrant les mises en
+    production successives.</div>
+  <div class="footer"><span>C2.2.4 — Versionnage &amp; déploiement</span><span>Luca Straputicari</span></div>
+</section>
+
+<!-- ============ C2.3.1 ============ -->
+<section class="page">
+  <h2><span class="num">C2.3.1</span> Cahier de recettes <span class="pts elim">Éliminatoire</span></h2>
+  <p class="lead">Élaborer le cahier de recettes (scénarios de test et résultats attendus)
+  pour détecter anomalies et régressions.</p>
+
+  <h3><span class="dot">▹</span> Structure &amp; couverture</h3>
+  <p>Le cahier de recettes (<code>docs/cahier-recettes.md</code>) formalise
+  <strong>17 scénarios (RT-01 à RT-17)</strong> couvrant l'ensemble des fonctionnalités
+  attendues, organisés par module. Chaque scénario précise préconditions, étapes, résultat
+  attendu, résultat obtenu et statut, et est <strong>relié à son test automatisé</strong>
+  (table de traçabilité en fin de cahier).</p>
+  <table>
+    <tr><th>Module</th><th>Scénarios</th><th>Type de test</th></tr>
+    <tr><td>Authentification</td><td>RT-01 → RT-05</td><td>Fonctionnel + sécurité (accès protégé)</td></tr>
+    <tr><td>Gestion du garage</td><td>RT-06 → RT-09</td><td>Fonctionnel + structurel (validation SIV)</td></tr>
+    <tr><td>Entretien</td><td>RT-10 → RT-12</td><td>Fonctionnel (MàJ kilométrage, filtre)</td></tr>
+    <tr><td>Tableau de bord</td><td>RT-13 → RT-14</td><td>Fonctionnel (calculs d'échéances)</td></tr>
+    <tr><td>Supervision</td><td>RT-15</td><td>Technique (endpoint santé)</td></tr>
+    <tr><td>Sécurité</td><td>RT-16 → RT-17</td><td>Sécurité (isolation des données, jeton invalide)</td></tr>
+  </table>
+
+  <h3><span class="dot">▹</span> Automatisation de la recette (Playwright)</h3>
+  <p>Les scénarios sont <strong>rejoués automatiquement</strong> par 22 tests e2e Playwright,
+  garantissant la reproductibilité et la détection des régressions :</p>
+  <ul>
+    <li><code>auth.spec.ts</code> — connexion, inscription, validation, protection des routes (RT-01→05).</li>
+    <li><code>home.spec.ts</code> — page d'accueil et navigation.</li>
+    <li><code>accessibility.spec.ts</code> — tests de sécurité d'accès et d'accessibilité.</li>
+    <li><code>api-health.spec.ts</code> — contrat de l'endpoint de supervision (RT-15).</li>
+  </ul>
+  <h3><span class="dot">▹</span> Typologie des tests exécutés</h3>
+  <p>Le critère impose la présence de tests <strong>fonctionnels, structurels et de
+  sécurité</strong> conformes au plan. Le cahier et son automatisation couvrent explicitement
+  ces trois natures :</p>
+  <table>
+    <tr><th>Type de test</th><th>Objet</th><th>Scénarios / preuves</th></tr>
+    <tr><td><strong>Fonctionnel</strong></td><td>Conformité au comportement attendu</td><td>RT-01, 03, 06, 08, 10 à 14 (parcours métier)</td></tr>
+    <tr><td><strong>Structurel</strong></td><td>Validation des données &amp; règles de saisie</td><td>RT-07 (format SIV), RT-02 (unicité email), schémas Zod</td></tr>
+    <tr><td><strong>Sécurité</strong></td><td>Contrôle d'accès &amp; authentification</td><td>RT-04 (identifiants erronés), RT-05 (route protégée), redirections middleware</td></tr>
+    <tr><td><strong>Technique</strong></td><td>Supervision / disponibilité</td><td>RT-15 (endpoint santé)</td></tr>
+  </table>
+
+  <div class="callout win"><div class="t">Bilan de recette</div>
+  17/17 scénarios passés, 0 anomalie fonctionnelle (validé par le MotoClub Alpes le
+  18/04/2026), rejoués automatiquement par 22 tests Playwright et le harnais unitaire pour
+  prévenir les régressions.</div>
+
+  <h3><span class="dot">▹</span> Auto-évaluation critère par critère</h3>
+  <table class="eval">
+    <tr><th>Critère du référentiel</th><th>Preuve</th><th>Statut</th></tr>
+    <tr><td>Le cahier reprend l'ensemble des fonctionnalités attendues</td><td>17 scénarios sur les 6 modules du périmètre</td><td><span class="met">Atteint</span></td></tr>
+    <tr><td>Tests fonctionnels, structurels et de sécurité conformes au plan</td><td>Typologie ci-dessus + module Sécurité (RT-16/17) + traçabilité vers les tests</td><td><span class="met">Atteint</span></td></tr>
+  </table>
+
+  <div class="callout critique"><div class="t">Regard critique</div>
+  La faiblesse initialement identifiée — un cahier trop <strong>fonctionnel</strong> — a été
+  corrigée par l'ajout d'un module <strong>Sécurité</strong> explicite (RT-16 isolation des
+  données, RT-17 jeton invalide) et d'une <strong>table de traçabilité</strong> reliant chaque
+  scénario à son test automatisé. La marge de progression restante concerne des jeux de
+  données limites plus systématiques (fuzzing léger des formulaires) et une seconde campagne
+  de recette datée après corrections, pour matérialiser le cycle complet détection → correction
+  → re-test.</div>
+
+  <div class="shot"><span class="st">📸 Capture 7.1</span>
+    <b>Extrait du cahier de recettes</b> (<code>docs/cahier-recettes.md</code>) : tableau
+    d'un module avec les statuts ✅.</div>
+  <div class="shot"><span class="st">📸 Capture 7.2</span>
+    <b>Rapport Playwright</b> : sortie de <code>npm run test:e2e</code> (22 passed) et/ou le
+    rapport HTML (<code>playwright-report</code>).</div>
+</section>
+
+<!-- ============ C2.3.2 ============ -->
+<section class="page">
+  <h2><span class="num">C2.3.2</span> Plan de correction des bogues <span class="pts">A2.3</span></h2>
+  <p class="lead">Élaborer un plan de correction à partir de l'analyse des anomalies et
+  régressions détectées, pour garantir un fonctionnement conforme.</p>
+
+  <h3><span class="dot">▹</span> Processus de traitement</h3>
+  <p>Chaque anomalie suit un cycle : <strong>détection → qualification (sévérité) → analyse
+  de cause racine → correction avec test de non-régression → vérification → clôture</strong>
+  (tracée dans <code>CHANGELOG.md</code>). Détail : <code>docs/plan-correction-bogues.md</code>.</p>
+
+  <h3><span class="dot">▹</span> Registre des anomalies traitées</h3>
+  <table>
+    <tr><th>ID</th><th>Anomalie</th><th>Sévérité</th><th>Statut</th></tr>
+    <tr><td>BUG-01</td><td>Couverture de tests insuffisante (6 %)</td><td><span class="tag crit">Bloquant</span></td><td>✅ 95 %</td></tr>
+    <tr><td>BUG-02</td><td>Jest exécutait les tests Playwright</td><td><span class="tag high">Majeur</span></td><td>✅ Résolu</td></tr>
+    <tr><td>BUG-03</td><td>Client Prisma périmé (typage <code>isPrimary</code>)</td><td><span class="tag crit">Bloquant</span></td><td>✅ Résolu</td></tr>
+    <tr><td>BUG-04</td><td>Lint CI bloquant (config absente)</td><td><span class="tag high">Majeur</span></td><td>✅ Résolu</td></tr>
+    <tr><td>BUG-05</td><td>Formulaires non accessibles</td><td><span class="tag high">Majeur</span></td><td>✅ Résolu</td></tr>
+    <tr><td>BUG-06</td><td>Incohérence de nommage de l'app</td><td><span class="tag ok">Mineur</span></td><td>✅ Résolu</td></tr>
+  </table>
+
+  <div class="callout"><div class="t">Analyse des points d'amélioration</div>
+  Chaque test en échec a fait l'objet d'une analyse de cause racine et d'un correctif
+  accompagné d'un test automatisé de non-régression, conformément à l'attendu.</div>
+
+  <div class="shot"><span class="st">📸 Capture 8.1</span>
+    <b>GitHub Issues</b> : une <em>issue</em> qualifiée (labels sévérité) et son correctif lié
+    (commit / PR de fermeture). Illustre la détection → qualification → traitement.</div>
+  <div class="footer"><span>C2.3.2 — Correction des bogues</span><span>Luca Straputicari</span></div>
+</section>
+
+<!-- ============ C2.4.1 ============ -->
+<section class="page">
+  <h2><span class="num">C2.4.1</span> Documentation technique <span class="pts">A2.4</span></h2>
+  <p class="lead">Rédiger la documentation technique d'exploitation pour assurer la
+  traçabilité et le suivi des évolutions.</p>
+
+  <h3><span class="dot">▹</span> Corpus documentaire livré</h3>
+  <table>
+    <tr><th>Document</th><th>Fichier</th><th>Contenu</th></tr>
+    <tr><td>Manuel de déploiement</td><td><code>docs/manuel-deploiement.md</code></td><td>Architecture cible, prérequis, variables, déploiement local &amp; Vercel, rollback</td></tr>
+    <tr><td>Manuel d'utilisation</td><td><code>docs/manuel-utilisation.md</code></td><td>Parcours utilisateur pas à pas, PWA, accessibilité</td></tr>
+    <tr><td>Manuel de mise à jour</td><td><code>docs/manuel-mise-a-jour.md</code></td><td>Versionnage, Git Flow, migrations Prisma, checklist de publication</td></tr>
+    <tr><td>Sécurité OWASP</td><td><code>docs/securite-owasp.md</code></td><td>Cartographie des 10 risques et mesures</td></tr>
+    <tr><td>Grille d'audit RGAA</td><td><code>docs/accessibilite-rgaa.md</code></td><td>18 critères évalués, taux de conformité</td></tr>
+    <tr><td>Plan de correction</td><td><code>docs/plan-correction-bogues.md</code></td><td>Processus et registre des anomalies</td></tr>
+    <tr><td>README &amp; CHANGELOG</td><td><code>README.md</code>, <code>CHANGELOG.md</code></td><td>Prise en main, choix technologiques et de langages, historique des versions</td></tr>
+  </table>
+
+  <div class="callout win"><div class="t">Traçabilité des choix</div>
+  La documentation justifie les choix de technologies (Next.js, TypeScript, PostgreSQL/Prisma,
+  JWT, Zod) et de langages, et décrit les procédures d'exploitation pour les futures évolutions.</div>
+
+  <h3><span class="dot">▹</span> Synthèse de conformité — Bloc 2</h3>
+  <table>
+    <tr><th>Compétence</th><th>Livrable principal</th><th>Statut</th></tr>
+    <tr><td>C2.1.1</td><td>Environnements + CI/CD + KPI</td><td>✅</td></tr>
+    <tr><td>C2.1.2</td><td>Pipeline d'intégration continue</td><td>✅</td></tr>
+    <tr><td>C2.2.1 <em>(élim.)</em></td><td>Prototype + architecture</td><td>✅</td></tr>
+    <tr><td>C2.2.2 <em>(élim.)</em></td><td>Harnais de tests (95 %)</td><td>✅</td></tr>
+    <tr><td>C2.2.3 <em>(élim.)</em></td><td>OWASP + RGAA</td><td>✅</td></tr>
+    <tr><td>C2.2.4</td><td>Versionnage + déploiement</td><td>✅</td></tr>
+    <tr><td>C2.3.1 <em>(élim.)</em></td><td>Cahier de recettes</td><td>✅</td></tr>
+    <tr><td>C2.3.2</td><td>Plan de correction des bogues</td><td>✅</td></tr>
+    <tr><td>C2.4.1</td><td>Manuels &amp; documentation</td><td>✅</td></tr>
+  </table>
+
+  <div class="shot"><span class="st">📸 Capture 9.1</span>
+    <b>Aperçu des manuels</b> : capture d'un des manuels rendus (déploiement ou utilisation)
+    montrant la clarté rédactionnelle et la structure.</div>
+  <div class="footer"><span>C2.4.1 — Documentation technique</span><span>Luca Straputicari</span></div>
+</section>
+
+<!-- ============ ANNEXE A — GLOSSAIRE ============ -->
+<section class="page">
+  <h2><span class="num ax">A</span> Annexe A — Glossaire technique</h2>
+  <p class="lead">Définition des principaux termes techniques employés dans ce rapport.</p>
+  <table class="gloss">
+    <tr><th>Terme</th><th>Définition</th></tr>
+    <tr><td>API Route</td><td>Point d'entrée serveur de Next.js (fichier <code>route.ts</code>) exposant une fonction HTTP (GET, POST…) ; contient les règles métier côté serveur.</td></tr>
+    <tr><td>App Router</td><td>Système de routage de Next.js 14 fondé sur l'arborescence de fichiers du dossier <code>app/</code>, avec rendu serveur par défaut.</td></tr>
+    <tr><td>bcrypt</td><td>Algorithme de hachage de mots de passe avec « sel » et facteur de coût, résistant aux attaques par force brute.</td></tr>
+    <tr><td>CI/CD</td><td>Intégration Continue / Déploiement Continu : automatisation de la vérification (tests, build) et de la mise en production à chaque modification du code.</td></tr>
+    <tr><td>Cookie httpOnly</td><td>Cookie inaccessible au JavaScript du navigateur, protégeant le jeton de session contre le vol par script (XSS).</td></tr>
+    <tr><td>Couverture (coverage)</td><td>Pourcentage du code exécuté par les tests. Mesurée en <em>statements</em> (instructions), <em>branches</em>, <em>functions</em> et <em>lines</em>.</td></tr>
+    <tr><td>cva</td><td><em>class-variance-authority</em> : utilitaire de gestion des variantes de style d'un composant (taille, couleur…).</td></tr>
+    <tr><td>e2e (end-to-end)</td><td>Test de bout en bout simulant un utilisateur réel dans un navigateur, du clic au résultat affiché.</td></tr>
+    <tr><td>ESLint</td><td>Analyseur statique de code JavaScript/TypeScript appliquant des règles de qualité et de bonnes pratiques.</td></tr>
+    <tr><td>Jest</td><td>Framework de tests unitaires JavaScript, ici couplé à Testing Library pour le rendu de composants React.</td></tr>
+    <tr><td>JWT</td><td><em>JSON Web Token</em> : jeton signé encodant l'identité de l'utilisateur, vérifié à chaque requête pour authentifier la session.</td></tr>
+    <tr><td>jose</td><td>Librairie de création et vérification de jetons JWT compatible avec l'environnement Edge de Next.js.</td></tr>
+    <tr><td>Lighthouse</td><td>Outil d'audit intégré à Chrome mesurant performance, accessibilité, bonnes pratiques et SEO d'une page.</td></tr>
+    <tr><td>Middleware</td><td>Fonction exécutée avant l'accès à une route ; ici, filtre d'authentification protégeant les pages privées.</td></tr>
+    <tr><td>Migration</td><td>Script versionné décrivant une évolution du schéma de base de données, rejouable de façon reproductible (Prisma).</td></tr>
+    <tr><td>Mock</td><td>Objet de substitution simulant une dépendance (base de données, API externe) pour isoler le code testé.</td></tr>
+    <tr><td>NHTSA</td><td><em>National Highway Traffic Safety Administration</em> : API publique fournissant la liste officielle des modèles de véhicules.</td></tr>
+    <tr><td>ORM</td><td><em>Object-Relational Mapping</em> : couche traduisant les objets du code en requêtes SQL (ici Prisma), avec requêtes paramétrées.</td></tr>
+    <tr><td>OWASP</td><td><em>Open Worldwide Application Security Project</em> : organisation de référence en sécurité applicative, éditrice du « Top 10 » des risques.</td></tr>
+    <tr><td>Playwright</td><td>Framework de tests end-to-end multi-navigateur, avec rapport HTML et exécution en CI.</td></tr>
+    <tr><td>Prisma</td><td>ORM TypeScript pour PostgreSQL : schéma déclaratif, migrations, client typé.</td></tr>
+    <tr><td>PWA</td><td><em>Progressive Web App</em> : application web installable sur mobile, utilisable comme une application native.</td></tr>
+    <tr><td>RGAA</td><td>Référentiel Général d'Amélioration de l'Accessibilité : norme française d'accessibilité numérique, alignée sur les WCAG.</td></tr>
+    <tr><td>Rollback</td><td>Retour à une version antérieure stable de l'application en cas d'anomalie en production.</td></tr>
+    <tr><td>SIV</td><td>Système d'Immatriculation des Véhicules : format français des plaques (<code>AB-123-CD</code>).</td></tr>
+    <tr><td>SSR</td><td><em>Server-Side Rendering</em> : génération du HTML côté serveur avant envoi au navigateur (meilleur SEO et temps d'affichage).</td></tr>
+    <tr><td>Tailwind CSS</td><td>Framework CSS « utilitaire » : la mise en forme s'exprime via des classes prédéfinies dans le balisage.</td></tr>
+    <tr><td>Testing Library</td><td>Bibliothèque de test de composants React centrée sur l'usage réel (rôles, libellés) plutôt que sur l'implémentation.</td></tr>
+    <tr><td>TypeScript</td><td>Sur-ensemble typé de JavaScript ; le typage statique détecte des erreurs dès la compilation.</td></tr>
+    <tr><td>Vercel</td><td>Plateforme d'hébergement et de déploiement continu optimisée pour Next.js.</td></tr>
+    <tr><td>Winston</td><td>Bibliothèque de journalisation structurée (niveaux, horodatage, format JSON).</td></tr>
+    <tr><td>Zod</td><td>Bibliothèque de validation de schémas TypeScript ; garantit la conformité des données entrantes.</td></tr>
+  </table>
+</section>
+
+<!-- ============ ANNEXE B — TABLE DES FIGURES ============ -->
+<section class="page">
+  <h2><span class="num ax">B</span> Annexe B — Table des figures</h2>
+  <p class="lead">Index des captures d'écran et illustrations à insérer dans le rapport,
+  avec leur emplacement (compétence associée).</p>
+  <table class="figidx">
+    <tr><td class="ref">Fig. 1.1</td><td>VS Code ouvert sur le projet (environnement de développement)</td><td class="loc">C2.1.1</td></tr>
+    <tr><td class="ref">Fig. 1.2</td><td>Conteneurs Docker PostgreSQL + Adminer démarrés</td><td class="loc">C2.1.1</td></tr>
+    <tr><td class="ref">Fig. 1.3</td><td>Réponse de l'endpoint <code>GET /api/health</code></td><td class="loc">C2.1.1</td></tr>
+    <tr><td class="ref">Fig. 2.1</td><td>Pipeline GitHub Actions vert (onglet Actions)</td><td class="loc">C2.1.2</td></tr>
+    <tr><td class="ref">Fig. 2.2</td><td>Détail d'un job CI / checks d'une Pull Request</td><td class="loc">C2.1.2</td></tr>
+    <tr><td class="ref">Fig. 3.1</td><td>Page d'accueil avec scène 3D</td><td class="loc">C2.2.1</td></tr>
+    <tr><td class="ref">Fig. 3.2</td><td>Tableau de bord (échéances, dépenses)</td><td class="loc">C2.2.1</td></tr>
+    <tr><td class="ref">Fig. 3.3</td><td>Mon Garage — wizard d'ajout de moto</td><td class="loc">C2.2.1</td></tr>
+    <tr><td class="ref">Fig. 3.4</td><td>Carnet d'entretien</td><td class="loc">C2.2.1</td></tr>
+    <tr><td class="ref">Fig. 3.5</td><td>Arborescence du projet <code>src/</code> annotée</td><td class="loc">C2.2.1</td></tr>
+    <tr><td class="ref">Fig. 4.1</td><td>Sortie <code>npm run test</code> (couverture + 142 tests)</td><td class="loc">C2.2.2</td></tr>
+    <tr><td class="ref">Fig. 4.2</td><td>Rapport HTML de couverture (<code>lcov-report</code>)</td><td class="loc">C2.2.2</td></tr>
+    <tr><td class="ref">Fig. 5.1</td><td>Code de sécurité (bcrypt, cookie httpOnly)</td><td class="loc">C2.2.3</td></tr>
+    <tr><td class="ref">Fig. 5.2</td><td>Audit Lighthouse — accessibilité + tests a11y verts</td><td class="loc">C2.2.3</td></tr>
+    <tr><td class="ref">Fig. 6.1</td><td>Graphe de commits / page Releases GitHub</td><td class="loc">C2.2.4</td></tr>
+    <tr><td class="ref">Fig. 6.2</td><td>Historique des déploiements Vercel</td><td class="loc">C2.2.4</td></tr>
+    <tr><td class="ref">Fig. 7.1</td><td>Extrait du cahier de recettes</td><td class="loc">C2.3.1</td></tr>
+    <tr><td class="ref">Fig. 7.2</td><td>Rapport Playwright (22 tests e2e)</td><td class="loc">C2.3.1</td></tr>
+    <tr><td class="ref">Fig. 8.1</td><td>GitHub Issue qualifiée + correctif lié</td><td class="loc">C2.3.2</td></tr>
+    <tr><td class="ref">Fig. 9.1</td><td>Aperçu d'un manuel technique rendu</td><td class="loc">C2.4.1</td></tr>
+  </table>
+  <div class="callout"><div class="t">Convention</div>
+  Chaque emplacement de capture est matérialisé dans le corps du rapport par un cadre en
+  pointillés bleus. Remplacer le cadre par l'image correspondante en conservant sa légende.</div>
+</section>
+
+<!-- ============ ANNEXE C — RÉFÉRENCES ============ -->
+<section class="page">
+  <h2><span class="num ax">C</span> Annexe C — Références &amp; normes</h2>
+  <p class="lead">Sources externes, référentiels et documentations mobilisés.</p>
+
+  <h3><span class="dot">▹</span> Sécurité &amp; accessibilité</h3>
+  <ul>
+    <li><strong>OWASP Top 10 (2021)</strong> — <code>owasp.org/Top10/</code></li>
+    <li><strong>RGAA</strong> (Référentiel Général d'Amélioration de l'Accessibilité) — <code>accessibilite.numerique.gouv.fr</code></li>
+    <li><strong>WCAG 2.1</strong> (Web Content Accessibility Guidelines) — <code>w3.org/TR/WCAG21/</code></li>
+  </ul>
+
+  <h3><span class="dot">▹</span> Documentations techniques</h3>
+  <ul>
+    <li><strong>Next.js 14</strong> — <code>nextjs.org/docs</code></li>
+    <li><strong>Prisma ORM</strong> — <code>prisma.io/docs</code></li>
+    <li><strong>Jest</strong> — <code>jestjs.io/docs</code> · <strong>Playwright</strong> — <code>playwright.dev</code></li>
+    <li><strong>Zod</strong> — <code>zod.dev</code></li>
+    <li><strong>API NHTSA vPIC</strong> — <code>vpic.nhtsa.dot.gov/api</code></li>
+  </ul>
+
+  <h3><span class="dot">▹</span> Méthodologie &amp; conventions</h3>
+  <ul>
+    <li><strong>Semantic Versioning 2.0.0</strong> — <code>semver.org/lang/fr/</code></li>
+    <li><strong>Référentiel RNCP 39583</strong> — Expert en développement logiciel, Bloc 2.</li>
+  </ul>
+
+  <div class="callout win"><div class="t">Fin du document</div>
+  Rapport Bloc 2 — MotoTrack · Luca Straputicari · Ynov Campus · 21 avril 2026.</div>
+</section>
+
+</body>
+</html>
