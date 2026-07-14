@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ const TYPE_LABELS: Record<string, string> = {
   OTHER: "Autre",
 };
 
-export default function MaintenancePage() {
+function MaintenanceContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const motoId = searchParams.get("motoId") ?? "";
@@ -182,5 +182,19 @@ export default function MaintenancePage() {
         </div>
       )}
     </AppLayout>
+  );
+}
+
+export default function MaintenancePage() {
+  return (
+    <Suspense
+      fallback={
+        <AppLayout title="Carnet d'entretien">
+          <p className="text-muted-foreground animate-pulse">Chargement des entretiens...</p>
+        </AppLayout>
+      }
+    >
+      <MaintenanceContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +30,7 @@ const maintenanceSchema = z.object({
 
 type MaintenanceFormValues = z.infer<typeof maintenanceSchema>;
 
-export default function AddMaintenancePage() {
+function AddMaintenanceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const defaultMotoId = searchParams.get("motoId");
@@ -188,5 +188,19 @@ export default function AddMaintenancePage() {
         )}
       </div>
     </AppLayout>
+  );
+}
+
+export default function AddMaintenancePage() {
+  return (
+    <Suspense
+      fallback={
+        <AppLayout title="Prochain entretien">
+          <p className="text-muted-foreground animate-pulse">Chargement...</p>
+        </AppLayout>
+      }
+    >
+      <AddMaintenanceContent />
+    </Suspense>
   );
 }
