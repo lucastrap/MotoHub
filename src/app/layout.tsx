@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
+import { WebVitals } from "@/components/monitoring/WebVitals";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const barlowCondensed = Barlow_Condensed({
@@ -11,7 +12,7 @@ const barlowCondensed = Barlow_Condensed({
 
 export const metadata: Metadata = {
   title: "MotoTrack",
-  description: "Professional motorcycle maintenance tracking",
+  description: "Suivi d'entretien et gestion de garage moto",
   manifest: "/manifest.json",
 };
 
@@ -22,7 +23,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className={`${inter.variable} ${barlowCondensed.variable} font-sans`}>{children}</body>
+      <body className={`${inter.variable} ${barlowCondensed.variable} font-sans`}>
+        <WebVitals />
+        {children}
+      </body>
     </html>
   );
 }
