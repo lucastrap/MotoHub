@@ -24,7 +24,7 @@ export default function Home() {
             <FontAwesomeIcon icon={faMotorcycle} className="h-5 w-5" />
           </div>
           <span className="font-display font-black text-xl tracking-tight uppercase">
-            Moto<span className="text-primary">Hub</span>
+            Moto<span className="text-primary">Track</span>
           </span>
         </Link>
         <nav className="flex items-center gap-3">

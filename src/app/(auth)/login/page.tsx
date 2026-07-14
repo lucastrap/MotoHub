@@ -10,14 +10,14 @@ import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().email({ message: "Adresse e-mail invalide" }),
+  password: z.string().min(6, { message: "Le mot de passe doit contenir au moins 6 caractères" }),
 })
 
 export default function LoginPage() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
-  
+
   const {
     register,
     handleSubmit,
@@ -36,7 +36,7 @@ export default function LoginPage() {
       })
 
       if (!response.ok) {
-        throw new Error("Invalid credentials")
+        throw new Error("Identifiants invalides")
       }
 
       router.push("/dashboard")
@@ -51,12 +51,12 @@ export default function LoginPage() {
       <div className="w-full max-w-md rounded-xl bg-card p-8 shadow-sm border">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold">MotoTrack</h1>
-          <p className="text-muted-foreground mt-2">Sign in to your account</p>
+          <p className="text-muted-foreground mt-2">Connectez-vous à votre compte</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Adresse e-mail</Label>
             <Input
               id="email"
               type="email"
@@ -69,7 +69,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Mot de passe</Label>
             <Input
               id="password"
               type="password"
@@ -84,12 +84,12 @@ export default function LoginPage() {
           {error && <p role="alert" aria-live="assertive" className="text-sm text-destructive font-medium">{error}</p>}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in..." : "Sign In"}
+            {isSubmitting ? "Connexion…" : "Se connecter"}
           </Button>
         </form>
-        
+
         <div className="mt-6 text-center text-sm">
-          Don't have an account? <a href="/register" className="text-primary hover:underline">Register</a>
+          Pas encore de compte ? <a href="/register" className="text-primary hover:underline">S&apos;inscrire</a>
         </div>
       </div>
     </div>
