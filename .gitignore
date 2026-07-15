@@ -60,3 +60,8 @@ next-env.d.ts
 /public/workbox-*.js
 /public/workbox-*.js.map
 /public/fallback-*
+
+# Ajouté par le CLI Vercel : tous les fichiers d'environnement sont exclus…
+.env*
+# …sauf le modèle documenté, qui doit rester versionné (cf. README).
+!.env.example
