@@ -4,123 +4,99 @@
 
 | Champ | Valeur |
 |---|---|
-| Client | MotoClub Alpes — Lyon |
+| Origine | Projet personnel — besoin issu d'une analyse de marché, pas d'une commande client |
+| Réalisation | Solo (Luca Straputicari) |
 | Durée totale | 6 semaines |
 | Début | 10 mars 2026 |
 | Fin | 21 avril 2026 |
-| Soutenance | 28 avril 2026 |
-| Méthodologie | Agile Scrum — sprints d'1 semaine |
-| Outil de suivi | GitHub Projects |
-| Réunion commanditaire | Vendredi à 14h — Sophie Arnaud (MotoClub Alpes) |
+| Méthodologie | Itérative, inspirée de Kanban — incréments d'environ une semaine |
+| Outil de suivi | GitHub (Issues, Pull Requests, branches) |
+| Validation | Auto-validation outillée : CI bloquante + revue de PR avec checklist |
+
+## Note sur la méthode
+
+Le projet étant mené seul, il n'y a ni sprint planning collectif, ni sprint review devant
+un commanditaire, ni rétrospective d'équipe. Les cérémonies Scrum n'ont pas été singées :
+le découpage est resté celui d'un Kanban personnel — un incrément par branche, une Pull
+Request par incrément, fusion conditionnée à une CI verte.
+
+Le point de contrôle qui remplace la revue d'équipe est la **Pull Request** : elle force
+un point d'arrêt avant `main`, exécute la CI et la preview, et laisse une trace écrite de
+l'intention. C'est le filet de sécurité du développeur unique.
 
 ---
 
-## Équipe
+## Incrément 1 — Semaine 1 (10 – 14 mars) : Initialisation technique
 
-| Membre | Rôle | Disponibilité |
-|---|---|---|
-| Luca Straputicari | Chef de projet & Fullstack lead | 100% |
-| Thomas Renard | Backend | 100% |
-| Sarah Morel | Frontend | 100% |
-| Karim Benali | Design UX/UI | 50% (mission parallèle) |
-| Julie Fontaine | QA | 30% (dernière semaine à 100%) |
-
----
-
-## Sprint 0 — Semaine 0 (3 – 9 mars) : Cadrage
-
-| Tâche | Responsable | Statut |
-|---|---|---|
-| Entretien commanditaire — recueil du besoin | Luca + Sophie Arnaud | Terminé |
-| Définition du périmètre fonctionnel | Luca | Terminé |
-| Choix de la stack technique | Luca + Thomas | Terminé |
-| Maquettes Figma v1 (wireframes) | Karim | Terminé |
-| Validation des maquettes par le client | Marc Duvalier | Terminé |
+| Tâche | Statut |
+|---|---|
+| Setup projet Next.js 14 + TypeScript | Terminé |
+| Configuration Docker + PostgreSQL | Terminé |
+| Schéma Prisma + migration initiale | Terminé |
+| Authentification JWT (register, login, logout) | Terminé |
+| Middleware de protection des routes | Terminé |
 
 ---
 
-## Sprint 1 — Semaine 1 (10 – 14 mars) : Initialisation technique
+## Incrément 2 — Semaine 2 (17 – 21 mars) : Core métier
 
-| Tâche | Responsable | Statut |
-|---|---|---|
-| Setup projet Next.js 14 + TypeScript | Thomas | Terminé |
-| Configuration Docker + PostgreSQL | Thomas | Terminé |
-| Schéma Prisma + migration initiale | Thomas | Terminé |
-| Authentification JWT (register, login, logout) | Thomas | Terminé |
-| Middleware de protection des routes | Luca | Terminé |
-
-**Sprint review (14 mars)** : Démo de l'auth devant Sophie Arnaud. Validé.
+| Tâche | Statut |
+|---|---|
+| API motorcycles (GET/POST) | Terminé |
+| API maintenances (GET/POST) | Terminé |
+| Module Garage — liste des motos | Terminé |
+| Module Entretien — ajout et historique | Terminé |
+| Tableau de bord v1 | Terminé |
 
 ---
 
-## Sprint 2 — Semaine 2 (17 – 21 mars) : Core métier
+## Incrément 3 — Semaine 3 (24 – 28 mars) : Fonctionnalités avancées
 
-| Tâche | Responsable | Statut |
-|---|---|---|
-| API motorcycles (GET/POST) | Thomas | Terminé |
-| API maintenances (GET/POST) | Thomas | Terminé |
-| Module Garage — liste des motos | Sarah | Terminé |
-| Module Entretien — ajout et historique | Sarah | Terminé |
-| Tableau de bord v1 | Sarah | Terminé |
-
-**Sprint review (21 mars)** : Démo garage + entretien. Demande client : ajouter la météo.
-
----
-
-## Sprint 3 — Semaine 3 (24 – 28 mars) : Fonctionnalités avancées
-
-| Tâche | Responsable | Statut |
-|---|---|---|
-| Wizard multi-étapes ajout moto | Luca | Terminé |
-| Validation modèle via NHTSA + autocomplete | Luca | Terminé |
-| Format automatique immatriculation SIV | Luca | Terminé |
-| Module Actualités (Google News RSS) | Sarah | Terminé |
-| Module Pièces & achats | Sarah | Terminé |
-| Page météo | Sarah | Terminé |
-
-**Sprint review (28 mars)** : Validé par Sophie Arnaud. Demande client : UI plus premium.
+| Tâche | Statut |
+|---|---|
+| Wizard multi-étapes ajout moto | Terminé |
+| Validation modèle via NHTSA + autocomplete | Terminé |
+| Format automatique immatriculation SIV | Terminé |
+| Module Actualités (Google News RSS) | Terminé |
+| Module Pièces & achats | Terminé |
+| Page météo | Terminé |
 
 ---
 
-## Sprint 4 — Semaine 4 (31 mars – 4 avril) : Design & 3D
+## Incrément 4 — Semaine 4 (31 mars – 4 avril) : Design & 3D
 
-| Tâche | Responsable | Statut |
-|---|---|---|
-| Système de design dark premium (Tailwind, Barlow Condensed) | Karim + Sarah | Terminé |
-| Refonte complète du frontend | Sarah | Terminé |
-| Scène 3D accueil (Three.js / React Three Fiber) | Luca | Terminé |
-| Modèle GLB Ducati Panigale V4R | Luca | Terminé |
-| PWA (next-pwa) | Thomas | Terminé |
-
-**Sprint review (4 avril)** : Très apprécié par Marc Duvalier. Validé.
+| Tâche | Statut |
+|---|---|
+| Système de design dark premium (Tailwind, Barlow Condensed) | Terminé |
+| Refonte du frontend | Terminé |
+| Scène 3D accueil (Three.js / React Three Fiber) | Terminé |
+| Modèle GLB Ducati Panigale V4R | Terminé |
+| PWA (next-pwa) | Terminé |
 
 ---
 
-## Sprint 5 — Semaine 5 (7 – 11 avril) : Consolidation
+## Incrément 5 — Semaine 5 (7 – 11 avril) : Consolidation
 
-| Tâche | Responsable | Statut |
-|---|---|---|
-| Sélection moto principale (isPrimary) | Thomas + Luca | Terminé |
-| Tableau de bord v2 — vraies données | Luca + Sarah | Terminé |
-| Filtre par moto dans l'historique | Sarah | Terminé |
-| Tests unitaires Jest | Julie + Luca | Terminé |
-| CI/CD GitHub Actions | Thomas | Terminé |
-
-**Sprint review (11 avril)** : Démo feature-complete. Go pour la documentation.
+| Tâche | Statut |
+|---|---|
+| Sélection moto principale (isPrimary) | Terminé |
+| Tableau de bord v2 — vraies données | Terminé |
+| Filtre par moto dans l'historique | Terminé |
+| Harnais de tests unitaires (Jest) | Terminé |
+| CI/CD GitHub Actions | Terminé |
 
 ---
 
-## Sprint 6 — Semaine 6 (14 – 21 avril) : Documentation & livraison
+## Incrément 6 — Semaine 6 (14 – 21 avril) : Documentation & livraison
 
-| Tâche | Responsable | Statut |
-|---|---|---|
-| Cahier de recettes (15 scénarios) | Julie | Terminé |
-| Exécution des tests de recette | Julie | Terminé |
-| Schéma d'architecture | Luca | Terminé |
-| Documentation technique | Luca + Thomas | Terminé |
-| Logging Winston + endpoint /api/health | Thomas | Terminé |
-| CHANGELOG | Luca | Terminé |
-| Préparation soutenance | Luca | En cours |
+| Tâche | Statut |
+|---|---|
+| Cahier de recettes (17 scénarios) | Terminé |
+| Exécution des tests de recette | Terminé |
+| Schéma d'architecture | Terminé |
+| Documentation technique | Terminé |
+| Logging Winston + endpoint /api/health | Terminé |
+| CHANGELOG | Terminé |
 
 ---
 
@@ -128,8 +104,18 @@
 
 | Jalon | Date cible | Date réelle | Statut |
 |---|---|---|---|
-| Validation maquettes | 9 mars 2026 | 9 mars 2026 | Atteint |
 | Prototype auth + garage navigable | 21 mars 2026 | 21 mars 2026 | Atteint |
 | Version feature-complete | 11 avril 2026 | 11 avril 2026 | Atteint |
 | Documentation complète | 21 avril 2026 | 21 avril 2026 | Atteint |
-| Soutenance | 28 avril 2026 | — | A venir |
+
+## Évolutions postérieures à la v1.0.0
+
+Le projet a continué d'évoluer après la livraison de la version 1.0.0, ce que trace
+l'historique Git :
+
+| Évolution | Branche |
+|---|---|
+| Localisation française des pages d'authentification | `feature/i18n-fr` |
+| Supervision Core Web Vitals (RUM) | `feature/monitoring-web-vitals` |
+| Migration de la base de production vers Supabase (pooler + directUrl) | `chore/supabase-config` |
+| Correction du prérendu : `useSearchParams` encapsulé dans une frontière Suspense | `fix/maintenance-suspense-boundary` |

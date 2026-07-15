@@ -40,8 +40,8 @@ Chaque anomalie suit un cycle formalisé :
 |---|---|
 | Détection | Audit qualité — `jest --coverage` |
 | Analyse | La couverture de la couche logique s'établissait à **6,4 %** ; les seuils du projet étaient fixés artificiellement bas (5 %), masquant l'absence de tests sur les routes API, le middleware et les librairies. Risque de régression majeur et non-conformité au critère « les tests couvrent la majorité du code ». |
-| Correction | Rédaction de **99 tests unitaires** couvrant les routes `auth`, `motorcycles`, `maintenances`, `health`, `news`, `motorcycle-models`, le middleware et les librairies. Relèvement des seuils de couverture (statements 90 %, branches 80 %). |
-| Vérification | Couverture couche logique portée à **95 % statements / 96 % lignes / 84 % branches**, 17 suites vertes. |
+| Correction | Rédaction d'un harnais couvrant les routes `auth`, `motorcycles`, `maintenances`, `health`, `news`, `motorcycle-models`, le middleware et les librairies. Relèvement des seuils de couverture, rendus bloquants en CI (statements 90 %, functions 90 %, lines 90 %, branches 80 %). |
+| Vérification | Harnais porté à **142 tests / 23 suites**, tous verts. Couverture de la couche logique : **95,94 % statements · 88,28 % branches · 98,14 % functions · 96,74 % lines** (mesure `jest --coverage`, cf. `jest.config.js`). |
 | Statut | ✅ Résolu |
 
 ### BUG-02 — Jest exécutait les tests Playwright 🟠
@@ -98,16 +98,30 @@ Chaque anomalie suit un cycle formalisé :
 
 ## 3. Anomalies fonctionnelles de recette
 
-L'exécution du cahier de recettes (15 scénarios, 18 avril 2026) n'a révélé **aucune
-anomalie fonctionnelle** : les 15 scénarios sont passés. Les anomalies ci-dessus relèvent
-de la **qualité technique** (tests, configuration, accessibilité, sécurité) et ont été
-détectées par l'outillage qualité mis en place (couverture, typage, lint, audit).
+La campagne de recette **finale** (17 scénarios, 18 avril 2026, version 1.0.0) n'a révélé
+aucune anomalie fonctionnelle : les 17 scénarios sont passés.
+
+Ce résultat ne signifie pas que le développement s'est déroulé sans incident. Les anomalies
+fonctionnelles rencontrées **au cours des incréments précédents** sont consignées dans le
+journal de `suivi-avancement.md` — notamment **A-03** (inscription cassée par une migration
+non appliquée), **A-04** (`useGLTF` appelé dans un try/catch, hook React invalide) et
+**A-06** (champs optionnels vides sérialisés en `""`, rejetés en 400 par Zod). Elles ont
+été corrigées avant la recette finale, ce qui explique qu'elle soit verte.
+
+Les anomalies du registre ci-dessus (BUG-01 à BUG-06) relèvent quant à elles de la
+**qualité technique** (tests, configuration, accessibilité, cohérence) et ont été détectées
+par l'outillage mis en place — couverture, typage, lint, audit — et non par la recette.
+
+**Ce que cette répartition dit du dispositif :** l'outillage attrape ce qu'il sait mesurer
+(typage, seuils, règles de lint) ; la recette manuelle attrape ce qui se voit à l'écran.
+Aucun des deux n'attrape ce à quoi je n'ai pas pensé — c'est précisément le rôle que
+tiendrait une revue par un pair, absente ici.
 
 ## 4. Analyse des points d'amélioration
 
 | Point d'amélioration | Action de fond engagée |
 |---|---|
-| Non-régression | Harnais de 99 tests unitaires + 22 tests e2e, exécutés à chaque push (CI) |
+| Non-régression | Harnais de 142 tests unitaires (23 suites) + 22 tests e2e, exécutés à chaque push (CI) |
 | Fiabilité du build | Typage strict vérifié, client Prisma régénéré, lint verrouillé |
 | Accessibilité | Conformité RGAA sur les parcours critiques, testée automatiquement |
 | Sécurité | Cartographie OWASP Top 10 (voir `securite-owasp.md`) |
