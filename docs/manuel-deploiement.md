@@ -4,7 +4,7 @@
 |---|---|
 | Projet | MotoTrack |
 | Version | 1.0.0 |
-| Public visé | Équipe technique / administrateur système |
+| Public visé | Mainteneur / administrateur système (développeur reprenant le projet) |
 | Date | 21 avril 2026 |
 
 ## 1. Architecture cible
@@ -12,7 +12,7 @@
 | Couche | Technologie | Hébergement |
 |---|---|---|
 | Application | Next.js 14 (App Router, SSR + API Routes) | Vercel |
-| Base de données | PostgreSQL 15 | Neon (managé) en production, Docker en local |
+| Base de données | PostgreSQL 15 | Supabase (managé) en production, Docker en local |
 | ORM / migrations | Prisma 5 | — |
 | CI/CD | GitHub Actions | GitHub |
 
@@ -20,17 +20,21 @@
 
 - **Node.js 20+** et **npm 10+**
 - **Docker Desktop** (base de données locale)
-- Un compte **Vercel** et un compte **Neon** (ou toute base PostgreSQL managée) pour la production
+- Un compte **Vercel** et un compte **Supabase** (ou toute base PostgreSQL managée) pour la production
 - Accès au dépôt GitHub du projet
 
 ## 3. Variables d'environnement
 
 | Variable | Description | Exemple |
 |---|---|---|
-| `DATABASE_URL` | Chaîne de connexion PostgreSQL | `postgresql://user:pass@host:5432/mototrack?schema=public` |
+| `DATABASE_URL` | Chaîne de connexion PostgreSQL. En production Supabase : URL **pooler** (PgBouncer), compatible serverless | `postgresql://user:pass@host:6543/postgres?pgbouncer=true` |
+| `DIRECT_URL` | Connexion **directe**, utilisée par Prisma Migrate uniquement (le pooler ne supporte pas les migrations) | `postgresql://user:pass@host:5432/postgres` |
 | `JWT_SECRET` | Secret de signature JWT (≥ 32 caractères) | `changeme-32-chars-minimum!!` |
 | `NEXT_PUBLIC_APP_URL` | URL publique de l'application | `https://mototrack.vercel.app` |
 | `LOG_LEVEL` | Niveau de journalisation Winston (optionnel) | `info` |
+
+> ℹ️ `DIRECT_URL` n'est requise que sur la configuration Supabase, portée par la branche
+> `chore/supabase-config` (voir §8). Sur `main`, `schema.prisma` ne déclare que `url`.
 
 > ⚠️ Le fichier `.env` est exclu du versionnement (`.gitignore`). Les secrets de production
 > sont stockés dans **Vercel → Settings → Environment Variables**.
@@ -81,7 +85,8 @@ push/PR sur main ──▶ Job « test-and-build »
 
 ### 5.2 Configuration initiale (une seule fois)
 
-1. Créer la base de production sur Neon, récupérer sa `DATABASE_URL`.
+1. Créer la base de production sur Supabase, récupérer l'URL pooler (`DATABASE_URL`) et
+   l'URL directe (`DIRECT_URL`) depuis **Project Settings → Database → Connection string**.
 2. Lier le projet à Vercel :
    ```bash
    npm install -g vercel
@@ -119,3 +124,21 @@ En cas d'anomalie critique en production :
 1. **Vercel → Deployments** → sélectionner le dernier déploiement stable → **Promote to Production**.
 2. Si une migration de base est en cause, restaurer via une migration Prisma corrective
    (voir `manuel-mise-a-jour.md`, section migrations).
+
+## 8. État réel des branches (à jour au 15 juillet 2026)
+
+Ce manuel décrit l'architecture cible. Toutes les évolutions ne sont pas encore fusionnées
+dans `main` — un mainteneur qui clone le dépôt doit le savoir avant de déployer :
+
+| Évolution | Branche | Fusionnée dans `main` ? |
+|---|---|---|
+| Correction du prérendu (frontière Suspense) | `fix/maintenance-suspense-boundary` | ✅ oui (PR #6) |
+| Localisation française des pages d'authentification | `feature/i18n-fr` | ❌ non — présente sur `develop` |
+| Supervision Core Web Vitals (RUM) | `feature/monitoring-web-vitals` | ❌ non — ni sur `main`, ni sur `develop` |
+| Configuration Supabase (pooler + `directUrl`) | `chore/supabase-config` | ❌ non — ni sur `main`, ni sur `develop` |
+
+**Conséquence directe :** en l'état, un déploiement depuis `main` produit une application
+sans localisation FR, sans collecte Web Vitals, et dont `schema.prisma` ne déclare pas
+`directUrl` — donc `prisma migrate deploy` échouera contre l'URL pooler de Supabase. La
+séquence de reprise est de fusionner `chore/supabase-config` **avant** toute migration en
+production.

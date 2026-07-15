@@ -1,21 +1,26 @@
 {
   "name": "MotoTrack",
   "short_name": "MotoTrack",
-  "description": "Professional motorcycle maintenance tracking application",
+  "description": "Suivi d'entretien moto : carnet, historique kilométrique et échéances.",
+  "lang": "fr",
   "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0a",
+  "theme_color": "#e60026",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

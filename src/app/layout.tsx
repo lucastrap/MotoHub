@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 
@@ -11,8 +11,18 @@ const barlowCondensed = Barlow_Condensed({
 
 export const metadata: Metadata = {
   title: "MotoTrack",
-  description: "Professional motorcycle maintenance tracking",
+  description: "Suivi d'entretien moto : carnet, historique kilométrique et échéances.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/icon-192x192.png",
+    // iOS ignore les icônes du manifest : sans apple-touch-icon, l'ajout à
+    // l'écran d'accueil utilise une capture de la page.
+    apple: "/icons/icon-192x192.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#e60026",
 };
 
 export default function RootLayout({
