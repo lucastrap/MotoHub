@@ -84,12 +84,57 @@ jobs:
         retention-days: 7
 
   # ─────────────────────────────────────────────────────────────
-  # Déploiement Vercel — uniquement sur push vers main
+  # Déploiements Vercel — la CI est le SEUL déployeur.
+  # L'intégration Git de Vercel est volontairement déconnectée : elle
+  # déploierait sur push sans consulter les tests. Ici, `needs: test-and-build`
+  # rend tout déploiement impossible tant que le pipeline n'est pas vert.
+  #
   # Prérequis : ajouter dans les GitHub Secrets du repo :
   #   VERCEL_TOKEN       → token API Vercel (Settings > Tokens)
   #   VERCEL_ORG_ID      → depuis .vercel/project.json après `vercel link`
   #   VERCEL_PROJECT_ID  → depuis .vercel/project.json après `vercel link`
   # ─────────────────────────────────────────────────────────────
+
+  # Preview (staging) — sur chaque Pull Request, après les tests.
+  deploy-preview:
+    name: Deploy Preview (PR)
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    if: github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Vercel CLI
+      run: npm install -g vercel@latest
+
+    - name: Deploy preview
+      id: deploy
+      run: echo "url=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)" >> $GITHUB_OUTPUT
+      env:
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    - name: Commenter l'URL de preview sur la PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `**Preview déployée** — pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
+          })
+
+  # Production — uniquement sur push vers main, après les tests.
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
