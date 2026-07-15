@@ -19,24 +19,24 @@ describe("Page de connexion (intégration)", () => {
   it("affiche les champs et le bouton de connexion", () => {
     render(<LoginPage />);
     expect(screen.getByRole("heading", { name: /mototrack/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/e-mail/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/mot de passe/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /se connecter/i })).toBeInTheDocument();
   });
 
   it("affiche les erreurs de validation Zod sur soumission vide", async () => {
     render(<LoginPage />);
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
-    expect(await screen.findByText(/invalid email address/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /se connecter/i }));
+    expect(await screen.findByText(/adresse e-mail invalide/i)).toBeInTheDocument();
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
   it("appelle l'API et redirige vers le dashboard si les identifiants sont valides", async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: true });
     render(<LoginPage />);
-    fill(/email/i, "pilote@motoclub-alpes.fr");
-    fill(/password/i, "motdepasse");
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
+    fill(/e-mail/i, "pilote@example.fr");
+    fill(/mot de passe/i, "motdepasse");
+    fireEvent.click(screen.getByRole("button", { name: /se connecter/i }));
 
     await waitFor(() =>
       expect(global.fetch).toHaveBeenCalledWith(
@@ -50,12 +50,12 @@ describe("Page de connexion (intégration)", () => {
   it("affiche un message d'erreur accessible si l'API rejette", async () => {
     (global.fetch as jest.Mock).mockResolvedValue({ ok: false });
     render(<LoginPage />);
-    fill(/email/i, "pilote@motoclub-alpes.fr");
-    fill(/password/i, "mauvaispass");
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
+    fill(/e-mail/i, "pilote@example.fr");
+    fill(/mot de passe/i, "mauvaispass");
+    fireEvent.click(screen.getByRole("button", { name: /se connecter/i }));
 
     const alert = await screen.findByRole("alert");
-    expect(alert).toHaveTextContent(/invalid credentials/i);
+    expect(alert).toHaveTextContent(/identifiants invalides/i);
     expect(push).not.toHaveBeenCalled();
   });
 });
