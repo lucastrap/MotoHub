@@ -5,12 +5,18 @@
 | Champ | Valeur |
 |---|---|
 | Projet | MotoTrack |
-| Client | MotoClub Alpes |
 | Version testée | 1.0.0 |
 | Environnement | localhost:3000 + PostgreSQL Docker |
-| Rédactrice | Julie Fontaine (QA) |
-| Validé par | Sophie Arnaud (MotoClub Alpes) |
+| Rédigé et exécuté par | Luca Straputicari |
 | Date | 18 avril 2026 |
+
+> **Note de méthode.** Le projet étant mené seul, la recette est rédigée et exécutée par la
+> même personne que celle qui a développé l'application. C'est une limite réelle : un
+> rédacteur qui connaît le code teste spontanément les chemins qu'il a prévus. Pour la
+> réduire, les scénarios ont été dérivés des user stories du Bloc 1 (et non du code), et
+> chaque fonctionnalité clé décline au moins un cas nominal, un cas d'erreur et un cas
+> limite. La majorité des scénarios est en outre rejouée automatiquement à chaque push,
+> ce qui les soustrait à ma bienveillance de relecteur.
 
 ---
 
@@ -30,7 +36,7 @@
 
 | Champ | Détail |
 |---|---|
-| Précondition | Compte existant avec l'email `test@motoclub-alpes.fr` |
+| Précondition | Compte existant avec l'email `test@mototrack.local` |
 | Étapes | 1. Accéder à `/register` · 2. Saisir l'email déjà enregistré · 3. Soumettre |
 | Résultat attendu | Message d'erreur affiché, pas de redirection |
 | Résultat obtenu | Conforme |
@@ -232,4 +238,19 @@ Chaque scénario de recette est rejoué automatiquement (non-régression). Corre
 | Non testé | 0 |
 | **Total** | **17** |
 
-**Conclusion** : L'ensemble des scénarios de recette (fonctionnels, structurels et de sécurité) est passé sans anomalie. L'application est conforme aux spécifications validées par Sophie Arnaud (MotoClub Alpes) le 18 avril 2026. Les 17 scénarios sont couverts par des tests automatisés garantissant la non-régression.
+**Conclusion** : la campagne de recette finale, jouée le 18 avril 2026 sur la version 1.0.0,
+ne révèle plus d'anomalie fonctionnelle : les 17 scénarios passent.
+
+Cette conclusion mérite d'être lue avec les réserves suivantes, qui sont les miennes :
+
+- **Ce résultat porte sur la recette finale, pas sur l'histoire du projet.** Les anomalies
+  rencontrées au cours des incréments précédents sont consignées dans
+  `suivi-avancement.md` (journal A-01 à A-07) et analysées dans `plan-correction-bogues.md`.
+  Un cahier vert du premier coup n'existe pas ; celui-ci est vert *à la fin*.
+- **11 des 17 scénarios sont adossés à des tests automatisés** (voir la table de traçabilité
+  ci-dessus), rejoués à chaque push. Les 6 restants — RT-06 (ajout moto, formulaire complet),
+  RT-08 (moto principale), RT-09 (autocomplete NHTSA), RT-12 (filtre historique),
+  RT-13 et RT-14 (dashboard) — ne sont vérifiés que manuellement. C'est là que le risque de
+  régression est le plus élevé, et c'est le premier chantier d'extension du harnais.
+- **Aucun utilisateur externe n'a exécuté cette recette.** Elle valide la conformité aux
+  spécifications que j'ai moi-même écrites, pas l'adéquation du produit à un besoin réel.

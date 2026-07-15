@@ -4,7 +4,7 @@
 |---|---|
 | Projet | MotoTrack |
 | Version | 1.0.0 |
-| Public visé | Utilisateur final (membre du MotoClub Alpes) |
+| Public visé | Utilisateur final (motard gérant l'entretien de sa ou ses motos) |
 | Date | 21 avril 2026 |
 
 MotoTrack est une application web de gestion de garage moto : suivi d'entretien,
@@ -82,5 +82,10 @@ langue déclarée et structure de titres cohérente.
 
 ## 8. Aide et support
 
-En cas de difficulté, contacter le référent numérique du club (Sophie Arnaud) ou consulter
-la sonde d'état du service : `https://<domaine>/api/health`.
+MotoTrack est développé et maintenu par une seule personne : il n'existe pas de support
+dédié. En cas de difficulté :
+
+- vérifier que le service est opérationnel via la sonde d'état : `https://<domaine>/api/health`
+  (réponse attendue : `{ "status": "ok", "db": "connected" }`) ;
+- signaler une anomalie en ouvrant une **issue** sur le dépôt GitHub du projet, en précisant
+  les étapes de reproduction, le comportement attendu et le comportement obtenu.
