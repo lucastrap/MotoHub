@@ -102,6 +102,7 @@ jobs:
     needs: test-and-build
     if: github.event_name == 'pull_request'
     permissions:
+      contents: read
       pull-requests: write
 
     steps:
@@ -118,7 +119,14 @@ jobs:
 
     - name: Deploy preview
       id: deploy
-      run: echo "url=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)" >> $GITHUB_OUTPUT
+      run: |
+        url=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
+        if [ -z "$url" ]; then
+          echo "::error::vercel deploy n'a retourne aucune URL"
+          exit 1
+        fi
+        echo "url=$url" >> $GITHUB_OUTPUT
+        echo "Preview deployee : $url" >> $GITHUB_STEP_SUMMARY
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -131,11 +139,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-<<<<<<< Updated upstream
-            body: `🚀 **Preview déployée** — pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
-=======
-            body: ` **Preview déployée** — pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
->>>>>>> Stashed changes
+            body: `**Preview déployée** — pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
           })
 
   # Production — uniquement sur push vers main, après les tests.
