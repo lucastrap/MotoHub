@@ -131,13 +131,16 @@ jobs:
         # dedans plutôt que de sourcer le fichier en shell (fragile si le mot de
         # passe contient un caractère spécial).
         vercel env pull .env --environment=preview --token=${{ secrets.VERCEL_TOKEN }} --yes
-        echo "Variables reçues de Vercel (noms) :"; grep -oE '^[A-Za-z0-9_]+' .env | sort -u
-        val=$(grep '^DIRECT_URL=' .env | head -1 | cut -d= -f2- | tr -d '"')
-        echo "Longueur de DIRECT_URL : ${#val}"
-        if [ -z "$val" ]; then
-          echo "::error::DIRECT_URL est vide dans le scope Preview de Vercel — vérifier la variable côté dashboard"
-          exit 1
-        fi
+        miss=""
+        for v in DATABASE_URL DIRECT_URL; do
+          val=$(grep "^${v}=" .env | head -1 | cut -d= -f2- | tr -d '"')
+          echo "Longueur de ${v} : ${#val}"
+          if [ -z "$val" ]; then
+            echo "::error::${v} est vide dans le scope Preview de Vercel (probablement marquée « Sensitive » — la recréer sans ce flag)"
+            miss=1
+          fi
+        done
+        [ -n "$miss" ] && exit 1
         npx prisma migrate deploy
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -193,12 +196,16 @@ jobs:
     - name: Migrate production database
       run: |
         vercel env pull .env --environment=production --token=${{ secrets.VERCEL_TOKEN }} --yes
-        val=$(grep '^DIRECT_URL=' .env | head -1 | cut -d= -f2- | tr -d '"')
-        echo "Longueur de DIRECT_URL : ${#val}"
-        if [ -z "$val" ]; then
-          echo "::error::DIRECT_URL est vide dans le scope Production de Vercel — vérifier la variable côté dashboard"
-          exit 1
-        fi
+        miss=""
+        for v in DATABASE_URL DIRECT_URL; do
+          val=$(grep "^${v}=" .env | head -1 | cut -d= -f2- | tr -d '"')
+          echo "Longueur de ${v} : ${#val}"
+          if [ -z "$val" ]; then
+            echo "::error::${v} est vide dans le scope Production de Vercel (probablement marquée « Sensitive » — la recréer sans ce flag)"
+            miss=1
+          fi
+        done
+        [ -n "$miss" ] && exit 1
         npx prisma migrate deploy
       env:
         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
