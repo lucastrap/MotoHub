@@ -7,11 +7,7 @@ on:
     branches: [ "main", "develop" ]
 
 jobs:
-  # ⚠️ TEMPORAIRE : tests désactivés le temps de valider le pipeline de deploy.
-  # REMETTRE `if: true` (ou supprimer cette ligne) + restaurer `needs: test-and-build`
-  # sur deploy-preview et deploy AVANT de merger.
   test-and-build:
-    if: false
     runs-on: ubuntu-latest
 
     services:
@@ -104,7 +100,7 @@ jobs:
   deploy-preview:
     name: Deploy Preview (PR)
     runs-on: ubuntu-latest
-    # ⚠️ TEMPORAIRE : `needs: test-and-build` retiré pour tester le deploy sans les tests. À RESTAURER.
+    needs: test-and-build
     if: github.event_name == 'pull_request'
     permissions:
       contents: read
