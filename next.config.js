@@ -2,8 +2,14 @@
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
-  register: true,
+
+  register: false,
   skipWaiting: true,
+
+  buildExcludes: [/app-build-manifest\.json$/],
+  fallbacks: {
+    document: '/_offline',
+  },
 })
 
 // OWASP A05 — En-têtes de sécurité HTTP appliqués à toutes les réponses.
