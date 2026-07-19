@@ -27,6 +27,10 @@ export const metadata: Metadata = {
     title: "MotoTrack",
     statusBarStyle: "black-translucent",
   },
+  // Équivalent standard (non-Apple) de apple-mobile-web-app-capable.
+  other: {
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export const viewport: Viewport = {
