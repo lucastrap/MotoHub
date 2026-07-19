@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { getUpcomingMaintenance } from "@/lib/maintenance/schedule";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -48,48 +49,7 @@ const TYPE_ICONS: Record<string, string> = {
   OTHER: "📋",
 };
 
-function getUpcomingMaintenance(moto: Motorcycle, lastByType: Record<string, Maintenance>) {
-  const km = moto.currentMileage;
-  const items = [];
 
-  const chainLast = lastByType["CHAIN_SERVICE"];
-  const chainNext = chainLast ? chainLast.mileage + 1000 : km + 1000;
-  items.push({
-    icon: "⚙️",
-    label: "Kit chaîne",
-    detail: `À ${chainNext.toLocaleString()} km`,
-    urgent: km >= chainNext - 100,
-  });
-
-  const oilLast = lastByType["OIL_CHANGE"];
-  const oilNext = oilLast ? oilLast.mileage + 6000 : km + 6000;
-  items.push({
-    icon: "🛢️",
-    label: "Vidange",
-    detail: `À ${oilNext.toLocaleString()} km`,
-    urgent: km >= oilNext - 300,
-  });
-
-  const brakeLast = lastByType["BRAKE_SERVICE"];
-  const brakeNext = brakeLast ? brakeLast.mileage + 15000 : km + 15000;
-  items.push({
-    icon: "🔴",
-    label: "Freins",
-    detail: `À ${brakeNext.toLocaleString()} km`,
-    urgent: km >= brakeNext - 500,
-  });
-
-  const tireLast = lastByType["TIRE_CHANGE"];
-  const tireNext = tireLast ? tireLast.mileage + 10000 : km + 10000;
-  items.push({
-    icon: "🔵",
-    label: "Pneus",
-    detail: `À ${tireNext.toLocaleString()} km`,
-    urgent: km >= tireNext - 500,
-  });
-
-  return items;
-}
 
 export default function DashboardPage() {
   const [motorcycles, setMotorcycles] = useState<Motorcycle[]>([]);
@@ -147,7 +107,7 @@ export default function DashboardPage() {
     fetchData();
   }, []);
 
-  const upcoming = primary ? getUpcomingMaintenance(primary, lastByType) : [];
+  const upcoming = primary ? getUpcomingMaintenance(primary.currentMileage, lastByType) : [];
 
   return (
     <AppLayout title="Tableau de bord">
@@ -253,11 +213,13 @@ export default function DashboardPage() {
               <div className="space-y-3 flex-1">
                 {upcoming.map((item) => (
                   <div
-                    key={item.label}
+                    key={item.type}
                     className={`flex items-center gap-4 p-3 rounded-lg border ${
-                      item.urgent
-                        ? "bg-orange-500/10 border-orange-500/30 text-orange-400"
-                        : "bg-muted/20 border-border text-foreground"
+                      item.status === "overdue"
+                        ? "bg-destructive/10 border-destructive/30 text-destructive"
+                        : item.status === "soon"
+                          ? "bg-orange-500/10 border-orange-500/30 text-orange-400"
+                          : "bg-muted/20 border-border text-foreground"
                     }`}
                   >
                     <span className="text-xl">{item.icon}</span>
@@ -265,9 +227,14 @@ export default function DashboardPage() {
                       <p className="font-medium text-sm">{item.label}</p>
                     </div>
                     <p className="text-xs text-muted-foreground">{item.detail}</p>
-                    {item.urgent && (
+                    {item.status === "soon" && (
                       <span className="text-xs font-bold text-orange-400 bg-orange-500/20 px-2 py-0.5 rounded-full">
                         Bientôt
+                      </span>
+                    )}
+                    {item.status === "overdue" && (
+                      <span className="text-xs font-bold text-destructive bg-destructive/20 px-2 py-0.5 rounded-full">
+                        En retard
                       </span>
                     )}
                   </div>
