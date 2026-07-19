@@ -24,7 +24,7 @@ export default function Home() {
             <FontAwesomeIcon icon={faMotorcycle} className="h-5 w-5" />
           </div>
           <span className="font-display font-black text-xl tracking-tight uppercase">
-            Moto<span className="text-primary">Track</span>
+            Moto<span className="text-brand">Track</span>
           </span>
         </Link>
         <nav className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function Home() {
           {/* Contenu gauche */}
           <div className="flex flex-col justify-center gap-8 px-8 lg:px-16 xl:px-24 py-20 z-10">
             {/* Tag */}
-            <div className="inline-flex items-center gap-2 text-primary text-xs font-bold tracking-[0.2em] uppercase w-fit">
+            <div className="inline-flex items-center gap-2 text-brand text-xs font-bold tracking-[0.2em] uppercase w-fit">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
               Tableau de bord moto nouvelle génération
             </div>
@@ -79,7 +79,7 @@ export default function Home() {
               </h1>
             </div>
 
-            <p className="text-white/45 text-lg max-w-md leading-relaxed">
+            <p className="text-white/60 text-lg max-w-md leading-relaxed">
               Suivi d&apos;entretien, historique complet, recherche de pièces et rappels
               intelligents. Tout ce qu&apos;il faut pour garder ta moto au top.
             </p>
@@ -119,7 +119,7 @@ export default function Home() {
                   <div className="font-display text-2xl font-black text-white">
                     {stat.value}
                   </div>
-                  <div className="text-[11px] text-white/35 uppercase tracking-widest mt-0.5">
+                  <div className="text-[11px] text-white/60 uppercase tracking-widest mt-0.5">
                     {stat.label}
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export default function Home() {
         <section className="py-28 px-8 lg:px-16 xl:px-24">
           <div className="max-w-6xl mx-auto">
             <div className="mb-14">
-              <p className="text-primary text-xs font-bold tracking-[0.25em] uppercase mb-4">
+              <p className="text-brand text-xs font-bold tracking-[0.25em] uppercase mb-4">
                 Fonctionnalités
               </p>
               <h2 className="font-display font-black uppercase text-[clamp(2.2rem,5vw,3.8rem)] text-white leading-[0.92]">
@@ -193,7 +193,7 @@ export default function Home() {
                     <h3 className="font-display text-base font-bold uppercase tracking-widest text-white mb-3">
                       {feature.title}
                     </h3>
-                    <p className="text-white/45 leading-relaxed text-sm">{feature.desc}</p>
+                    <p className="text-white/60 leading-relaxed text-sm">{feature.desc}</p>
                   </div>
 
                   <div
@@ -203,7 +203,7 @@ export default function Home() {
                   >
                     <span
                       className={`text-[11px] font-bold uppercase tracking-wider ${
-                        feature.highlight ? "text-primary" : "text-white/20"
+                        feature.highlight ? "text-brand" : "text-white/60"
                       }`}
                     >
                       {feature.highlight ? "Disponible →" : "Inclus →"}
@@ -230,7 +230,7 @@ export default function Home() {
                 maîtriser ?
               </span>
             </h2>
-            <p className="text-white/45 text-lg max-w-md">
+            <p className="text-white/60 text-lg max-w-md">
               Rejoins les passionnés qui ne laissent plus rien au hasard.
             </p>
             <Button
@@ -246,7 +246,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-white/[0.06] py-8 px-8 lg:px-16">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/20 text-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/60 text-sm">
           <div className="flex items-center gap-2">
             <FontAwesomeIcon icon={faMotorcycle} className="text-primary/40" />
             <span>© {new Date().getFullYear()} MotoTrack</span>

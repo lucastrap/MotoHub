@@ -32,6 +32,8 @@ const config = {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        // Rouge de marque eclairci, lisible comme texte sur fond sombre (AA).
+        brand: "hsl(var(--primary-text))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
