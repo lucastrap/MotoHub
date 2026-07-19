@@ -5,6 +5,10 @@ const withPWA = require('next-pwa')({
 
   register: false,
   skipWaiting: true,
+  
+  fallbacks: {
+    document: '/_offline',
+  },
 })
 
 // OWASP A05 — En-têtes de sécurité HTTP appliqués à toutes les réponses.
