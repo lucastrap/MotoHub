@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import MotorcycleScene from "@/components/3d/MotorcycleScene";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMotorcycle,
