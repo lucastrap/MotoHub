@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-// RT-15 — Endpoint de supervision (cahier de recettes)
+// RT-15   Endpoint de supervision (cahier de recettes)
 test.describe("API de supervision /api/health", () => {
   test("répond avec un contrat de santé structuré", async ({ request }) => {
     const res = await request.get("/api/health");
@@ -12,7 +12,7 @@ test.describe("API de supervision /api/health", () => {
     expect(typeof body.latencyMs).toBe("number");
 
     // Avec la base disponible (environnement CI/prod) : 200 + status ok
-    // Sans base : 503 + status error — les deux cas restent contractuels
+    // Sans base : 503 + status error   les deux cas restent contractuels
     expect([200, 503]).toContain(res.status());
     if (res.status() === 200) {
       expect(body.status).toBe("ok");

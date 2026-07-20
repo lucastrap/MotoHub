@@ -9,7 +9,7 @@ jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: ({ className }: { className?: string }) => <span className={className} />,
 }));
 
-describe("AppLayout — structure et accessibilité", () => {
+describe("AppLayout   structure et accessibilité", () => {
   it("expose un lien d'évitement vers le contenu principal (RGAA 12.7)", () => {
     render(<AppLayout title="Tableau de bord">contenu</AppLayout>);
     const skip = screen.getByRole("link", { name: /aller au contenu principal/i });

@@ -1,4 +1,4 @@
-// jose est un module ESM pur — on le mock pour l'environnement Jest/JSDOM
+// jose est un module ESM pur   on le mock pour l'environnement Jest/JSDOM
 jest.mock("jose", () => ({
   jwtVerify: jest.fn(),
   SignJWT: jest.fn().mockImplementation(() => ({

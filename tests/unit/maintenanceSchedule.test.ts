@@ -54,7 +54,7 @@ describe("getUpcomingMaintenance", () => {
     expect(chain.status).toBe("soon");
   });
 
-  it("passe en 'overdue' quand l'échéance est dépassée — l'état qui manquait", () => {
+  it("passe en 'overdue' quand l'échéance est dépassée   l'état qui manquait", () => {
     const chain = getUpcomingMaintenance(11500, { CHAIN_SERVICE: { mileage: 10000 } }).find(
       (i) => i.type === "CHAIN_SERVICE",
     )!;
