@@ -80,8 +80,8 @@ export default function Home() {
             </div>
 
             <p className="text-white/60 text-lg max-w-md leading-relaxed">
-              Suivi d&apos;entretien, historique complet, recherche de pièces et rappels
-              intelligents. Tout ce qu&apos;il faut pour garder ta moto au top.
+              Suivi d&apos;entretien, historique complet, recherche de pièces et échéances
+              calculées au kilomètre. Tout ce qu&apos;il faut pour garder ta moto au top.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-1">
@@ -149,7 +149,7 @@ export default function Home() {
               </h2>
             </div>
 
-            {/* Grille de features — séparations fines */}
+            {/* Grille de features   séparations fines */}
             <div className="grid gap-px bg-white/[0.06] rounded-2xl overflow-hidden sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
@@ -166,8 +166,8 @@ export default function Home() {
                 },
                 {
                   icon: faGaugeHigh,
-                  title: "Rappels intelligents",
-                  desc: "Notifications pour ton kit chaîne, l'huile moteur et ta prochaine révision. Ne rate plus rien.",
+                  title: "Échéances calculées",
+                  desc: "Ta prochaine vidange, ton kit chaîne, tes freins : les échéances sont calculées au kilomètre près depuis ton historique.",
                   highlight: false,
                 },
               ].map((feature) => (

@@ -1,6 +1,6 @@
 import { checkRateLimit, getClientIp, resetRateLimit } from "@/lib/rateLimit";
 
-describe("checkRateLimit — fenêtre glissante", () => {
+describe("checkRateLimit   fenêtre glissante", () => {
   beforeEach(() => resetRateLimit());
 
   it("autorise les requêtes sous le seuil", () => {

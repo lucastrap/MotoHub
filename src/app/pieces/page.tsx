@@ -87,7 +87,7 @@ function getDynamicSearchLinks(moto: Motorcycle): ShopLink[] {
       name: "eBay",
       url: `https://www.ebay.fr/sch/i.html?_nkw=pieces+${encodeURIComponent(moto.brand + ' ' + moto.model)}&_sacat=6024`,
       type: "search",
-      description: `Rechercher "${moto.brand} ${moto.model}" sur eBay — neuf & occasion.`,
+      description: `Rechercher "${moto.brand} ${moto.model}" sur eBay   neuf & occasion.`,
     },
     {
       name: "Le Bon Coin",
