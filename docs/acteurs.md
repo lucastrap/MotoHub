@@ -1,4 +1,4 @@
-# Cartographie des acteurs — MotoTrack
+# Cartographie des acteurs   MotoTrack
 
 ## Origine du projet
 
@@ -9,7 +9,7 @@ des carnets papier ou des tableurs épars, les solutions existantes étant soit 
 
 En l'absence de commanditaire externe, j'ai endossé le rôle de commanditaire pour cadrer
 le produit : définition du périmètre, arbitrage des priorités, validation des livrables.
-Ce double rôle est explicite et assumé — il implique que les décisions produit ne sont
+Ce double rôle est explicite et assumé   il implique que les décisions produit ne sont
 adossées à aucune validation externe, limite discutée en conclusion du dossier.
 
 ## Réalisation
@@ -21,7 +21,7 @@ adossées à aucune validation externe, limite discutée en conclusion du dossie
 Le projet est réalisé **seul, de bout en bout**. Aucune répartition des tâches n'est donc
 possible : la discipline habituellement portée par une équipe (revue de code, regard
 extérieur sur une régression, validation par un tiers) est reportée sur l'outillage
-automatisé — CI bloquante, harnais de tests, typage strict, lint. Ce transfert est un
+automatisé   CI bloquante, harnais de tests, typage strict, lint. Ce transfert est un
 choix méthodologique documenté, pas un pis-aller.
 
 ## Persona d'illustration
@@ -36,8 +36,8 @@ les arbitrages fonctionnels (« un membre du club aurait-il besoin de ceci ? »)
 
 | Acteur | Rôle | Implication |
 |---|---|---|
-| Ynov Campus — Jury | Évalue la conformité du projet aux blocs de compétences | Soutenance finale |
-| Référents pédagogiques | Accompagnement méthodologique | Intermittente — jalons |
+| Ynov Campus   Jury | Évalue la conformité du projet aux blocs de compétences | Soutenance finale |
+| Référents pédagogiques | Accompagnement méthodologique | Intermittente   jalons |
 | Vercel | Hébergement de l'application (production et previews) | Technique uniquement |
 | Supabase | Base de données PostgreSQL managée en production | Technique uniquement |
 

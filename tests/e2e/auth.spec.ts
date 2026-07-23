@@ -13,7 +13,7 @@ test.describe("Page de connexion (/login)", () => {
 
   test("affiche une erreur Zod quand l'email est vide", async ({ page }) => {
     // type="email" bloque la soumission si la valeur est invalide (validation navigateur)
-    // mais laisse passer un champ vide sans required — zodResolver prend le relai
+    // mais laisse passer un champ vide sans required   zodResolver prend le relai
     await page.getByRole("button", { name: /se connecter/i }).click();
     await expect(page.locator("text=Adresse e-mail invalide")).toBeVisible();
   });

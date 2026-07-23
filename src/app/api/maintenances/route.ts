@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import z from "zod";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 const maintenanceSchema = z.object({
   motorcycleId: z.string().uuid(),
@@ -64,6 +65,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(maintenances, { status: 200 });
   } catch (error) {
+    logger.error("GET /api/maintenances a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -107,6 +109,7 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
+    logger.error("POST /api/maintenances a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

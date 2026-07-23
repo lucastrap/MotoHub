@@ -1,11 +1,11 @@
-# Changelog — MotoTrack
+# Changelog   MotoTrack
 
 Toutes les modifications notables sont documentées ici.  
 Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [1.0.0] — 2026-04-21
+## [1.0.0]   2026-04-21
 
 ### Ajouts
 - Module Garage : ajout, liste et gestion de plusieurs motos
@@ -20,8 +20,8 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 - Scène 3D accueil (Ducati Panigale V4R, Three.js / React Three Fiber)
 - Authentification JWT avec cookies HTTP-only (register, login, logout)
 - Middleware de protection des routes privées
-- Design dark premium — Tailwind CSS, Barlow Condensed, thème `#090909`
-- PWA (next-pwa) — installable sur mobile
+- Design dark premium   Tailwind CSS, Barlow Condensed, thème `#090909`
+- PWA (next-pwa)   installable sur mobile
 - CI/CD GitHub Actions (lint, tests, build)
 - Endpoint de supervision `GET /api/health`
 - Logger structuré Winston
@@ -35,7 +35,7 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [0.3.0] — 2026-04-07
+## [0.3.0]   2026-04-07
 
 ### Ajouts
 - Wizard ajout moto : sélecteur de marques avec drapeaux, autocomplete modèle NHTSA
@@ -49,12 +49,12 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [0.2.0] — 2026-03-24
+## [0.2.0]   2026-03-24
 
 ### Ajouts
 - Module Pièces & achats avec liens dynamiques par moto
 - Scène 3D (Three.js) sur la page d'accueil
-- Design dark premium — refonte complète du frontend
+- Design dark premium   refonte complète du frontend
 - Page Actualités moto
 
 ### Correctifs
@@ -63,13 +63,13 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [0.1.0] — 2026-03-15
+## [0.1.0]   2026-03-15
 
 ### Ajouts
 - Initialisation projet Next.js 14 + Docker + Prisma
 - Schéma base de données : User, Motorcycle, Maintenance, Reminder
 - Authentification complète (register, login, JWT, middleware)
-- Module Garage — liste et ajout de motos
-- Module Entretien — CRUD interventions
+- Module Garage   liste et ajout de motos
+- Module Entretien   CRUD interventions
 - Tableau de bord initial
 - CI/CD GitHub Actions

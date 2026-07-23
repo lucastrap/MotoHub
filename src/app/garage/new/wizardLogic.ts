@@ -51,28 +51,9 @@ export function buildYears(currentYear: number = new Date().getFullYear()): numb
   return Array.from({ length: currentYear - 1989 + 2 }, (_, i) => currentYear + 1 - i);
 }
 
-// ── Schéma de validation ──
 
-export function buildMotorcycleSchema(currentYear: number = new Date().getFullYear()) {
-  return z.object({
-    brand: z.string().min(1, "La marque est requise"),
-    model: z.string().min(1, "Le modèle est requis"),
-    year: z.coerce.number().min(1990).max(currentYear + 1),
-    currentMileage: z.coerce.number().min(0).default(0),
-    color: z.string().optional(),
-    licensePlate: z
-      .string()
-      .optional()
-      .transform((v) => v || undefined)
-      .refine((v) => !v || PLATE_REGEX.test(v), "Format invalide (ex: AB-123-CD)"),
-    vin: z.string().optional().transform((v) => v || undefined),
-    purchaseDate: z.string().optional().transform((v) => v || undefined),
-    purchasePrice: z.preprocess(
-      (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
-      z.number().positive().optional()
-    ),
-  });
-}
+import { buildMotorcycleSchema } from "@/lib/schemas/motorcycle";
+export { buildMotorcycleSchema };
 
 export const motorcycleWizardSchema = buildMotorcycleSchema();
 export type MotorcycleFormValues = z.infer<typeof motorcycleWizardSchema>;

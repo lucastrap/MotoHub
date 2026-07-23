@@ -1,0 +1,24 @@
+---
+title: "S8 · Processus de correction des bogues (§7.4)"
+---
+flowchart TB
+    A["Détection<br/>recette · CI · usage"]
+    B["Issue GitHub<br/>repro · attendu/obtenu · criticité"]
+    C["Qualification & priorisation<br/>gravité × fréquence"]
+    D["Branche fix/…"]
+    E["Test de non-régression<br/>écrit AVANT le correctif → ROUGE"]
+    F["Correctif → test VERT"]
+    G["Pull Request<br/>revue · CI verte · preview"]
+    H["Merge → Production"]
+    I["Vérification → clôture<br/>CHANGELOG"]
+
+    A --> B --> C --> D --> E --> F --> G --> H --> I
+
+    LEGEND["Point non négociable : le test est vu ROUGE avant le correctif  <br/>sans ça, rien ne prouve qu'il détecte réellement le défaut."]
+
+    classDef step fill:#0a0a0a,stroke:#e60026,color:#f2f2f2;
+    classDef key fill:#3b0a0a,stroke:#ef4444,color:#fca5a5;
+    classDef note fill:none,stroke:none,color:#9ca3af,font-size:12px;
+    class A,B,C,D,F,G,H,I step;
+    class E key;
+    class LEGEND note;

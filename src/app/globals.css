@@ -12,6 +12,8 @@
     --popover-foreground: 0 0% 95%;
     --primary: 350 100% 45%;
     --primary-foreground: 0 0% 100%;
+    /* Rouge de marque eclairci, lisible comme TEXTE sur fond sombre (AA >= 4.5:1). */
+    --primary-text: 350 100% 58%;
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 95%;
     --muted: 0 0% 12%;

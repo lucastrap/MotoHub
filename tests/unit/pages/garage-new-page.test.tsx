@@ -9,7 +9,7 @@ jest.mock("@fortawesome/react-fontawesome", () => ({
   FontAwesomeIcon: ({ className }: { className?: string }) => <span className={className} />,
 }));
 
-describe("Page d'ajout de moto — rendu du wizard", () => {
+describe("Page d'ajout de moto   rendu du wizard", () => {
   beforeEach(() => {
     global.fetch = jest.fn().mockResolvedValue({ json: async () => ({ models: [] }) });
   });

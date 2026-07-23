@@ -119,7 +119,7 @@ export default function RegisterPage() {
         </form>
 
         <div className="mt-6 text-center text-sm">
-          Déjà un compte ? <a href="/login" className="text-primary hover:underline">Se connecter</a>
+          Déjà un compte ? <a href="/login" className="text-brand hover:underline">Se connecter</a>
         </div>
       </div>
     </div>

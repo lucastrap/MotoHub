@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-describe("cn — fusion de classes Tailwind", () => {
+describe("cn   fusion de classes Tailwind", () => {
   it("concatène plusieurs classes", () => {
     expect(cn("px-2", "py-1")).toBe("px-2 py-1");
   });

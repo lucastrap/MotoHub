@@ -265,7 +265,7 @@ export default function AddMotorcyclePage() {
                   {modelValid === false && modelInput && (
                     <p className="text-xs text-yellow-500/80 flex items-center gap-1.5">
                       <FontAwesomeIcon icon={faTriangleExclamation} className="h-3 w-3" />
-                      Modèle non reconnu pour {watchBrand} — vérifiez l'orthographe ou continuez quand même.
+                      Modèle non reconnu pour {watchBrand}   vérifiez l'orthographe ou continuez quand même.
                     </p>
                   )}
                   {modelValid === true && (
@@ -352,7 +352,7 @@ export default function AddMotorcyclePage() {
                 <div className="space-y-2">
                   <FieldLabel>
                     Immatriculation
-                    <span className="text-white/25 font-normal text-xs ml-2">— format SIV (ex: AB-123-CD)</span>
+                    <span className="text-white/25 font-normal text-xs ml-2">  format SIV (ex: AB-123-CD)</span>
                   </FieldLabel>
                   <div className="relative">
                     <StyledInput
@@ -392,7 +392,7 @@ export default function AddMotorcyclePage() {
                 <div className="space-y-2">
                   <FieldLabel>
                     Numéro de série (VIN)
-                    <span className="text-white/30 font-normal text-xs ml-2">— optionnel</span>
+                    <span className="text-white/30 font-normal text-xs ml-2">  optionnel</span>
                   </FieldLabel>
                   <StyledInput
                     id="vin"

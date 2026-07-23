@@ -52,7 +52,7 @@ jobs:
     - name: Run Linter
       run: npm run lint
 
-    - name: Security audit (dépendances — OWASP A06)
+    - name: Security audit (dépendances   OWASP A06)
       run: npm audit --audit-level=high
       continue-on-error: true
 
@@ -85,7 +85,7 @@ jobs:
         retention-days: 7
 
   # ─────────────────────────────────────────────────────────────
-  # Déploiements Vercel — la CI est le SEUL déployeur.
+  # Déploiements Vercel   la CI est le SEUL déployeur.
   # L'intégration Git de Vercel est volontairement déconnectée : elle
   # déploierait sur push sans consulter les tests. Ici, `needs: test-and-build`
   # rend tout déploiement impossible tant que le pipeline n'est pas vert.
@@ -96,7 +96,7 @@ jobs:
   #   VERCEL_PROJECT_ID  → depuis .vercel/project.json après `vercel link`
   # ─────────────────────────────────────────────────────────────
 
-  # Preview (staging) — sur chaque Pull Request, après les tests.
+  # Preview (staging)   sur chaque Pull Request, après les tests.
   deploy-preview:
     name: Deploy Preview (PR)
     runs-on: ubuntu-latest
@@ -164,10 +164,10 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `**Preview déployée** — pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
+            body: `**Preview déployée**   pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
           })
 
-  # Production — uniquement sur push vers main, après les tests.
+  # Production   uniquement sur push vers main, après les tests.
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest

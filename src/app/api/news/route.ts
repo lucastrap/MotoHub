@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
+import logger from '@/lib/logger';
 
 export type MotoNews = {
   id: string;
@@ -90,7 +91,7 @@ export async function GET() {
             });
           }
         } catch (err) {
-          console.error(`[news] Feed failed: ${feed.name}`, err);
+          logger.warn(`[news] flux indisponible : ${feed.name}`, { err });
         }
       })
     );
@@ -101,7 +102,7 @@ export async function GET() {
 
     return NextResponse.json(allArticles.slice(0, 24));
   } catch (error) {
-    console.error('[news] Global error:', error);
+    logger.error('[news] échec global de récupération', { error });
     return NextResponse.json({ error: 'Impossible de récupérer les actualités' }, { status: 500 });
   }
 }

@@ -1,4 +1,4 @@
-# Manuel d'utilisation — MotoTrack
+# Manuel d'utilisation   MotoTrack
 
 | Champ | Valeur |
 |---|---|
@@ -28,11 +28,11 @@ navigateur ou installable en application (PWA) sur mobile.
 
 1. Menu **Mon Garage** → **Ajouter une moto**.
 2. Suivre le **wizard en 3 étapes** :
-   - **Étape 1** — Marque (sélecteur avec drapeaux) et année. Le champ **Modèle** propose
+   - **Étape 1**   Marque (sélecteur avec drapeaux) et année. Le champ **Modèle** propose
      une autocomplétion issue de la base officielle NHTSA.
-   - **Étape 2** — Détails : couleur, immatriculation (formatée automatiquement au format
+   - **Étape 2**   Détails : couleur, immatriculation (formatée automatiquement au format
      SIV `AB-123-CD`), numéro de série (VIN), kilométrage actuel.
-   - **Étape 3** — Informations d'achat : date et prix (facultatifs).
+   - **Étape 3**   Informations d'achat : date et prix (facultatifs).
 3. **Valider** : la moto apparaît dans la liste du garage.
 
 **Définir la moto principale** : dans **Mon Garage**, cliquer sur *« Définir comme moto
