@@ -1,9 +1,9 @@
-# Analyse de sécurité — OWASP Top 10 (2021)
+# Analyse de sécurité   OWASP Top 10 (2021)
 
 | Champ | Valeur |
 |---|---|
 | Projet | MotoTrack |
-| Référentiel | OWASP Top 10 — édition 2021 |
+| Référentiel | OWASP Top 10   édition 2021 |
 | Périmètre | Application web Next.js 14 (App Router), API Routes, PostgreSQL/Prisma |
 | Auteur | Luca Straputicari |
 | Date | 21 avril 2026 |
@@ -14,7 +14,7 @@ les pistes d'amélioration.
 
 ---
 
-## A01:2021 — Broken Access Control (Contrôle d'accès défaillant)
+## A01:2021   Broken Access Control (Contrôle d'accès défaillant)
 
 **Mesures en place :**
 - Middleware Next.js (`src/middleware.ts`) protégeant les routes `/dashboard`, `/garage`,
@@ -33,16 +33,16 @@ les pistes d'amélioration.
 
 ---
 
-## A02:2021 — Cryptographic Failures (Défaillances cryptographiques)
+## A02:2021   Cryptographic Failures (Défaillances cryptographiques)
 
 **Mesures en place :**
-- Mots de passe hachés avec **bcrypt** (facteur de coût 10) — jamais stockés en clair
+- Mots de passe hachés avec **bcrypt** (facteur de coût 10)   jamais stockés en clair
   (`api/auth/register/route.ts`). Aucun mot de passe n'est renvoyé par l'API
   (`select` limité à `id, email, name`).
 - Jetons de session **JWT signés HS256** (`src/lib/auth.ts`, librairie `jose`), secret
   fourni par variable d'environnement `JWT_SECRET` (jamais commité).
 - Cookie de session **`httpOnly`**, **`secure`** en production, `path=/`, `maxAge` 24 h
-  (`api/auth/login/route.ts`) — inaccessible au JavaScript client.
+  (`api/auth/login/route.ts`)   inaccessible au JavaScript client.
 
 **Preuve de test :** `tests/unit/api/register.test.ts` (`bcrypt.hash` appelé),
 `tests/unit/auth.test.ts` (signature/vérification JWT).
@@ -51,14 +51,14 @@ les pistes d'amélioration.
 
 ---
 
-## A03:2021 — Injection
+## A03:2021   Injection
 
 **Mesures en place :**
 - **Prisma ORM** : toutes les requêtes sont paramétrées ; aucune concaténation SQL.
   La seule requête brute (`SELECT 1` du health-check) est une constante sans entrée utilisateur.
 - **Validation systématique des entrées avec Zod** avant tout traitement
   (`loginSchema`, `registerSchema`, `motorcycleSchema`, `maintenanceSchema`).
-- React échappe par défaut le rendu — pas d'injection HTML/XSS via l'interpolation JSX.
+- React échappe par défaut le rendu   pas d'injection HTML/XSS via l'interpolation JSX.
 
 **Preuve de test :** tests de schémas Zod (`motorcycleSchema.test.ts`) et de rejet `400`
 sur données invalides dans chaque route.
@@ -67,7 +67,7 @@ sur données invalides dans chaque route.
 
 ---
 
-## A04:2021 — Insecure Design (Conception non sécurisée)
+## A04:2021   Insecure Design (Conception non sécurisée)
 
 **Mesures en place :**
 - Défense en profondeur : validation (Zod) + contrôle d'accès (middleware) + contrôle
@@ -79,7 +79,7 @@ sur données invalides dans chaque route.
 
 ---
 
-## A05:2021 — Security Misconfiguration (Mauvaise configuration)
+## A05:2021   Security Misconfiguration (Mauvaise configuration)
 
 **Mesures en place :**
 - Secrets externalisés en variables d'environnement (`.env` exclu par `.gitignore`).
@@ -96,7 +96,7 @@ sur données invalides dans chaque route.
 
 ---
 
-## A06:2021 — Vulnerable and Outdated Components (Composants vulnérables)
+## A06:2021   Vulnerable and Outdated Components (Composants vulnérables)
 
 **Mesures en place :**
 - Dépendances récentes et épinglées (`package-lock.json`) : Next.js 14, Prisma 5, Zod 3.
@@ -108,7 +108,7 @@ sur données invalides dans chaque route.
 
 ---
 
-## A07:2021 — Identification and Authentication Failures
+## A07:2021   Identification and Authentication Failures
 
 **Mesures en place :**
 - Mot de passe minimum 6 caractères imposé à l'inscription (schéma Zod).
@@ -117,7 +117,7 @@ sur données invalides dans chaque route.
 - Déconnexion serveur effective par suppression du cookie (`api/auth/logout`).
 - **Limitation de débit (rate limiting)** sur `/api/auth/login` et `/api/auth/register`
   (`src/lib/rateLimit.ts`) : au-delà du seuil de tentatives par IP, réponse `429` avec
-  en-tête `Retry-After` — protection contre le bourrage d'identifiants (credential stuffing).
+  en-tête `Retry-After`   protection contre le bourrage d'identifiants (credential stuffing).
 
 **Preuve de test :** `tests/unit/api/login.test.ts` (401 identifiants invalides, **429
 au-delà du seuil**), `tests/unit/rateLimit.test.ts`, `tests/unit/auth.test.ts` (token expiré rejeté).
@@ -127,7 +127,7 @@ au-delà du seuil**), `tests/unit/rateLimit.test.ts`, `tests/unit/auth.test.ts` 
 
 ---
 
-## A08:2021 — Software and Data Integrity Failures
+## A08:2021   Software and Data Integrity Failures
 
 **Mesures en place :**
 - Intégrité de la chaîne de build assurée par `package-lock.json` + `npm ci`.
@@ -139,13 +139,13 @@ des ressources tierces.
 
 ---
 
-## A09:2021 — Security Logging and Monitoring Failures
+## A09:2021   Security Logging and Monitoring Failures
 
 **Mesures en place :**
 - Journalisation structurée **Winston** (`src/lib/logger.ts`) : niveaux, horodatage,
   format JSON, persistance fichier en développement.
 - Endpoint de supervision **`GET /api/health`** exposant l'état applicatif, l'état de la
-  base et la latence — support d'une sonde de monitoring externe.
+  base et la latence   support d'une sonde de monitoring externe.
 - Traçage des échecs de vérification de jeton dans le middleware.
 
 **Preuve de test :** `tests/unit/api/health.test.ts` (200/503), `tests/unit/logger.test.ts`,
@@ -155,11 +155,11 @@ des ressources tierces.
 
 ---
 
-## A10:2021 — Server-Side Request Forgery (SSRF)
+## A10:2021   Server-Side Request Forgery (SSRF)
 
 **Mesures en place :**
 - Les seules requêtes sortantes ciblent des URL **constantes et de confiance**
-  (API NHTSA, flux Google News RSS) — aucune URL n'est construite à partir d'une entrée
+  (API NHTSA, flux Google News RSS)   aucune URL n'est construite à partir d'une entrée
   utilisateur arbitraire.
 - Le paramètre `brand` de `api/motorcycle-models` est encodé (`encodeURIComponent`) et
   restreint à une table d'alias connue.

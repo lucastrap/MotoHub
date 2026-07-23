@@ -1,15 +1,15 @@
-# Planning projet — MotoTrack
+# Planning projet   MotoTrack
 
 ## Cadre général
 
 | Champ | Valeur |
 |---|---|
-| Origine | Projet personnel — besoin issu d'une analyse de marché, pas d'une commande client |
+| Origine | Projet personnel   besoin issu d'une analyse de marché, pas d'une commande client |
 | Réalisation | Solo (Luca Straputicari) |
 | Durée totale | 6 semaines |
 | Début | 10 mars 2026 |
 | Fin | 21 avril 2026 |
-| Méthodologie | Itérative, inspirée de Kanban — incréments d'environ une semaine |
+| Méthodologie | Itérative, inspirée de Kanban   incréments d'environ une semaine |
 | Outil de suivi | GitHub (Issues, Pull Requests, branches) |
 | Validation | Auto-validation outillée : CI bloquante + revue de PR avec checklist |
 
@@ -17,7 +17,7 @@
 
 Le projet étant mené seul, il n'y a ni sprint planning collectif, ni sprint review devant
 un commanditaire, ni rétrospective d'équipe. Les cérémonies Scrum n'ont pas été singées :
-le découpage est resté celui d'un Kanban personnel — un incrément par branche, une Pull
+le découpage est resté celui d'un Kanban personnel   un incrément par branche, une Pull
 Request par incrément, fusion conditionnée à une CI verte.
 
 Le point de contrôle qui remplace la revue d'équipe est la **Pull Request** : elle force
@@ -26,7 +26,7 @@ l'intention. C'est le filet de sécurité du développeur unique.
 
 ---
 
-## Incrément 1 — Semaine 1 (10 – 14 mars) : Initialisation technique
+## Incrément 1   Semaine 1 (10 – 14 mars) : Initialisation technique
 
 | Tâche | Statut |
 |---|---|
@@ -38,19 +38,19 @@ l'intention. C'est le filet de sécurité du développeur unique.
 
 ---
 
-## Incrément 2 — Semaine 2 (17 – 21 mars) : Core métier
+## Incrément 2   Semaine 2 (17 – 21 mars) : Core métier
 
 | Tâche | Statut |
 |---|---|
 | API motorcycles (GET/POST) | Terminé |
 | API maintenances (GET/POST) | Terminé |
-| Module Garage — liste des motos | Terminé |
-| Module Entretien — ajout et historique | Terminé |
+| Module Garage   liste des motos | Terminé |
+| Module Entretien   ajout et historique | Terminé |
 | Tableau de bord v1 | Terminé |
 
 ---
 
-## Incrément 3 — Semaine 3 (24 – 28 mars) : Fonctionnalités avancées
+## Incrément 3   Semaine 3 (24 – 28 mars) : Fonctionnalités avancées
 
 | Tâche | Statut |
 |---|---|
@@ -63,7 +63,7 @@ l'intention. C'est le filet de sécurité du développeur unique.
 
 ---
 
-## Incrément 4 — Semaine 4 (31 mars – 4 avril) : Design & 3D
+## Incrément 4   Semaine 4 (31 mars – 4 avril) : Design & 3D
 
 | Tâche | Statut |
 |---|---|
@@ -75,19 +75,19 @@ l'intention. C'est le filet de sécurité du développeur unique.
 
 ---
 
-## Incrément 5 — Semaine 5 (7 – 11 avril) : Consolidation
+## Incrément 5   Semaine 5 (7 – 11 avril) : Consolidation
 
 | Tâche | Statut |
 |---|---|
 | Sélection moto principale (isPrimary) | Terminé |
-| Tableau de bord v2 — vraies données | Terminé |
+| Tableau de bord v2   vraies données | Terminé |
 | Filtre par moto dans l'historique | Terminé |
 | Harnais de tests unitaires (Jest) | Terminé |
 | CI/CD GitHub Actions | Terminé |
 
 ---
 
-## Incrément 6 — Semaine 6 (14 – 21 avril) : Documentation & livraison
+## Incrément 6   Semaine 6 (14 – 21 avril) : Documentation & livraison
 
 | Tâche | Statut |
 |---|---|

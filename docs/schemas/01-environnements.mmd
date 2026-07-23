@@ -1,0 +1,26 @@
+---
+title: "S1 · Promotion des environnements   local → preview → production (§3.2)"
+---
+flowchart LR
+    DEV["Local (dev)<br/>PostgreSQL conteneur"]
+    PRE["Preview (staging)<br/>Supabase   projet dédié"]
+    PROD["Production<br/>Supabase   projet dédié"]
+
+    G1{{"CI · gate"}}
+    G2{{"CI · gate"}}
+
+    DEV -->|"ouverture d'une PR"| G1
+    G1 -->|"CI verte"| PRE
+    PRE -->|"merge sur main"| G2
+    G2 -->|"CI verte"| PROD
+
+    LEGEND["Aucune modification n'atteint la production sans franchir une CI verte.<br/>Preview et production sont deux projets Supabase physiquement séparés."]
+
+    classDef env fill:#0a0a0a,stroke:#e60026,color:#f2f2f2;
+    classDef prod fill:#0a0a0a,stroke:#22c55e,color:#f2f2f2;
+    classDef gate fill:#1f2937,stroke:#f59e0b,color:#f2f2f2;
+    classDef note fill:none,stroke:none,color:#9ca3af,font-size:12px;
+    class DEV,PRE env;
+    class PROD prod;
+    class G1,G2 gate;
+    class LEGEND note;
