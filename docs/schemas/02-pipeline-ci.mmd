@@ -1,0 +1,40 @@
+---
+title: "S2 · Pipeline CI/CD   .github/workflows/ci.yml (§3.4)"
+---
+flowchart TB
+    TRIG(["push / pull_request → main · develop"])
+
+    subgraph J1["Job · test-and-build"]
+        direction TB
+        S1["Installation & migrations<br/>(PostgreSQL éphémère)"]
+        S2["Lint · audit sécurité"]
+        S3["Tests Jest<br/>seuils de couverture bloquants"]
+        S4["Build"]
+        S5["Tests e2e Playwright"]
+        S1 --> S2 --> S3 --> S4 --> S5
+    end
+
+    subgraph J2["Job · deploy-preview   si pull_request"]
+        P1["Migration → Supabase staging"]
+        P2["Déploiement preview + URL sur la PR"]
+        P1 --> P2
+    end
+
+    subgraph J3["Job · deploy   si push sur main"]
+        D1["Migration → Supabase production"]
+        D2["Déploiement production"]
+        D1 --> D2
+    end
+
+    TRIG --> J1
+    J1 -->|"needs · succès"| J2
+    J1 -->|"needs · succès"| J3
+
+    LEGEND["Les jobs de déploiement déclarent needs: test-and-build   impossible de déployer sur CI rouge.<br/>Étapes ordonnées par coût croissant : lint → tests → build → e2e."]
+
+    classDef job fill:#0a0a0a,stroke:#e60026,color:#f2f2f2;
+    classDef gate fill:#1f2937,stroke:#f59e0b,color:#f2f2f2;
+    classDef note fill:none,stroke:none,color:#9ca3af,font-size:12px;
+    class S1,S2,S3,S4,S5,P1,P2,D1,D2 job;
+    class TRIG gate;
+    class LEGEND note;

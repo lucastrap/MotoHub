@@ -1,0 +1,27 @@
+---
+title: "S9 · Modèle de branches Git (§3.5)"
+---
+gitGraph
+    commit id: "socle"
+    branch develop
+    checkout develop
+    commit id: "intégration"
+    branch feature/i18n-fr
+    checkout feature/i18n-fr
+    commit
+    commit
+    checkout develop
+    merge feature/i18n-fr tag: "PR"
+    branch fix/suspense
+    checkout fix/suspense
+    commit
+    checkout develop
+    merge fix/suspense tag: "PR"
+    checkout main
+    merge develop tag: "v1.0.0"
+
+    %% Légende
+    %% main    : production, protégée (fusion par PR + CI verte exigée).
+    %% develop : intégration des incréments terminés.
+    %% feature/ : un incrément par branche · fix/ : correctif · chore/ : infrastructure.
+    %% Chaque fusion vers main passe par une PR et une preview vérifiée (§3.5).

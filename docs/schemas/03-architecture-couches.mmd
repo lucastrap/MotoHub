@@ -1,0 +1,44 @@
+---
+title: "S3 · Architecture en couches (modèle n-tier)   MotoTrack (§4.1)"
+---
+flowchart TB
+    subgraph L1["Présentation"]
+        A["Client web Next.js   React, App Router<br/>PWA installable"]
+    end
+
+    subgraph L2["Application"]
+        B["Route Handlers /api/*<br/>authentification · validation · autorisation"]
+    end
+
+    subgraph L3["Domaine   logique métier"]
+        C["lib/   modules purs, testables isolément"]
+    end
+
+    subgraph L4["Accès aux données"]
+        D["Prisma ORM"]
+    end
+
+    subgraph L5["Persistance"]
+        E[("PostgreSQL   Supabase")]
+    end
+
+    A --> B --> C --> D --> E
+
+    SEC["Sécurité (transverse)<br/>middleware Edge · JWT<br/>en-têtes HTTP · CSP"]
+    EXT["Systèmes externes<br/>NHTSA · flux RSS"]
+
+    SEC -. protège .-> L1
+    SEC -. protège .-> L2
+    B --> EXT
+
+    LEGEND["Règle de dépendance : chaque couche ne dépend que de la couche inférieure (flux vers le bas).<br/>Le Domaine (lib/) n'importe jamais la couche Application/Présentation (app/)."]
+
+    classDef layer fill:#0a0a0a,stroke:#e60026,color:#f2f2f2;
+    classDef cross fill:#1f2937,stroke:#f59e0b,color:#f2f2f2;
+    classDef ext fill:#111827,stroke:#9ca3af,color:#e5e7eb;
+    classDef note fill:none,stroke:none,color:#9ca3af,font-size:12px;
+
+    class A,B,C,D,E layer;
+    class SEC cross;
+    class EXT ext;
+    class LEGEND note;

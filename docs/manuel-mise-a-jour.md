@@ -1,4 +1,4 @@
-# Manuel de mise à jour — MotoTrack
+# Manuel de mise à jour   MotoTrack
 
 | Champ | Valeur |
 |---|---|
@@ -11,9 +11,9 @@
 
 Le projet suit le **Semantic Versioning** (`MAJEUR.MINEUR.CORRECTIF`) :
 
-- **MAJEUR** — changement incompatible (ex. refonte du modèle de données) ;
-- **MINEUR** — nouvelle fonctionnalité rétrocompatible ;
-- **CORRECTIF** — correction de bogue rétrocompatible.
+- **MAJEUR**   changement incompatible (ex. refonte du modèle de données) ;
+- **MINEUR**   nouvelle fonctionnalité rétrocompatible ;
+- **CORRECTIF**   correction de bogue rétrocompatible.
 
 Toute évolution est consignée dans **`CHANGELOG.md`** et matérialisée par un **tag Git**
 (`git tag v1.1.0`). L'historique complet est traçable via `git log` et les *Releases* GitHub.
@@ -87,7 +87,7 @@ sont toutes vertes.
 # 1. Mettre à jour la version et le CHANGELOG
 npm version minor          # incrémente package.json + crée le tag Git
 
-# 2. Documenter la version dans CHANGELOG.md (section [X.Y.Z] — date)
+# 2. Documenter la version dans CHANGELOG.md (section [X.Y.Z]   date)
 
 # 3. Pousser la branche et le tag
 git push origin main --follow-tags
