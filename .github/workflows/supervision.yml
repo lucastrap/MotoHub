@@ -1,0 +1,193 @@
+name: Supervision production
+
+on:
+  schedule:
+
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: supervision-production
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    name: Sonde /api/health
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Vérifier la configuration de la sonde
+        run: |
+          if [ -z "${{ vars.PRODUCTION_URL }}" ]; then
+            echo "::error::La variable de dépôt PRODUCTION_URL n'est pas définie : sonde inactive."
+            exit 1
+          fi
+
+      - name: Interroger la sonde de santé
+        id: probe
+        run: |
+          URL="${{ vars.PRODUCTION_URL }}/api/health"
+          echo "Sonde : $URL"
+
+          # Trois tentatives espacées de 20 s. Un incident n'est déclaré qu'après
+          # trois échecs consécutifs : une alerte sur un aléa réseau isolé
+          # décrédibilise le dispositif et finit par être ignorée.
+          for attempt in 1 2 3; do
+            body=$(mktemp)
+            metrics=$(curl -s -o "$body" -w "%{http_code} %{time_total}" \
+                       --max-time 15 "$URL" || echo "000 0")
+            code=$(echo "$metrics" | cut -d' ' -f1)
+            total=$(echo "$metrics" | cut -d' ' -f2)
+            status=$(jq -r '.status // "inconnu"' "$body" 2>/dev/null || echo "illisible")
+            db_latency=$(jq -r '.latencyMs // "n/a"' "$body" 2>/dev/null || echo "n/a")
+            version=$(jq -r '.version // "n/a"' "$body" 2>/dev/null || echo "n/a")
+            commit=$(jq -r '.commit // "n/a"' "$body" 2>/dev/null || echo "n/a")
+
+            echo "Tentative $attempt : HTTP $code · status=$status · latence DB ${db_latency}ms · réponse ${total}s"
+
+            if [ "$code" = "200" ] && { [ "$status" = "ok" ] || [ "$status" = "degraded" ]; }; then
+              {
+                echo "healthy=true"
+                echo "status=$status"
+                echo "http_code=$code"
+                echo "db_latency=$db_latency"
+                echo "response_time=$total"
+                echo "version=$version"
+                echo "commit=$commit"
+              } >> "$GITHUB_OUTPUT"
+              echo "### Sonde OK : status \`$status\`, latence DB ${db_latency} ms" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+
+            [ "$attempt" -lt 3 ] && sleep 20
+          done
+
+          # Trois échecs consécutifs : incident confirmé.
+          {
+            echo "healthy=false"
+            echo "status=$status"
+            echo "http_code=$code"
+            echo "db_latency=$db_latency"
+            echo "response_time=$total"
+            echo "version=$version"
+            echo "commit=$commit"
+          } >> "$GITHUB_OUTPUT"
+          echo "### Sonde EN ÉCHEC : HTTP $code, status \`$status\` (3 tentatives)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Alerter (ouvrir ou mettre à jour l'incident)
+        if: steps.probe.outputs.healthy == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const p = ${{ toJSON(steps.probe.outputs) }};
+            const marqueur = '<!-- supervision-incident -->';
+
+            const { data: ouvertes } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'incident',
+            });
+            const existante = ouvertes.find(i => (i.body || '').includes(marqueur));
+
+            const detail = [
+              `| Indicateur | Valeur |`,
+              `|---|---|`,
+              `| Code HTTP | \`${p.http_code}\` |`,
+              `| Statut applicatif | \`${p.status}\` |`,
+              `| Latence base | ${p.db_latency} ms |`,
+              `| Temps de réponse | ${p.response_time} s |`,
+              `| Version déployée | ${p.version} (\`${p.commit}\`) |`,
+              `| Détecté le | ${new Date().toISOString()} |`,
+              `| Exécution | ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId} |`,
+            ].join('\n');
+
+            if (existante) {
+              // Incident déjà connu : on horodate la persistance plutôt que
+              // d'empiler des issues en double.
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existante.number,
+                body: `**Incident toujours en cours** : sonde à nouveau en échec.\n\n${detail}`,
+              });
+              core.notice(`Incident #${existante.number} mis à jour.`);
+              return;
+            }
+
+            const { data: creee } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[INCIDENT] Production indisponible : sonde /api/health en échec`,
+              labels: ['incident', 'production'],
+              body: [
+                marqueur,
+                `## Détection automatique`,
+                ``,
+                `La sonde \`/api/health\` a échoué **3 fois consécutivement** (tentatives espacées de 20 s).`,
+                ``,
+                detail,
+                ``,
+                `## Conduite à tenir`,
+                ``,
+                `Voir le runbook : \`docs/supervision-monitoring.md\` § « Procédure de levée d'alerte ».`,
+                ``,
+                `1. Confirmer manuellement : \`curl -i ${{ vars.PRODUCTION_URL }}/api/health\``,
+                `2. Vérifier l'état de la base (tableau de bord Supabase) et du déploiement (Vercel).`,
+                `3. Si l'incident suit un déploiement, envisager le retour arrière Vercel (promouvoir le déploiement stable précédent).`,
+                `4. Qualifier la sévérité et suivre \`docs/procedure-incidents.md\`.`,
+                ``,
+                `_Cette issue sera commentée et refermée automatiquement au retour à la normale._`,
+              ].join('\n'),
+            });
+            core.setFailed(`Incident ouvert : #${creee.number}`);
+
+      - name: Clore l'incident au retour à la normale
+        if: steps.probe.outputs.healthy == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const p = ${{ toJSON(steps.probe.outputs) }};
+            const marqueur = '<!-- supervision-incident -->';
+
+            const { data: ouvertes } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'incident',
+            });
+            const existante = ouvertes.find(i => (i.body || '').includes(marqueur));
+            if (!existante) return;
+
+            const dureeMin = Math.round(
+              (Date.now() - new Date(existante.created_at).getTime()) / 60000
+            );
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: existante.number,
+              body: [
+                `**Retour à la normale** : la sonde répond de nouveau.`,
+                ``,
+                `| Indicateur | Valeur |`,
+                `|---|---|`,
+                `| Statut applicatif | \`${p.status}\` |`,
+                `| Latence base | ${p.db_latency} ms |`,
+                `| Version déployée | ${p.version} (\`${p.commit}\`) |`,
+                `| Durée d'indisponibilité constatée | ~${dureeMin} min (borne haute : granularité de la sonde, 15 min) |`,
+                ``,
+                `Rédiger le compte rendu d'incident avant clôture définitive`,
+                `(\`docs/procedure-incidents.md\` § « Registre des incidents »).`,
+              ].join('\n'),
+            });
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: existante.number,
+              state: 'closed',
+            });
+            core.notice(`Incident #${existante.number} refermé après ~${dureeMin} min.`);

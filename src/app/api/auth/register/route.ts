@@ -12,7 +12,7 @@ const registerSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // OWASP A07 — limitation des créations de compte par IP
+    // OWASP A07   limitation des créations de compte par IP
     const rl = checkRateLimit(`register:${getClientIp(req)}`);
     if (!rl.allowed) {
       return NextResponse.json(

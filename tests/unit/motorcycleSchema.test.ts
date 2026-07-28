@@ -25,7 +25,7 @@ const schema = z.object({
   ),
 });
 
-describe("Schéma Zod — ajout de moto", () => {
+describe("Schéma Zod   ajout de moto", () => {
   const validBase = {
     brand: "Yamaha",
     model: "MT-07",

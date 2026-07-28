@@ -1,4 +1,4 @@
-// OWASP A07 — Limitation de débit (fenêtre glissante en mémoire).
+// OWASP A07   Limitation de débit (fenêtre glissante en mémoire).
 // Protège les endpoints sensibles (authentification) contre le bourrage
 // d'identifiants et les attaques par force brute.
 //

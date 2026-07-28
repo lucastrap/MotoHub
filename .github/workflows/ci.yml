@@ -52,9 +52,41 @@ jobs:
     - name: Run Linter
       run: npm run lint
 
-    - name: Security audit (dépendances — OWASP A06)
-      run: npm audit --audit-level=high
+    - name: Audit des dépendances (production et outillage)
+      run: |
+        set +e
+        npm audit --omit=dev --json > audit-prod.json
+        npm audit --json > audit-all.json
+        set -e
+
+        lire() {
+          node -p "const m=require('./$1').metadata.vulnerabilities; [m.critical,m.high,m.moderate,m.low].join(' | ')"
+        }
+        prod=$(lire audit-prod.json)
+        all=$(lire audit-all.json)
+
+        {
+          echo "### Audit des dépendances"
+          echo ""
+          echo "| Périmètre | Critiques | Élevées | Modérées | Faibles |"
+          echo "|---|---|---|---|---|"
+          echo "| Production (--omit=dev) | $prod |"
+          echo "| Complet (outillage inclus) | $all |"
+        } >> $GITHUB_STEP_SUMMARY
+
+        crit_prod=$(node -p "require('./audit-prod.json').metadata.vulnerabilities.critical")
+        if [ "$crit_prod" -gt 0 ]; then
+          echo "::warning::$crit_prod vulnérabilité(s) critique(s) dans le périmètre de production, voir docs/politique-dependances.md"
+        fi
       continue-on-error: true
+
+    - name: Conserver les rapports d'audit
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: audit-dependances
+        path: audit-*.json
+        retention-days: 30
 
     - name: Run unit tests
       run: npm run test
@@ -85,7 +117,7 @@ jobs:
         retention-days: 7
 
   # ─────────────────────────────────────────────────────────────
-  # Déploiements Vercel — la CI est le SEUL déployeur.
+  # Déploiements Vercel : la CI est le SEUL déployeur.
   # L'intégration Git de Vercel est volontairement déconnectée : elle
   # déploierait sur push sans consulter les tests. Ici, `needs: test-and-build`
   # rend tout déploiement impossible tant que le pipeline n'est pas vert.
@@ -96,7 +128,7 @@ jobs:
   #   VERCEL_PROJECT_ID  → depuis .vercel/project.json après `vercel link`
   # ─────────────────────────────────────────────────────────────
 
-  # Preview (staging) — sur chaque Pull Request, après les tests.
+  # Preview (staging) : sur chaque Pull Request, après les tests.
   deploy-preview:
     name: Deploy Preview (PR)
     runs-on: ubuntu-latest
@@ -132,7 +164,7 @@ jobs:
           val=$(grep "^${v}=" .env | head -1 | cut -d= -f2- | tr -d '"')
           echo "Longueur de ${v} : ${#val}"
           if [ -z "$val" ]; then
-            echo "::error::${v} est vide dans le scope Preview de Vercel (probablement marquée « Sensitive » — la recréer sans ce flag)"
+            echo "::error::${v} est vide dans le scope Preview de Vercel (probablement marquée « Sensitive », la recréer sans ce flag)"
             miss=1
           fi
         done
@@ -164,10 +196,10 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: `**Preview déployée** — pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
+            body: `**Preview déployée** : pipeline vert.\n\n${{ steps.deploy.outputs.url }}\n\nSonde de santé : ${{ steps.deploy.outputs.url }}/api/health`
           })
 
-  # Production — uniquement sur push vers main, après les tests.
+  # Production : uniquement sur push vers main, après les tests.
   deploy:
     name: Deploy to Vercel
     runs-on: ubuntu-latest
@@ -197,7 +229,7 @@ jobs:
           val=$(grep "^${v}=" .env | head -1 | cut -d= -f2- | tr -d '"')
           echo "Longueur de ${v} : ${#val}"
           if [ -z "$val" ]; then
-            echo "::error::${v} est vide dans le scope Production de Vercel (probablement marquée « Sensitive » — la recréer sans ce flag)"
+            echo "::error::${v} est vide dans le scope Production de Vercel (probablement marquée « Sensitive », la recréer sans ce flag)"
             miss=1
           fi
         done

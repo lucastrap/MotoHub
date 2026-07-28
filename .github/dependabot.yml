@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────
+# Veille automatisée des dépendances
+# Le regroupement limite le bruit : une PR par famille plutôt qu'une par paquet.
+# ─────────────────────────────────────────────────────────────
+version: 2
+
+updates:
+  # Dépendances applicatives npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependances"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    groups:
+      mises-a-jour-mineures:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+      securite:
+        applies-to: security-updates
+        patterns:
+          - "*"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependances"
+      - "ci"
+    commit-message:
+      prefix: "chore(ci)"

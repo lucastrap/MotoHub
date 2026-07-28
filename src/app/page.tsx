@@ -149,7 +149,7 @@ export default function Home() {
               </h2>
             </div>
 
-            {/* Grille de features — séparations fines */}
+            {/* Grille de features   séparations fines */}
             <div className="grid gap-px bg-white/[0.06] rounded-2xl overflow-hidden sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {

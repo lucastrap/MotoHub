@@ -27,7 +27,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
-      {/* RGAA 12.7 — lien d'évitement vers le contenu principal */}
+      {/* RGAA 12.7   lien d'évitement vers le contenu principal */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
@@ -36,7 +36,7 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
       </a>
       <aside className="w-full md:w-64 bg-card border-r border-border shrink-0 md:h-screen sticky top-0 flex flex-col items-center py-6 md:py-8 shadow-xl z-20">
         <div className="mb-8 px-6 text-center">
-           <Link href="/dashboard" className="inline-flex items-center gap-3" aria-label="MotoTrack — accueil">
+           <Link href="/dashboard" className="inline-flex items-center gap-3" aria-label="MotoTrack   accueil">
              <div className="bg-primary text-primary-foreground p-2 rounded-xl shadow-lg shadow-primary/30">
                 <FontAwesomeIcon icon={faMotorcycle} className="h-6 w-6" aria-hidden="true" />
              </div>

@@ -13,7 +13,7 @@ async function getUser() {
   }
 }
 
-// PATCH /api/motorcycles/[id] — set as primary or update fields
+// PATCH /api/motorcycles/[id]   set as primary or update fields
 export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }

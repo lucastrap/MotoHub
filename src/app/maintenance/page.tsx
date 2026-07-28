@@ -117,7 +117,7 @@ function MaintenanceContent() {
           <span className="font-semibold text-foreground">
             {selectedMoto.brand} {selectedMoto.model} {selectedMoto.year}
           </span>
-          <span>— {maintenances.length} intervention{maintenances.length > 1 ? "s" : ""}</span>
+          <span>  {maintenances.length} intervention{maintenances.length > 1 ? "s" : ""}</span>
         </div>
       )}
 
@@ -172,7 +172,7 @@ function MaintenanceContent() {
                       {m.mileage.toLocaleString()} km
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap font-medium">
-                      {m.cost != null ? `€${m.cost.toFixed(2)}` : "—"}
+                      {m.cost != null ? `€${m.cost.toFixed(2)}` : " "}
                     </td>
                   </tr>
                 ))}

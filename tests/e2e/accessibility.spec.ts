@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Accessibilité RGAA — pages publiques", () => {
+test.describe("Accessibilité RGAA   pages publiques", () => {
   test("la langue du document est déclarée en français (RGAA 8.3)", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "fr");

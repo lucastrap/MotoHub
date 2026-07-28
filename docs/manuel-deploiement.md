@@ -1,4 +1,4 @@
-# Manuel de déploiement — MotoTrack
+# Manuel de déploiement   MotoTrack
 
 | Champ | Valeur |
 |---|---|
@@ -13,7 +13,7 @@
 |---|---|---|
 | Application | Next.js 14 (App Router, SSR + API Routes) | Vercel |
 | Base de données | PostgreSQL 15 | Supabase (managé) en production, Docker en local |
-| ORM / migrations | Prisma 5 | — |
+| ORM / migrations | Prisma 5 |   |
 | CI/CD | GitHub Actions | GitHub |
 
 ## 2. Prérequis
@@ -128,17 +128,17 @@ En cas d'anomalie critique en production :
 ## 8. État réel des branches (à jour au 15 juillet 2026)
 
 Ce manuel décrit l'architecture cible. Toutes les évolutions ne sont pas encore fusionnées
-dans `main` — un mainteneur qui clone le dépôt doit le savoir avant de déployer :
+dans `main`   un mainteneur qui clone le dépôt doit le savoir avant de déployer :
 
 | Évolution | Branche | Fusionnée dans `main` ? |
 |---|---|---|
 | Correction du prérendu (frontière Suspense) | `fix/maintenance-suspense-boundary` | ✅ oui (PR #6) |
-| Localisation française des pages d'authentification | `feature/i18n-fr` | ❌ non — présente sur `develop` |
-| Supervision Core Web Vitals (RUM) | `feature/monitoring-web-vitals` | ❌ non — ni sur `main`, ni sur `develop` |
-| Configuration Supabase (pooler + `directUrl`) | `chore/supabase-config` | ❌ non — ni sur `main`, ni sur `develop` |
+| Localisation française des pages d'authentification | `feature/i18n-fr` | ❌ non   présente sur `develop` |
+| Supervision Core Web Vitals (RUM) | `feature/monitoring-web-vitals` | ❌ non   ni sur `main`, ni sur `develop` |
+| Configuration Supabase (pooler + `directUrl`) | `chore/supabase-config` | ❌ non   ni sur `main`, ni sur `develop` |
 
 **Conséquence directe :** en l'état, un déploiement depuis `main` produit une application
 sans localisation FR, sans collecte Web Vitals, et dont `schema.prisma` ne déclare pas
-`directUrl` — donc `prisma migrate deploy` échouera contre l'URL pooler de Supabase. La
+`directUrl`   donc `prisma migrate deploy` échouera contre l'URL pooler de Supabase. La
 séquence de reprise est de fusionner `chore/supabase-config` **avant** toute migration en
 production.

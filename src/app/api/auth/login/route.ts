@@ -13,7 +13,7 @@ const loginSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // OWASP A07 — limitation des tentatives de connexion par IP
+    // OWASP A07   limitation des tentatives de connexion par IP
     const rl = checkRateLimit(`login:${getClientIp(req)}`);
     if (!rl.allowed) {
       return NextResponse.json(

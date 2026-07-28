@@ -65,3 +65,7 @@ next-env.d.ts
 .env*
 # …sauf le modèle documenté, qui doit rester versionné (cf. README).
 !.env.example
+
+# Sentry   fichier de configuration local du CLI (contient un jeton)
+.sentryclirc
+.env.sentry-build-plugin

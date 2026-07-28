@@ -1,11 +1,77 @@
-# Changelog — MotoTrack
+# Changelog MotoTrack
 
-Toutes les modifications notables sont documentées ici.  
-Format : [Semantic Versioning](https://semver.org/lang/fr/)
+Versions déployées, de la plus récente à la plus ancienne.
+Les correctifs citent le commit qui les porte : `git show <commit>` permet de vérifier.
 
 ---
 
-## [1.0.0] — 2026-04-21
+## [1.3.0] 2026-07-28
+
+Rien de nouveau côté utilisateur : cette version rend l'application observable.
+
+- Sonde `/api/health` complétée : état ok / dégradé / erreur, latence de la base, version
+  et commit déployés
+- Un workflow interroge la sonde toutes les 15 min et ouvre une issue si elle échoue trois
+  fois de suite. Il la referme tout seul quand ça remarche.
+- Sentry branché sur le front, le serveur et le middleware. Les erreurs déjà rattrapées par
+  les routes API y remontent aussi, via un transport Winston maison.
+- Trois modèles d'issue (anomalie, incident, amélioration), les issues vides sont bloquées
+- Dependabot activé, montées majeures exclues
+- La CI publie deux compteurs d'audit séparés : production seule, et tout
+
+Au passage : le garde-fou de tests sur les jobs de déploiement, que j'avais désactivé le
+temps de déboguer le pipeline, est remis (`b09044d`).
+
+---
+
+## [1.2.0] 2026-07-19
+
+- Mode hors-ligne et installation sur l'écran d'accueil
+- Speed Insights, pour mesurer les temps de chargement réels (`a264f8b`)
+
+**Correctif** : l'installation de la PWA échouait. Workbox essayait de mettre en cache
+`app-build-manifest.json`, un fichier interne à Next absent du build de prod, et une seule
+entrée en échec suffit à tout invalider. Il manquait aussi la balise standard
+`mobile-web-app-capable` à côté de celle d'Apple (`45d106c`).
+
+---
+
+## [1.1.1] 2026-07-17
+
+Montée de Next 14.1.0 vers 14.2.35, avec `eslint-config-next` en même temps (`7f8c78c`).
+Correctifs de sécurité accumulés depuis 14.1.0. Rien de cassé au passage.
+
+---
+
+## [1.1.0] 2026-07-16
+
+- Base migrée vers Supabase, connexion par le pooler
+- La CI devient le seul déployeur : l'intégration Git de Vercel déployait sans regarder les
+  tests, elle est débranchée. Les jobs de déploiement attendent le pipeline.
+- Une preview Vercel est déployée sur chaque PR, avec l'URL commentée dessus (`ccb010f`)
+
+**Correctif** : les migrations Prisma échouaient depuis la CI, pour trois raisons empilées.
+Le pooler ne gère pas les migrations, il faut `directUrl`. `DIRECT_URL` manquait dans le
+job de tests. Et les variables étaient chargées avec `source`, ce qui casse dès qu'un mot
+de passe contient un caractère spécial. L'échec est devenu lisible au lieu d'être muet
+(`c3c3f26`, `93c7409`, `0fe416b`, `6bdaa72`).
+
+---
+
+## [1.0.1] 2026-07-15
+
+- Pages de connexion et d'inscription en français (`d78d319`)
+- Nom de l'application uniformisé sur MotoTrack partout
+- Documentation réécrite en solo : plus de référence à une équipe ou à un commanditaire
+  externe (`eeb2dd0`)
+
+**Correctif** : `next build` échouait sur les deux pages d'entretien. `useSearchParams()`
+était appelé directement dans la page, sans frontière `<Suspense>`, et Next 14 refuse de
+prérendre dans ce cas. Plus rien ne pouvait être déployé (`03bc3ae`).
+
+---
+
+## [1.0.0] 2026-04-21
 
 ### Ajouts
 - Module Garage : ajout, liste et gestion de plusieurs motos
@@ -20,8 +86,8 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 - Scène 3D accueil (Ducati Panigale V4R, Three.js / React Three Fiber)
 - Authentification JWT avec cookies HTTP-only (register, login, logout)
 - Middleware de protection des routes privées
-- Design dark premium — Tailwind CSS, Barlow Condensed, thème `#090909`
-- PWA (next-pwa) — installable sur mobile
+- Design dark premium : Tailwind CSS, Barlow Condensed, thème `#090909`
+- PWA (next-pwa), installable sur mobile
 - CI/CD GitHub Actions (lint, tests, build)
 - Endpoint de supervision `GET /api/health`
 - Logger structuré Winston
@@ -35,7 +101,7 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [0.3.0] — 2026-04-07
+## [0.3.0] 2026-04-07
 
 ### Ajouts
 - Wizard ajout moto : sélecteur de marques avec drapeaux, autocomplete modèle NHTSA
@@ -49,12 +115,12 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [0.2.0] — 2026-03-24
+## [0.2.0] 2026-03-24
 
 ### Ajouts
 - Module Pièces & achats avec liens dynamiques par moto
 - Scène 3D (Three.js) sur la page d'accueil
-- Design dark premium — refonte complète du frontend
+- Design dark premium : refonte complète du frontend
 - Page Actualités moto
 
 ### Correctifs
@@ -63,13 +129,13 @@ Format : [Semantic Versioning](https://semver.org/lang/fr/)
 
 ---
 
-## [0.1.0] — 2026-03-15
+## [0.1.0] 2026-03-15
 
 ### Ajouts
 - Initialisation projet Next.js 14 + Docker + Prisma
 - Schéma base de données : User, Motorcycle, Maintenance, Reminder
 - Authentification complète (register, login, JWT, middleware)
-- Module Garage — liste et ajout de motos
-- Module Entretien — CRUD interventions
+- Module Garage : liste et ajout de motos
+- Module Entretien : CRUD interventions
 - Tableau de bord initial
 - CI/CD GitHub Actions

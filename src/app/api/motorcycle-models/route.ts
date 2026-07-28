@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-// API NHTSA (National Highway Traffic Safety Administration) — gratuite, sans clé
+// API NHTSA (National Highway Traffic Safety Administration)   gratuite, sans clé
 // https://vpic.nhtsa.dot.gov/api/
 
 // Correspondance nom affiché → nom NHTSA
