@@ -14,17 +14,12 @@ jobs:
   probe:
     name: Sonde /api/health
     runs-on: ubuntu-latest
+
+    if: vars.PRODUCTION_URL != ''
     permissions:
       issues: write
 
     steps:
-      - name: Vérifier la configuration de la sonde
-        run: |
-          if [ -z "${{ vars.PRODUCTION_URL }}" ]; then
-            echo "::error::La variable de dépôt PRODUCTION_URL n'est pas définie : sonde inactive."
-            exit 1
-          fi
-
       - name: Interroger la sonde de santé
         id: probe
         run: |
@@ -75,6 +70,128 @@ jobs:
             echo "commit=$commit"
           } >> "$GITHUB_OUTPUT"
           echo "### Sonde EN ÉCHEC : HTTP $code, status \`$status\` (3 tentatives)" >> "$GITHUB_STEP_SUMMARY"
+
+
+      - name: Restaurer le compteur de dégradations
+        uses: actions/cache/restore@v4
+        with:
+          path: .supervision-degradations
+          key: supervision-degradations-${{ github.run_id }}
+          restore-keys: |
+            supervision-degradations-
+
+      - name: Escalader une dégradation persistante
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const p = ${{ toJSON(steps.probe.outputs) }};
+            const fichier = '.supervision-degradations';
+            const marqueur = '<!-- supervision-degradation -->';
+            // 3 exécutions consécutives, soit 45 min de dégradation continue.
+            const SEUIL = 3;
+
+            const precedent = fs.existsSync(fichier)
+              ? parseInt(fs.readFileSync(fichier, 'utf8').trim(), 10) || 0
+              : 0;
+            // Une indisponibilité franche relève de l'autre chemin : elle remet
+            // le compteur de dégradation à zéro plutôt que de s'y ajouter.
+            const consecutives =
+              p.healthy === 'true' && p.status === 'degraded' ? precedent + 1 : 0;
+            fs.writeFileSync(fichier, String(consecutives));
+            core.notice(`Dégradations consécutives : ${consecutives} (seuil : ${SEUIL})`);
+
+            const { data: ouvertes } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'degradation',
+            });
+            const existante = ouvertes.find(i => (i.body || '').includes(marqueur));
+
+            const detail = [
+              `| Indicateur | Valeur |`,
+              `|---|---|`,
+              `| Statut applicatif | \`${p.status}\` |`,
+              `| Latence base | ${p.db_latency} ms (seuil : 500 ms) |`,
+              `| Temps de réponse | ${p.response_time} s |`,
+              `| Version déployée | ${p.version} (\`${p.commit}\`) |`,
+              `| Exécutions consécutives dégradées | ${consecutives} |`,
+              `| Constaté le | ${new Date().toISOString()} |`,
+              `| Exécution | ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId} |`,
+            ].join('\n');
+
+            if (consecutives === 0) {
+              if (existante) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existante.number,
+                  body: `**Retour à la normale** : la latence est repassée sous le seuil.\n\n${detail}`,
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existante.number,
+                  state: 'closed',
+                });
+                core.notice(`Dégradation #${existante.number} refermée.`);
+              }
+              return;
+            }
+
+            if (consecutives < SEUIL) {
+              // En deçà du seuil, on n'ouvre rien : une dégradation isolée est
+              // déjà tracée dans Sentry en `warning`.
+              core.notice(`Sous le seuil, aucune issue ouverte.`);
+              return;
+            }
+
+            if (existante) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existante.number,
+                body: `**Dégradation toujours en cours.**\n\n${detail}`,
+              });
+              core.notice(`Dégradation #${existante.number} mise à jour.`);
+              return;
+            }
+
+            const { data: creee } = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[DÉGRADATION] Latence base au-dessus du seuil sur ${SEUIL} exécutions`,
+              labels: ['degradation', 'production', 'severite:majeur'],
+              body: [
+                marqueur,
+                `## Détection automatique`,
+                ``,
+                `La sonde \`/api/health\` renvoie \`degraded\` depuis **${SEUIL} exécutions consécutives**,`,
+                `soit environ 45 minutes de dégradation continue. L'application répond, la base est`,
+                `joignable, mais au-delà du seuil de latence retenu.`,
+                ``,
+                detail,
+                ``,
+                `## Conduite à tenir`,
+                ``,
+                `1. Confirmer : \`curl -s ${{ vars.PRODUCTION_URL }}/api/health | jq .checks\``,
+                `2. Vérifier le pooler et la charge de l'instance (tableau de bord Supabase).`,
+                `3. Comparer avec le déploiement en cours : la dégradation suit-elle une mise en production ?`,
+                `4. Chercher dans Sentry les \`warning\` émis par le transport Winston sur la même période.`,
+                `5. Qualifier et suivre \`docs/procedure-incidents.md\`.`,
+                ``,
+                `_Refermée automatiquement au retour de la latence sous le seuil._`,
+              ].join('\n'),
+            });
+            core.notice(`Dégradation ouverte : #${creee.number}`);
+
+      - name: Conserver le compteur de dégradations
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .supervision-degradations
+          key: supervision-degradations-${{ github.run_id }}
 
       - name: Alerter (ouvrir ou mettre à jour l'incident)
         if: steps.probe.outputs.healthy == 'false'
