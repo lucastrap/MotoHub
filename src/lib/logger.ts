@@ -1,4 +1,5 @@
 import winston from "winston";
+import { SentryTransport, isSentryEnabled } from "./sentryTransport";
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL ?? "info",
@@ -23,6 +24,11 @@ const logger = winston.createLogger({
 if (process.env.NODE_ENV === "development") {
   logger.add(new winston.transports.File({ filename: "logs/error.log", level: "error" }));
   logger.add(new winston.transports.File({ filename: "logs/combined.log" }));
+}
+
+// Remontée des erreurs applicatives vers le collecteur d'incidents
+if (isSentryEnabled()) {
+  logger.add(new SentryTransport({ level: "warn" }));
 }
 
 export default logger;

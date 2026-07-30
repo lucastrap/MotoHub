@@ -73,7 +73,7 @@ sur données invalides dans chaque route.
 - Défense en profondeur : validation (Zod) + contrôle d'accès (middleware) + contrôle
   de propriété (requêtes filtrées) à trois niveaux distincts.
 - Principe de moindre privilège sur les réponses API (projection des champs).
-- Modélisation des menaces réalisée lors du cadrage (SWOT sécurité, Bloc 1).
+- Modélisation des menaces réalisée lors du cadrage (SWOT sécurité).
 
 **Amélioration :** limitation de débit (rate limiting) sur les endpoints d'authentification.
 

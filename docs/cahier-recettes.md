@@ -13,7 +13,7 @@
 > **Note de méthode.** Le projet étant mené seul, la recette est rédigée et exécutée par la
 > même personne que celle qui a développé l'application. C'est une limite réelle : un
 > rédacteur qui connaît le code teste spontanément les chemins qu'il a prévus. Pour la
-> réduire, les scénarios ont été dérivés des user stories du Bloc 1 (et non du code), et
+> réduire, les scénarios ont été dérivés des user stories du cadrage (et non du code), et
 > chaque fonctionnalité clé décline au moins un cas nominal, un cas d'erreur et un cas
 > limite. La majorité des scénarios est en outre rejouée automatiquement à chaque push,
 > ce qui les soustrait à ma bienveillance de relecteur.

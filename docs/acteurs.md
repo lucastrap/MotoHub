@@ -49,7 +49,7 @@ les arbitrages fonctionnels (« un membre du club aurait-il besoin de ceci ? »)
 | Motard confirmé | Possède plusieurs motos, fait lui-même son entretien | Gérer plusieurs motos, suivre coûts et pièces |
 | Nouvel acheteur | Vient d'acquérir sa première moto | Enregistrer son véhicule, trouver des pièces en ligne |
 
-Ces profils sont issus de l'analyse de marché du Bloc 1. **Ils n'ont pas été confrontés à
+Ces profils sont issus de l'analyse de marché menée au cadrage. **Ils n'ont pas été confrontés à
 des utilisateurs réels** : le produit n'a pas fait l'objet d'une campagne de test
 utilisateurs. C'est la principale limite de validation du projet.
 

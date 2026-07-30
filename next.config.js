@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const { withSentryConfig } = require('@sentry/nextjs')
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
@@ -32,8 +33,11 @@ const securityHeaders = [
       "img-src 'self' data: https:",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
-      "connect-src 'self' https://vpic.nhtsa.dot.gov https://news.google.com",
+      // Sentry : point d'ingestion des erreurs (collecte d'incidents)
+      "connect-src 'self' https://vpic.nhtsa.dot.gov https://news.google.com https://*.ingest.sentry.io https://*.ingest.de.sentry.io",
       "font-src 'self' data:",
+      // Le rejeu de session Sentry compresse les données dans un worker
+      "worker-src 'self' blob:",
       "object-src 'none'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
@@ -43,9 +47,29 @@ const securityHeaders = [
 
 const nextConfig = {
   reactStrictMode: true,
+  // Requis en Next 14 pour que `src/instrumentation.ts` soit exécuté au démarrage
+  // du serveur (initialisation Sentry côté Node et Edge).
+  experimental: {
+    instrumentationHook: true,
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },
 }
 
-module.exports = withPWA(nextConfig)
+// Sentry enveloppe la configuration en dernier
+module.exports = withSentryConfig(withPWA(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+
+  // Journalise le travail du plugin en CI
+  silent: !process.env.CI,
+  telemetry: false,
+
+
+  sourcemaps: { disable: true },
+
+  webpack: {
+    treeshake: { removeDebugLogging: true },
+  },
+})
