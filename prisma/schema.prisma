@@ -42,8 +42,7 @@ model Motorcycle {
   isPrimary       Boolean       @default(false)
 
   maintenances    Maintenance[]
-  reminders       Reminder[]
-  
+
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   
@@ -68,24 +67,6 @@ model Maintenance {
   
   @@index([motorcycleId])
   @@index([date])
-}
-
-model Reminder {
-  id              String        @id @default(uuid())
-  motorcycleId    String
-  motorcycle      Motorcycle    @relation(fields: [motorcycleId], references: [id], onDelete: Cascade)
-  
-  type            MaintenanceType
-  name            String
-  thresholdMileage Int?
-  frequencyMonths  Int?
-  
-  isActive        Boolean       @default(true)
-  
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-  
-  @@index([motorcycleId])
 }
 
 enum MaintenanceType {

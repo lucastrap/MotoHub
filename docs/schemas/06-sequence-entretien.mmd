@@ -1,0 +1,35 @@
+---
+title: "S6 · Séquence   enregistrement d'un entretien (§5.1)"
+---
+sequenceDiagram
+    autonumber
+    actor U as Client (navigateur)
+    participant API as POST /api/maintenances
+    participant JWT as Auth (JWT · jose)
+    participant Z as Validation (Zod)
+    participant DB as Prisma / PostgreSQL
+
+    U->>API: POST { motorcycleId, type, mileage, ... }
+
+    API->>JWT: identité depuis le cookie
+    alt jeton absent ou invalide
+        JWT-->>U: 401 Unauthorized
+    end
+
+    API->>Z: validation du corps
+    alt schéma invalide
+        Z-->>U: 400 Bad Request
+    end
+
+    API->>DB: findFirst { id, userId }   vérifie la propriété
+    alt moto non possédée
+        DB-->>U: 403 Forbidden
+    end
+
+    API->>DB: create(maintenance)
+    opt mileage > currentMileage
+        API->>DB: update(currentMileage)
+    end
+    DB-->>U: 201 Created
+
+    note over API,DB: Ordre imposé : identité → validation → propriété → écriture.<br/>create + update ne sont pas transactionnels (dette §5.4).

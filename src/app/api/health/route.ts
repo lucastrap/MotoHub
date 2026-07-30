@@ -24,7 +24,7 @@ export async function GET() {
     );
   } catch (error) {
     const latency = Date.now() - start;
-    logger.error("Health check failed — DB unreachable", { error, latencyMs: latency });
+    logger.error("Health check failed   DB unreachable", { error, latencyMs: latency });
 
     return NextResponse.json(
       {

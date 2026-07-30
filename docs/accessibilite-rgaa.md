@@ -1,4 +1,4 @@
-# Grille d'audit d'accessibilité RGAA — MotoTrack
+# Grille d'audit d'accessibilité RGAA   MotoTrack
 
 | Champ | Valeur |
 |---|---|
@@ -23,7 +23,7 @@ interactions clés et les points de vigilance les plus fréquents. Chaque critè
 |---|---|---|---|
 | 1.1 | Images porteuses d'info avec alternative | Icônes décoratives en `aria-hidden`, pas d'image porteuse de sens non décrite | C |
 | 1.2 | Images de décoration ignorées par l'AT | `aria-hidden="true"` sur les icônes FontAwesome | C |
-| 3.2 | Contraste des textes | Thème sombre, texte clair sur fond `#0f172a` (ratio > 4.5:1) | C |
+| 3.2 | Contraste des textes | Thème sombre ; jeton `--primary-text` (5,35:1) pour le rouge-texte et libellés relevés à `text-white/60` (7,3:1) sur les parcours audités   défauts de contraste initiaux corrigés (§4.3.d) | C |
 | 3.3 | Contraste des composants d'interface | Boutons/champs à bordures contrastées | C |
 | 7.1 | Scripts compatibles AT | Composants React sémantiques, pas de widget custom inaccessible | C |
 | 7.3 | Scripts contrôlables au clavier | Navigation et formulaires entièrement utilisables au clavier | C |
@@ -35,7 +35,7 @@ interactions clés et les points de vigilance les plus fréquents. Chaque critè
 | 11.2 | Étiquettes pertinentes | Libellés explicites (Email, Password, Name…) | C |
 | 11.10 | Contrôle de saisie / erreurs signalées | `role="alert"`, `aria-invalid`, `aria-describedby` | C |
 | 11.13 | Saisie facilitée (autocomplete) | `autocomplete` sur email et mots de passe | C |
-| 12.6 | Zones de regroupement atteignables | Landmarks `nav`/`main` présents | C |
+| 12.6 | Zones de regroupement atteignables | Landmarks `nav`/`main` présents ; `(auth)/layout.tsx` fournit `<main id="main-content">` + lien d'évitement sur `/login` et `/register` | C |
 | 12.7 | Lien d'évitement | « Aller au contenu principal » vers `#main-content` | C |
 | 12.8 | Ordre de tabulation cohérent | Ordre DOM logique (lien d'évitement → nav → contenu) | C |
 | 13.3 | Documents bureautiques accessibles | NA (pas de document téléchargeable dans le périmètre) | NA |

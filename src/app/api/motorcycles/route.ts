@@ -3,18 +3,8 @@ import prisma from "@/lib/prisma";
 import z from "zod";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
-
-const motorcycleSchema = z.object({
-  brand: z.string().min(1),
-  model: z.string().min(1),
-  year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
-  color: z.string().optional(),
-  vin: z.string().optional(),
-  licensePlate: z.string().optional(),
-  currentMileage: z.number().int().min(0).default(0),
-  purchaseDate: z.string().optional(),
-  purchasePrice: z.number().optional(),
-});
+import logger from "@/lib/logger";
+import { motorcycleSchema } from "@/lib/schemas/motorcycle";
 
 async function getUser() {
   const token = cookies().get("token")?.value;
@@ -41,6 +31,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(motorcycles, { status: 200 });
   } catch (error) {
+    logger.error("GET /api/motorcycles a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -68,6 +59,7 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
+    logger.error("POST /api/motorcycles a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

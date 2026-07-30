@@ -1,4 +1,4 @@
-# Cahier de recettes — MotoTrack
+# Cahier de recettes   MotoTrack
 
 ## Informations générales
 
@@ -20,7 +20,7 @@
 
 ---
 
-## Module 1 — Authentification
+## Module 1   Authentification
 
 ### RT-01 : Inscription d'un nouvel utilisateur
 
@@ -74,9 +74,9 @@
 
 ---
 
-## Module 2 — Gestion du garage
+## Module 2   Gestion du garage
 
-### RT-06 : Ajout d'une moto — formulaire complet
+### RT-06 : Ajout d'une moto   formulaire complet
 
 | Champ | Détail |
 |---|---|
@@ -87,7 +87,7 @@
 | Résultat obtenu | Conforme |
 | Statut | ✅ Passé |
 
-### RT-07 : Ajout d'une moto — format immatriculation invalide
+### RT-07 : Ajout d'une moto   format immatriculation invalide
 
 | Champ | Détail |
 |---|---|
@@ -111,14 +111,14 @@
 
 | Champ | Détail |
 |---|---|
-| Étapes | 1. Wizard step 1 — sélectionner "Yamaha" + année 2022 · 2. Cliquer dans le champ Modèle |
+| Étapes | 1. Wizard step 1   sélectionner "Yamaha" + année 2022 · 2. Cliquer dans le champ Modèle |
 | Résultat attendu | Liste de modèles Yamaha 2022 proposée (MT-07, MT-09, R1…) |
-| Résultat obtenu | Conforme — 12 modèles retournés |
+| Résultat obtenu | Conforme   12 modèles retournés |
 | Statut | ✅ Passé |
 
 ---
 
-## Module 3 — Entretien
+## Module 3   Entretien
 
 ### RT-10 : Ajout d'une intervention
 
@@ -152,7 +152,7 @@
 
 ---
 
-## Module 4 — Tableau de bord
+## Module 4   Tableau de bord
 
 ### RT-13 : Affichage de la dernière intervention
 
@@ -161,7 +161,7 @@
 | Précondition | Au moins une intervention enregistrée pour la moto principale |
 | Étapes | 1. Accéder à `/dashboard` |
 | Résultat attendu | Type, description, date et kilométrage de la dernière intervention affichés |
-| Résultat obtenu | Conforme — vidange du 15/04/2026 affichée |
+| Résultat obtenu | Conforme   vidange du 15/04/2026 affichée |
 | Statut | ✅ Passé |
 
 ### RT-14 : Affichage des prochaines échéances
@@ -170,12 +170,12 @@
 |---|---|
 | Étapes | 1. Accéder à `/dashboard` |
 | Résultat attendu | 4 échéances calculées (vidange, chaîne, freins, pneus) avec km cible |
-| Résultat obtenu | Conforme — prochaine vidange à 19 200 km affichée |
+| Résultat obtenu | Conforme   prochaine vidange à 19 200 km affichée |
 | Statut | ✅ Passé |
 
 ---
 
-## Module 5 — Supervision
+## Module 5   Supervision
 
 ### RT-15 : Endpoint de santé
 
@@ -188,24 +188,24 @@
 
 ---
 
-## Module 6 — Sécurité (contrôle d'accès)
+## Module 6   Sécurité (contrôle d'accès)
 
 ### RT-16 : Isolation des données entre utilisateurs
 
 | Champ | Détail |
 |---|---|
-| Type | Test de sécurité (contrôle d'accès — OWASP A01) |
+| Type | Test de sécurité (contrôle d'accès   OWASP A01) |
 | Précondition | Utilisateur A connecté ; une moto appartient à l'utilisateur B |
 | Étapes | 1. Appeler `PATCH /api/motorcycles/{id_moto_B}` avec la session de A |
-| Résultat attendu | HTTP 404 — la ressource d'autrui est invisible, aucune modification |
-| Résultat obtenu | Conforme — 404 retourné |
+| Résultat attendu | HTTP 404   la ressource d'autrui est invisible, aucune modification |
+| Résultat obtenu | Conforme   404 retourné |
 | Statut | ✅ Passé |
 
 ### RT-17 : Rejet d'un jeton expiré ou invalide
 
 | Champ | Détail |
 |---|---|
-| Type | Test de sécurité (authentification — OWASP A07) |
+| Type | Test de sécurité (authentification   OWASP A07) |
 | Précondition | Cookie `token` altéré ou expiré |
 | Étapes | 1. Accéder à `/dashboard` avec un jeton invalide |
 | Résultat attendu | Redirection vers `/login` (jeton non vérifié) |
@@ -214,7 +214,7 @@
 
 ---
 
-## Traçabilité — scénarios ↔ tests automatisés
+## Traçabilité   scénarios ↔ tests automatisés
 
 Chaque scénario de recette est rejoué automatiquement (non-régression). Correspondance :
 
@@ -248,9 +248,9 @@ Cette conclusion mérite d'être lue avec les réserves suivantes, qui sont les 
   `suivi-avancement.md` (journal A-01 à A-07) et analysées dans `plan-correction-bogues.md`.
   Un cahier vert du premier coup n'existe pas ; celui-ci est vert *à la fin*.
 - **11 des 17 scénarios sont adossés à des tests automatisés** (voir la table de traçabilité
-  ci-dessus), rejoués à chaque push. Les 6 restants — RT-06 (ajout moto, formulaire complet),
+  ci-dessus), rejoués à chaque push. Les 6 restants   RT-06 (ajout moto, formulaire complet),
   RT-08 (moto principale), RT-09 (autocomplete NHTSA), RT-12 (filtre historique),
-  RT-13 et RT-14 (dashboard) — ne sont vérifiés que manuellement. C'est là que le risque de
+  RT-13 et RT-14 (dashboard)   ne sont vérifiés que manuellement. C'est là que le risque de
   régression est le plus élevé, et c'est le premier chantier d'extension du harnais.
 - **Aucun utilisateur externe n'a exécuté cette recette.** Elle valide la conformité aux
   spécifications que j'ai moi-même écrites, pas l'adéquation du produit à un besoin réel.

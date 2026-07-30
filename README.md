@@ -1,6 +1,6 @@
 # MotoTrack
 
-Application web de gestion de garage moto — suivi d'entretien, tableau de bord, actualités et météo. Projet personnel réalisé seul dans le cadre d'un titre RNCP niveau 7 (Expert en développement logiciel).
+Application web de gestion de garage moto   suivi d'entretien, tableau de bord, actualités et météo. Projet personnel réalisé seul dans le cadre d'un titre RNCP niveau 7 (Expert en développement logiciel).
 
 ## Stack technique
 

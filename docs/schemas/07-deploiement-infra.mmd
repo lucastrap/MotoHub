@@ -1,0 +1,35 @@
+---
+title: "S7 · Déploiement / infrastructure   MotoTrack (§3.2 · §4.6)"
+---
+flowchart LR
+    subgraph DEVICE["Appareil utilisateur"]
+        B["Navigateur / PWA<br/>Service Worker (cache, offline)"]
+    end
+
+    subgraph VERCEL["Vercel   serverless, multi-instances"]
+        direction TB
+        EDGE["Edge Runtime<br/>middleware   contrôle d'accès"]
+        FUNC["Fonctions serverless<br/>App Router : pages + /api/*"]
+        EDGE --> FUNC
+    end
+
+    subgraph SUPA["Supabase"]
+        DB[("PostgreSQL managé<br/>projets staging + production")]
+    end
+
+    EXT["Services externes<br/>API NHTSA · flux RSS"]
+
+    B -- HTTPS --> EDGE
+    FUNC -- "Prisma · TLS" --> DB
+    FUNC -- HTTPS --> EXT
+
+    LEGEND["Vue physique   complète l'architecture logique (S3).<br/>Instances serverless multiples et éphémères : l'état en mémoire ne persiste pas (§5.4)."]
+
+    classDef node fill:#0a0a0a,stroke:#e60026,color:#f2f2f2;
+    classDef data fill:#1f2937,stroke:#22c55e,color:#f2f2f2;
+    classDef ext fill:#111827,stroke:#9ca3af,color:#e5e7eb;
+    classDef note fill:none,stroke:none,color:#9ca3af,font-size:12px;
+    class B,EDGE,FUNC node;
+    class DB data;
+    class EXT ext;
+    class LEGEND note;

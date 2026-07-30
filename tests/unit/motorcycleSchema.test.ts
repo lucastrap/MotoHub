@@ -1,31 +1,7 @@
-import * as z from "zod";
 
-// Schéma extrait de src/app/garage/new/page.tsx
-const currentYear = new Date().getFullYear();
+import { motorcycleSchema as schema } from "@/lib/schemas/motorcycle";
 
-const schema = z.object({
-  brand: z.string().min(1, "La marque est requise"),
-  model: z.string().min(1, "Le modèle est requis"),
-  year: z.coerce.number().min(1990).max(currentYear + 1),
-  currentMileage: z.coerce.number().min(0).default(0),
-  color: z.string().optional(),
-  licensePlate: z
-    .string()
-    .optional()
-    .transform((v) => v || undefined)
-    .refine(
-      (v) => !v || /^[A-Z]{2}-\d{3}-[A-Z]{2}$/.test(v),
-      "Format invalide (ex: AB-123-CD)"
-    ),
-  vin: z.string().optional().transform((v) => v || undefined),
-  purchaseDate: z.string().optional().transform((v) => v || undefined),
-  purchasePrice: z.preprocess(
-    (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
-    z.number().positive().optional()
-  ),
-});
-
-describe("Schéma Zod — ajout de moto", () => {
+describe("Schéma Zod   ajout de moto", () => {
   const validBase = {
     brand: "Yamaha",
     model: "MT-07",

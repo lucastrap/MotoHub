@@ -1,6 +1,6 @@
 import { formatPlate, PLATE_REGEX } from "@/lib/formatPlate";
 
-describe("formatPlate — format SIV automatique", () => {
+describe("formatPlate   format SIV automatique", () => {
   it("retourne une chaîne vide si l'entrée est vide", () => {
     expect(formatPlate("")).toBe("");
   });

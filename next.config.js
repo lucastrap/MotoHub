@@ -2,11 +2,18 @@
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
-  register: true,
+
+  register: false,
   skipWaiting: true,
+
+  buildExcludes: [/app-build-manifest\.json$/],
+  fallbacks: {
+   
+    document: '/offline',
+  },
 })
 
-// OWASP A05 — En-têtes de sécurité HTTP appliqués à toutes les réponses.
+// OWASP A05   En-têtes de sécurité HTTP appliqués à toutes les réponses.
 // La CSP est déclarée en "Report-Only" pour ne pas casser le rendu (Three.js,
 // PWA, styles inline de Next) tout en préparant une future politique bloquante.
 const securityHeaders = [

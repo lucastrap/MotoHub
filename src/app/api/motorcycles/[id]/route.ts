@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 async function getUser() {
   const token = cookies().get("token")?.value;
@@ -13,7 +14,7 @@ async function getUser() {
   }
 }
 
-// PATCH /api/motorcycles/[id] — set as primary or update fields
+// PATCH /api/motorcycles/[id]   set as primary or update fields
 export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
@@ -44,7 +45,8 @@ export async function PATCH(
     });
 
     return NextResponse.json(updated);
-  } catch {
+  } catch (error) {
+    logger.error("PATCH /api/motorcycles/[id] a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

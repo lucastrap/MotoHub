@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import prisma from "@/lib/prisma";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import z from "zod";
+import logger from "@/lib/logger";
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -12,7 +13,7 @@ const registerSchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    // OWASP A07 — limitation des créations de compte par IP
+    // OWASP A07   limitation des créations de compte par IP
     const rl = checkRateLimit(`register:${getClientIp(req)}`);
     if (!rl.allowed) {
       return NextResponse.json(
@@ -29,8 +30,9 @@ export async function POST(req: Request) {
     });
 
     if (existingUser) {
+      // OWASP A07    message générique : ne pas confirmer l'existence d'un compte
       return NextResponse.json(
-        { error: "User already exists" },
+        { error: "Inscription impossible avec ces informations." },
         { status: 400 }
       );
     }
@@ -55,6 +57,7 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
+    logger.error("POST /api/auth/register a échoué", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
