@@ -54,6 +54,8 @@ jobs:
 
     - name: Security audit (dépendances   OWASP A06)
       run: npm audit --audit-level=high
+      continue-on-error: true
+
     - name: Audit des dépendances (production et outillage)
       run: |
         set +e
