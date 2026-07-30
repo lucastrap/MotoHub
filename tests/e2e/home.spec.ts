@@ -26,7 +26,7 @@ test.describe("Page d'accueil", () => {
   test("affiche la section fonctionnalités", async ({ page }) => {
     await expect(page.getByRole("heading", { name: /carnet d'entretien/i })).toBeVisible();
     await expect(page.getByRole("heading", { name: /pièces détachées/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /rappels intelligents/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /échéances calculées/i })).toBeVisible();
   });
 
   test("le footer affiche l'année courante", async ({ page }) => {

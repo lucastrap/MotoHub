@@ -1,0 +1,81 @@
+name: Incident de production
+description: Consigner une indisponibilité ou une dégradation constatée en production
+title: "[INCIDENT] "
+labels: ["incident", "production"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Modèle utilisé pour les incidents **déclarés manuellement**. Les incidents
+        détectés par la sonde `/api/health` sont ouverts automatiquement par le
+        workflow `supervision.yml` avec le même étiquetage.
+
+  - type: dropdown
+    id: nature
+    attributes:
+      label: Nature de l'incident
+      options:
+        - Indisponibilité totale (application injoignable)
+        - Indisponibilité partielle (une fonctionnalité hors service)
+        - Dégradation de performance
+        - Perte ou incohérence de données
+        - Incident de sécurité
+    validations:
+      required: true
+
+  - type: input
+    id: debut
+    attributes:
+      label: Début constaté (UTC)
+      placeholder: "2026-07-28T09:15:00Z"
+    validations:
+      required: true
+
+  - type: input
+    id: detection
+    attributes:
+      label: Moyen de détection
+      placeholder: "Sonde GitHub Actions / alerte UptimeRobot / Sentry / retour utilisateur"
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Qui est affecté, sur quel parcours, avec ou sans contournement.
+    validations:
+      required: true
+
+  - type: textarea
+    id: indicateurs
+    attributes:
+      label: Relevé des indicateurs
+      description: Sortie de `/api/health`, code HTTP, latence base, version et commit déployés.
+      render: json
+    validations:
+      required: true
+
+  - type: textarea
+    id: actions
+    attributes:
+      label: Actions immédiates
+      description: Mesures de rétablissement (retour arrière Vercel, redémarrage, correctif à chaud).
+    validations:
+      required: false
+
+  - type: textarea
+    id: cause
+    attributes:
+      label: Cause racine
+      description: À compléter après analyse   ne pas clore l'incident tant que ce champ est vide.
+    validations:
+      required: false
+
+  - type: textarea
+    id: prevention
+    attributes:
+      label: Prévention de la réapparition
+      description: Test de non-régression ajouté, seuil ajusté, garde-fou mis en place dans la CI.
+    validations:
+      required: false
