@@ -21,14 +21,15 @@ describe("AppLayout   structure et accessibilité", () => {
     const nav = screen.getByRole("navigation", { name: /navigation principale/i });
     expect(nav).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /mon garage/i })).toHaveAttribute("href", "/garage");
-    expect(screen.getByRole("link", { name: /historique/i })).toHaveAttribute("href", "/maintenance");
+    expect(screen.getByRole("link", { name: /entretien/i })).toHaveAttribute("href", "/maintenance");
+    expect(screen.getByRole("link", { name: /^pièces$/i })).toHaveAttribute("href", "/pieces");
   });
 
   it("marque le lien actif avec aria-current selon l'URL courante", () => {
     mockPathname = "/garage";
-    render(<AppLayout title="Mon Garage">contenu</AppLayout>);
+    render(<AppLayout title="Mon garage">contenu</AppLayout>);
     expect(screen.getByRole("link", { name: /mon garage/i })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: /historique/i })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("link", { name: /entretien/i })).not.toHaveAttribute("aria-current");
   });
 
   it("affiche le titre de page fourni et le contenu", () => {

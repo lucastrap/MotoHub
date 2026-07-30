@@ -5,8 +5,6 @@ export type MaintenanceStatus = "ok" | "soon" | "overdue";
 export interface MaintenanceRule {
   /** Type d'entretien (aligné sur l'enum Prisma MaintenanceType). */
   type: string;
-  /** Icône affichée (canal d'information indépendant de la couleur). */
-  icon: string;
   /** Libellé lisible (canal d'information indépendant de la couleur). */
   label: string;
   /** Intervalle kilométrique entre deux entretiens de ce type. */
@@ -17,7 +15,6 @@ export interface MaintenanceRule {
 
 export interface UpcomingMaintenance {
   type: string;
-  icon: string;
   label: string;
   targetMileage: number;
   detail: string;
@@ -26,10 +23,10 @@ export interface UpcomingMaintenance {
 
 
 export const MAINTENANCE_RULES: MaintenanceRule[] = [
-  { type: "CHAIN_SERVICE", icon: "⚙️", label: "Kit chaîne", interval: 1000, soonMargin: 100 },
-  { type: "OIL_CHANGE", icon: "🛢️", label: "Vidange", interval: 6000, soonMargin: 300 },
-  { type: "BRAKE_SERVICE", icon: "🔴", label: "Freins", interval: 15000, soonMargin: 500 },
-  { type: "TIRE_CHANGE", icon: "🔵", label: "Pneus", interval: 10000, soonMargin: 500 },
+  { type: "CHAIN_SERVICE", label: "Kit chaîne", interval: 1000, soonMargin: 100 },
+  { type: "OIL_CHANGE", label: "Vidange", interval: 6000, soonMargin: 300 },
+  { type: "BRAKE_SERVICE", label: "Freins", interval: 15000, soonMargin: 500 },
+  { type: "TIRE_CHANGE", label: "Pneus", interval: 10000, soonMargin: 500 },
 ];
 
 
@@ -54,7 +51,6 @@ export function getUpcomingMaintenance(
     const targetMileage = baseMileage + rule.interval;
     return {
       type: rule.type,
-      icon: rule.icon,
       label: rule.label,
       targetMileage,
       detail: `À ${targetMileage.toLocaleString("fr-FR")} km`,

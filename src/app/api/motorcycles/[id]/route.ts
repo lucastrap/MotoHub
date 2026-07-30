@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import z from "zod";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
 import logger from "@/lib/logger";
+
+/** Seul champ modifiable pour l'instant. Validé pour ne pas transmettre
+ *  n'importe quelle valeur à Prisma, qui lèverait une 500. */
+const patchSchema = z.object({
+  isPrimary: z.boolean(),
+});
 
 async function getUser() {
   const token = cookies().get("token")?.value;
@@ -23,7 +30,7 @@ export async function PATCH(
     const user = await getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const body = await req.json();
+    const body = patchSchema.parse(await req.json());
 
     // Verify ownership
     const moto = await prisma.motorcycle.findFirst({
@@ -46,6 +53,9 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.errors }, { status: 400 });
+    }
     logger.error("PATCH /api/motorcycles/[id] a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

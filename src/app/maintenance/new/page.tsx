@@ -4,31 +4,15 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { maintenanceSchema, aujourdhui, type MaintenanceInput } from "@/lib/schemas/maintenance";
+import { formatKm } from "@/lib/format";
 import { Motorcycle } from "@prisma/client";
 
-const maintenanceSchema = z.object({
-  motorcycleId: z.string().min(1, { message: "Veuillez sélectionner une moto" }),
-  type: z.enum([
-    "OIL_CHANGE", 
-    "TIRE_CHANGE", 
-    "BRAKE_SERVICE", 
-    "CHAIN_SERVICE", 
-    "GENERAL_SERVICE", 
-    "REPAIR", 
-    "OTHER"
-  ], { required_error: "Veuillez sélectionner un type d'entretien" }),
-  date: z.string().min(1, { message: "La date est requise" }),
-  mileage: z.coerce.number().min(0),
-  description: z.string().min(1, { message: "La description est requise" }),
-  cost: z.coerce.number().optional()
-});
-
-type MaintenanceFormValues = z.infer<typeof maintenanceSchema>;
+type MaintenanceFormValues = MaintenanceInput;
 
 function AddMaintenanceContent() {
   const router = useRouter();
@@ -42,15 +26,26 @@ function AddMaintenanceContent() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<MaintenanceFormValues>({
     resolver: zodResolver(maintenanceSchema),
     defaultValues: {
       motorcycleId: defaultMotoId || "",
-      date: new Date().toISOString().split('T')[0],
+      date: aujourdhui(),
       mileage: 0,
+      description: "",
     }
   });
+
+  const motoSelectionnee = motorcycles.find((m) => m.id === watch("motorcycleId"));
+  const kmSaisi = Number(watch("mileage"));
+
+  // Saisir un kilométrage inférieur à celui de la moto est légitime (on
+  // rattrape un entretien ancien), mais c'est souvent une faute de frappe :
+  // on prévient sans bloquer.
+  const kmEnRetrait =
+    motoSelectionnee && Number.isFinite(kmSaisi) && kmSaisi < motoSelectionnee.currentMileage;
 
   useEffect(() => {
     async function fetchMotorcycles() {
@@ -90,7 +85,7 @@ function AddMaintenanceContent() {
   }
 
   return (
-    <AppLayout title="Prochain entretien">
+    <AppLayout title="Nouvelle intervention">
       <div className="bg-card rounded-xl border p-6 md:p-8 max-w-2xl shadow-sm">
         {loading ? (
           <p>Chargement de votre garage...</p>
@@ -144,31 +139,52 @@ function AddMaintenanceContent() {
               {/* Date */}
               <div className="space-y-2">
                 <Label htmlFor="date">Date *</Label>
-                <Input id="date" type="date" {...register("date")} />
+                {/* `max` bloque le sélecteur natif, le schéma bloque la saisie
+                    manuelle et les requêtes directes vers l'API. */}
+                <Input id="date" type="date" max={aujourdhui()} {...register("date")} />
                 {errors.date && <p className="text-sm text-destructive">{errors.date.message}</p>}
               </div>
 
               {/* Mileage */}
               <div className="space-y-2">
                 <Label htmlFor="mileage">Kilométrage (km) *</Label>
-                <Input id="mileage" type="number" {...register("mileage")} />
+                <Input
+                  id="mileage"
+                  type="number"
+                  min={0}
+                  aria-describedby={kmEnRetrait ? "mileage-indication" : undefined}
+                  {...register("mileage")}
+                />
                 {errors.mileage && <p className="text-sm text-destructive">{errors.mileage.message}</p>}
+                {/* Gris et non rouge : c'est une information, pas une erreur, et
+                    le rouge de marque se confondrait avec les messages d'erreur. */}
+                {kmEnRetrait && !errors.mileage && (
+                  <p id="mileage-indication" className="text-sm text-muted-foreground">
+                    Inférieur au kilométrage actuel de la moto (
+                    {formatKm(motoSelectionnee!.currentMileage)} km). Le compteur de la moto
+                    ne sera pas modifié.
+                  </p>
+                )}
               </div>
 
               {/* Cost */}
               <div className="space-y-2">
                 <Label htmlFor="cost">Coût total (€)</Label>
-                <Input id="cost" type="number" step="0.01" {...register("cost")} />
+                <Input id="cost" type="number" step="0.01" min={0} {...register("cost")} />
+                {errors.cost && <p className="text-sm text-destructive">{errors.cost.message}</p>}
               </div>
 
               {/* Description */}
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="description">Description / Notes *</Label>
+                <Label htmlFor="description">
+                  Description{" "}
+                  <span className="font-normal text-muted-foreground">(optionnel)</span>
+                </Label>
                 <textarea
                   id="description"
                   rows={4}
                   className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Détails de l'intervention..."
+                  placeholder="Pièces changées, atelier, remarques…"
                   {...register("description")}
                 />
                 {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
@@ -195,7 +211,7 @@ export default function AddMaintenancePage() {
   return (
     <Suspense
       fallback={
-        <AppLayout title="Prochain entretien">
+        <AppLayout title="Nouvelle intervention">
           <p className="text-muted-foreground animate-pulse">Chargement...</p>
         </AppLayout>
       }

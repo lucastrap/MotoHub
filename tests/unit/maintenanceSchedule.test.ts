@@ -3,6 +3,7 @@ import {
   getMaintenanceStatus,
   MAINTENANCE_RULES,
 } from "@/lib/maintenance/schedule";
+import { typeIcon } from "@/lib/maintenance/icons";
 
 describe("getMaintenanceStatus", () => {
   it("retourne 'ok' bien avant l'échéance", () => {
@@ -70,8 +71,18 @@ describe("getUpcomingMaintenance", () => {
 
   it("porte l'information sur trois canaux indépendants de la couleur (icône, libellé, valeur)", () => {
     const chain = getUpcomingMaintenance(10000, {}).find((i) => i.type === "CHAIN_SERVICE")!;
-    expect(chain.icon).toBeTruthy();
+    // L'icône se résout depuis le type au moment du rendu : on vérifie le canal
+    // de bout en bout plutôt qu'un champ recopié dans la règle métier.
+    expect(typeIcon(chain.type)).toBeDefined();
+    expect(typeIcon(chain.type)).not.toBe(typeIcon("OIL_CHANGE"));
     expect(chain.label).toBe("Kit chaîne");
     expect(chain.detail).toMatch(/\d/); // contient la valeur chiffrée
+  });
+
+  it("chaque règle métier a une icône et un libellé distincts", () => {
+    const icones = MAINTENANCE_RULES.map((r) => typeIcon(r.type).iconName);
+    const libelles = MAINTENANCE_RULES.map((r) => r.label);
+    expect(new Set(icones).size).toBe(MAINTENANCE_RULES.length);
+    expect(new Set(libelles).size).toBe(MAINTENANCE_RULES.length);
   });
 });

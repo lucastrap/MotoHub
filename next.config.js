@@ -52,6 +52,12 @@ const nextConfig = {
   experimental: {
     instrumentationHook: true,
   },
+  images: {
+    // Photos de moto stockées sur Vercel Blob.
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+    ],
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },

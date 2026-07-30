@@ -5,23 +5,7 @@ import z from "zod";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
 import logger from "@/lib/logger";
-
-const maintenanceSchema = z.object({
-  motorcycleId: z.string().uuid(),
-  type: z.enum([
-    "OIL_CHANGE", 
-    "TIRE_CHANGE", 
-    "BRAKE_SERVICE", 
-    "CHAIN_SERVICE", 
-    "GENERAL_SERVICE", 
-    "REPAIR", 
-    "OTHER"
-  ]),
-  date: z.string(),
-  mileage: z.coerce.number().min(0),
-  description: z.string().min(1),
-  cost: z.coerce.number().optional()
-});
+import { maintenanceSchema } from "@/lib/schemas/maintenance";
 
 async function getUser() {
   const token = cookies().get("token")?.value;
@@ -92,11 +76,14 @@ export async function POST(req: Request) {
     const maintenance = await prisma.maintenance.create({
       data: {
         ...parsedData,
+        // La colonne est NOT NULL : une description omise est stockée vide.
+        description: parsedData.description ?? "",
         date: new Date(parsedData.date),
       },
     });
-    
-    // Update the motorcycle's current mileage if this service mileage is higher
+
+    // Le kilométrage de la moto ne recule jamais : une intervention saisie
+    // après coup, à un kilométrage inférieur, ne doit pas l'écraser.
     if (parsedData.mileage > motoOwnership.currentMileage) {
       await prisma.motorcycle.update({
         where: { id: motoOwnership.id },
