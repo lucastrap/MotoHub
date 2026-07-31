@@ -5,6 +5,24 @@ Les correctifs citent le commit qui les porte : `git show <commit>` permet de v�
 
 ---
 
+## [1.3.1] 2026-07-29
+
+Rien de nouveau côté utilisateur : cette version corrige un angle mort de la supervision
+elle-même.
+
+- **Correctif** : un ralentissement durable n'alertait personne. La sonde renvoyait bien
+  `degraded` et Sentry recevait un `warning`, mais le workflow n'ouvrait d'issue que sur
+  échec complet : une base lente pendant des heures aurait été constatée par les
+  utilisateurs avant de l'être par la supervision. Une issue de sévérité majeure est
+  désormais ouverte après trois exécutions consécutives en `degraded`, soit environ
+  45 minutes de dégradation continue, et refermée au retour sous le seuil (`9bb6775`).
+- Le compteur d'exécutions consécutives est porté par le cache Actions, le workflow
+  n'ayant aucune mémoire d'une exécution à l'autre. Une dégradation isolée n'ouvre
+  toujours rien : elle reste tracée dans Sentry.
+
+Au passage : ce code était parti en prod le 29/07 avec `9bb6775`, mais le numéro était
+resté à 1.3.0 sur `main`. La sonde annonçait donc 1.3.0 sur du 1.3.1. Remis d'aplomb ici.
+
 ## [1.3.0] 2026-07-28
 
 Rien de nouveau côté utilisateur : cette version rend l'application observable.
