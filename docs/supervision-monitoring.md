@@ -25,7 +25,7 @@ Disponibilité :
 |---|---|---|
 | Code HTTP de `/api/health` | sonde | ≠ 200 |
 | Champ `status` | sonde | `error` |
-| `latencyMs` (aller-retour base) | sonde | > 500 ms, état `degraded` |
+| `latencyMs` (aller-retour base) | sonde | > 1000 ms, état `degraded` |
 | Temps de réponse total | curl | > 15 s (délai d'attente) |
 | Disponibilité mensuelle | UptimeRobot | < 99 % |
 
@@ -33,7 +33,7 @@ Erreurs applicatives : toute occurrence est remontée dans Sentry, qu'il s'agiss
 
 Expérience utilisateur : LCP > 2,5 s, INP > 200 ms, CLS > 0,1, mesurés par Vercel Speed Insights. Ce sont les seuils Core Web Vitals publiés par Google.
 
-Sur le seuil de 500 ms : la latence observée via le pooler Supabase se compte en dizaines de millisecondes. Plus bas, chaque démarrage à froid d'une fonction serverless déclencherait une alerte. Plus haut, l'utilisateur aurait déjà abandonné. Le seuil est déclaré dans `src/lib/supervision.ts` et repris par la route, les tests et la réponse de la sonde (champ `thresholdMs`), pour qu'il ne puisse pas diverger d'un endroit à l'autre.
+Sur le seuil de 1000 ms : la latence réelle du pooler Supabase (offre gratuite) se mesure autour de 400 à 500 ms, démarrages à froid des fonctions serverless compris. Le seuil initial de 500 ms se situait donc au niveau du bruit de fond et déclenchait des états `degraded` intermittents sans dégradation réelle ; il a été relevé à 1000 ms pour ne signaler que les ralentissements francs, tout en restant sous le point où l'utilisateur abandonne. Le seuil est déclaré dans `src/lib/supervision.ts` et repris par la route, les tests et la réponse de la sonde (champ `thresholdMs`), pour qu'il ne puisse pas diverger d'un endroit à l'autre.
 
 ## 3. Sondes
 
@@ -50,7 +50,7 @@ Sur le seuil de 500 ms : la latence observée via le pooler Supabase se compte e
   "commit": "a265c88",         // rattache l'alerte au déploiement exact
   "uptimeSeconds": 1042,
   "checks": {
-    "database": { "status": "ok", "latencyMs": 38, "thresholdMs": 500 }
+    "database": { "status": "ok", "latencyMs": 420, "thresholdMs": 1000 }
   }
 }
 ```
@@ -96,7 +96,7 @@ Données personnelles : `sendDefaultPii: false`, corps de requête et cookies re
 | Application injoignable, confirmée 3 fois | Issue GitHub `incident` + notification | ≤ 15 min |
 | Retour à la normale | Commentaire et clôture automatique de l'issue | ≤ 15 min |
 | Erreur serveur non rattrapée | Courriel Sentry | immédiat |
-| Latence base > 500 ms | Message Sentry, niveau `warning` | immédiat |
+| Latence base > 1000 ms | Message Sentry, niveau `warning` | immédiat |
 | Vulnérabilité de dépendance | Pull request Dependabot | hebdomadaire |
 
 Le canal principal est l'issue GitHub plutôt que le courriel, parce qu'elle porte un état ouvert/fermé, un horodatage de début et de fin, et qu'elle se retrouve six mois plus tard. Le workflow commente l'issue existante au lieu d'en créer une seconde, et la referme en calculant la durée d'indisponibilité. Le registre d'incidents se remplit donc sans intervention.
