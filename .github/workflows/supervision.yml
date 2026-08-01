@@ -81,7 +81,7 @@ jobs:
             supervision-degradations-
 
       - name: Escalader une dégradation persistante
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
@@ -195,7 +195,7 @@ jobs:
 
       - name: Alerter (ouvrir ou mettre à jour l'incident)
         if: steps.probe.outputs.healthy == 'false'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const p = ${{ toJSON(steps.probe.outputs) }};
@@ -263,7 +263,7 @@ jobs:
 
       - name: Clore l'incident au retour à la normale
         if: steps.probe.outputs.healthy == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const p = ${{ toJSON(steps.probe.outputs) }};
