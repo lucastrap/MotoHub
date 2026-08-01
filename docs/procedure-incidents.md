@@ -146,9 +146,21 @@ Les anomalies de qualité technique BUG-01 à BUG-06 figurent dans `docs/plan-co
 | Enseignement | Consigné plutôt que passé sous silence, parce que ce type d'écart devient permanent quand il n'est pas tracé. Il aurait fallu déboguer le job de déploiement sur une branche dédiée, sans toucher au pipeline de `main`. |
 | Statut | Résolu le 16/07/2026 |
 
+### MCO-05   Validation de la chaîne d'alerte par panne provoquée (exercice)
+
+| Champ | Détail |
+|---|---|
+| Détection | Sonde `/api/health` — **panne provoquée, exercice de validation du 01/08/2026** (pas un incident subi) |
+| Constat | Mise en pause volontaire de l'instance Supabase (T0 = 13:21). La sonde bascule en `status: error` (HTTP 503, base injoignable) à 13:23:20 ; l'application reste debout et répond. |
+| Analyse | Un dispositif de supervision configuré et un dispositif qui fonctionne sont deux objets distincts. Faute d'incident subi (MotoTrack n'a pas d'utilisateurs), la chaîne d'alerte a été éprouvée par une panne réelle mais provoquée, qui exerce tout le circuit : sonde externe UptimeRobot → e-mail, et sonde interne → issue automatique → notification → clôture avec durée. |
+| Déroulé | Premier signalement reçu à 13:26 par e-mail UptimeRobot (sonde externe, intervalle 5 min), soit ~3 min après la panne effective. Sonde interne : issue #23 ouverte à 13:24:54, commentée « incident toujours en cours », puis refermée automatiquement à 13:44:59 au retour de la base. |
+| Mesures | Délai panne → premier signalement reçu ≈ 3 min, conforme au seuil annoncé de 5 min. Durée d'indisponibilité calculée par le workflow ≈ 20 min (borne haute : granularité de 15 min de la sonde interne). |
+| Vérification | Fil de l'issue #23 complet (ouverture, persistance, clôture avec durée) ; retour de la sonde en `status: ok` confirmé (latence ~440 ms, sous le seuil de 1000 ms). |
+| Statut | Exercice mené le 01/08/2026. Panne provoquée et réversible, déclarée comme telle partout où elle est citée. |
+
 ## 6. Ce que le dispositif attrape
 
-Répartition de MCO-01 à MCO-04 par canal de détection :
+Répartition de MCO-01 à MCO-05 par canal de détection :
 
 | Canal | Nombre | Ce qu'il attrape |
 |---|---|---|
@@ -156,10 +168,10 @@ Répartition de MCO-01 à MCO-04 par canal de détection :
 | Recette manuelle | 1 | Ce qui se voit à l'écran |
 | Revue de l'historique | 1 | Les écarts de processus |
 | Retour utilisateur | 0 | |
-| Sonde et collecteur | 0 | Mis en place le 28/07/2026, postérieurs à ces anomalies |
+| Sonde et collecteur | 1 | MCO-05, panne provoquée le 01/08/2026 : seul cas éprouvé par la sonde, à défaut d'incident subi |
 
 Aucune anomalie n'a été détectée par un utilisateur, pour une raison simple : MotoTrack n'a pas de base d'utilisateurs. Le dispositif de collecte est fonctionnel mais non éprouvé par l'usage, et c'est sa principale faiblesse.
 
-Sentry et les sondes, arrivés le 28/07/2026, n'ont contribué à aucune de ces quatre détections. Ils couvrent en revanche une catégorie qu'aucun canal existant n'attrapait : l'erreur qui frappe un utilisateur en production sans faire échouer ni le build, ni un test, ni une recette.
+Sentry et les sondes, arrivés le 28/07/2026, n'ont contribué à aucune des quatre détections organiques (MCO-01 à MCO-04), postérieurs à ces anomalies. La chaîne d'alerte de la sonde a en revanche été éprouvée le 01/08/2026 par une panne provoquée (MCO-05), pas encore par un incident subi. Ces dispositifs couvrent une catégorie qu'aucun canal existant n'attrapait : l'erreur qui frappe un utilisateur en production sans faire échouer ni le build, ni un test, ni une recette.
 
 Reste ce à quoi je n'ai pas pensé, qu'aucun de ces canaux ne détecte et que couvrirait normalement une revue par un pair, absente d'un projet solo.
