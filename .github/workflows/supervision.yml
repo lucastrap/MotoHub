@@ -73,7 +73,7 @@ jobs:
 
 
       - name: Restaurer le compteur de dégradations
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: .supervision-degradations
           key: supervision-degradations-${{ github.run_id }}
@@ -188,7 +188,7 @@ jobs:
 
       - name: Conserver le compteur de dégradations
         if: always()
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: .supervision-degradations
           key: supervision-degradations-${{ github.run_id }}
