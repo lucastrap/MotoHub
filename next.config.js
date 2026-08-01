@@ -47,6 +47,12 @@ const securityHeaders = [
 
 const nextConfig = {
   reactStrictMode: true,
+  // Version réelle injectée au build depuis package.json : sur Vercel,
+  // `npm_package_version` n'est pas défini au runtime, la sonde annonçait donc
+  // toujours la valeur de repli. Ici la version suit vraiment le déploiement.
+  env: {
+    APP_VERSION: require('./package.json').version,
+  },
   // Requis en Next 14 pour que `src/instrumentation.ts` soit exécuté au démarrage
   // du serveur (initialisation Sentry côté Node et Edge).
   experimental: {
