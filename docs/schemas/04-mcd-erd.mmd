@@ -1,0 +1,43 @@
+---
+title: "S4 · Modèle de données (ERD)   prisma/schema.prisma (§4.1)"
+---
+erDiagram
+    USER ||--o{ MOTORCYCLE : "possède"
+    MOTORCYCLE ||--o{ MAINTENANCE : "consigne"
+
+    USER {
+        uuid id PK
+        string email UK
+        string passwordHash
+        string name
+    }
+
+    MOTORCYCLE {
+        uuid id PK
+        uuid userId FK
+        string brand
+        string model
+        int year
+        string vin UK
+        string licensePlate
+        int currentMileage
+        boolean isPrimary
+    }
+
+    MAINTENANCE {
+        uuid id PK
+        uuid motorcycleId FK
+        MaintenanceType type
+        datetime date
+        int mileage
+        string description
+        float cost
+    }
+
+    %% Légende
+    %% Cardinalité : 1 User → N Motorcycle → N Maintenance.
+    %% Toutes les relations en onDelete: Cascade (droit à l'effacement, RGPD art. 17).
+    %% PK clé primaire · FK clé étrangère · UK unicité · index sur email, userId, motorcycleId, date.
+    %% enum MaintenanceType : OIL_CHANGE, TIRE_CHANGE, BRAKE_SERVICE, CHAIN_SERVICE, GENERAL_SERVICE, REPAIR, OTHER.
+    %% Chaque table porte aussi createdAt / updatedAt (colonnes d'audit, omises ici).
+    %% Un modèle REMINDER avait été provisionné puis retiré (migration 20260719120000_remove_unused_reminder), le code ne l'exploitant jamais.

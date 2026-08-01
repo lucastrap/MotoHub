@@ -9,7 +9,8 @@ const withPWA = require('next-pwa')({
 
   buildExcludes: [/app-build-manifest\.json$/],
   fallbacks: {
-    document: '/_offline',
+   
+    document: '/offline',
   },
 })
 
@@ -50,6 +51,12 @@ const nextConfig = {
   // du serveur (initialisation Sentry côté Node et Edge).
   experimental: {
     instrumentationHook: true,
+  },
+  images: {
+    // Photos de moto stockées sur Vercel Blob.
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+    ],
   },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]

@@ -3,33 +3,33 @@ import { PLATE_REGEX } from "@/lib/formatPlate";
 
 // ── Données de référence ──
 
-export const BRANDS: { name: string; origin?: string }[] = [
-  { name: "Yamaha", origin: "🇯🇵" },
-  { name: "Honda", origin: "🇯🇵" },
-  { name: "Kawasaki", origin: "🇯🇵" },
-  { name: "Suzuki", origin: "🇯🇵" },
-  { name: "BMW", origin: "🇩🇪" },
-  { name: "Ducati", origin: "🇮🇹" },
-  { name: "KTM", origin: "🇦🇹" },
-  { name: "Triumph", origin: "🇬🇧" },
-  { name: "Aprilia", origin: "🇮🇹" },
-  { name: "Husqvarna", origin: "🇦🇹" },
-  { name: "MV Agusta", origin: "🇮🇹" },
-  { name: "Beta", origin: "🇮🇹" },
-  { name: "Harley-Davidson", origin: "🇺🇸" },
-  { name: "Royal Enfield", origin: "🇮🇳" },
-  { name: "CFMoto", origin: "🇨🇳" },
-  { name: "Zontes", origin: "🇨🇳" },
-  { name: "Benelli", origin: "🇨🇳" },
-  { name: "Voge", origin: "🇨🇳" },
-  { name: "Kove", origin: "🇨🇳" },
-  { name: "QJ Motor", origin: "🇨🇳" },
-  { name: "Keeway", origin: "🇨🇳" },
-  { name: "Loncin", origin: "🇨🇳" },
-  { name: "Lifan", origin: "🇨🇳" },
-  { name: "Niu", origin: "🇨🇳" },
-  { name: "Kymco", origin: "🇹🇼" },
-  { name: "SYM", origin: "🇹🇼" },
+export const BRANDS: { name: string }[] = [
+  { name: "Yamaha" },
+  { name: "Honda" },
+  { name: "Kawasaki" },
+  { name: "Suzuki" },
+  { name: "BMW" },
+  { name: "Ducati" },
+  { name: "KTM" },
+  { name: "Triumph" },
+  { name: "Aprilia" },
+  { name: "Husqvarna" },
+  { name: "MV Agusta" },
+  { name: "Beta" },
+  { name: "Harley-Davidson" },
+  { name: "Royal Enfield" },
+  { name: "CFMoto" },
+  { name: "Zontes" },
+  { name: "Benelli" },
+  { name: "Voge" },
+  { name: "Kove" },
+  { name: "QJ Motor" },
+  { name: "Keeway" },
+  { name: "Loncin" },
+  { name: "Lifan" },
+  { name: "Niu" },
+  { name: "Kymco" },
+  { name: "SYM" },
   { name: "Autre" },
 ];
 
@@ -51,28 +51,9 @@ export function buildYears(currentYear: number = new Date().getFullYear()): numb
   return Array.from({ length: currentYear - 1989 + 2 }, (_, i) => currentYear + 1 - i);
 }
 
-// ── Schéma de validation ──
 
-export function buildMotorcycleSchema(currentYear: number = new Date().getFullYear()) {
-  return z.object({
-    brand: z.string().min(1, "La marque est requise"),
-    model: z.string().min(1, "Le modèle est requis"),
-    year: z.coerce.number().min(1990).max(currentYear + 1),
-    currentMileage: z.coerce.number().min(0).default(0),
-    color: z.string().optional(),
-    licensePlate: z
-      .string()
-      .optional()
-      .transform((v) => v || undefined)
-      .refine((v) => !v || PLATE_REGEX.test(v), "Format invalide (ex: AB-123-CD)"),
-    vin: z.string().optional().transform((v) => v || undefined),
-    purchaseDate: z.string().optional().transform((v) => v || undefined),
-    purchasePrice: z.preprocess(
-      (v) => (v === "" || v === null || v === undefined ? undefined : Number(v)),
-      z.number().positive().optional()
-    ),
-  });
-}
+import { buildMotorcycleSchema } from "@/lib/schemas/motorcycle";
+export { buildMotorcycleSchema };
 
 export const motorcycleWizardSchema = buildMotorcycleSchema();
 export type MotorcycleFormValues = z.infer<typeof motorcycleWizardSchema>;
@@ -109,6 +90,23 @@ export function filterModels(models: string[], input: string, limit = 8): string
 /** Construit l'URL d'appel à l'API de modèles. */
 export function buildModelsUrl(brand: string, year: number | string): string {
   return `/api/motorcycle-models?brand=${encodeURIComponent(brand)}&year=${year}`;
+}
+
+/**
+ * Décide de l'effet de la touche Entrée dans le formulaire multi-étapes.
+ *
+ * Sans cette règle, Entrée dans un champ déclenche la soumission implicite via
+ * le bouton submit de la dernière étape : on enregistrait la moto en tapant le
+ * prix d'achat. Les boutons sont laissés de côté pour ne pas casser la
+ * navigation au clavier (marques, couleurs, suggestions de modèle).
+ */
+export function enterAction(
+  tagName: string,
+  step: number,
+  lastStep: number,
+): "ignore" | "next" | "block" {
+  if (tagName !== "INPUT" && tagName !== "SELECT") return "ignore";
+  return step < lastStep ? "next" : "block";
 }
 
 /** Transforme le corps d'une erreur API en message lisible. */

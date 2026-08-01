@@ -89,7 +89,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 text-center text-sm">
-          Pas encore de compte ? <a href="/register" className="text-primary hover:underline">S&apos;inscrire</a>
+          Pas encore de compte ? <a href="/register" className="text-brand hover:underline">S&apos;inscrire</a>
         </div>
       </div>
     </div>

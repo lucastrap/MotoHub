@@ -1,0 +1,60 @@
+name: Axe d'amélioration
+description: Proposer une évolution issue d'un retour utilisateur ou d'un indicateur de performance
+title: "[AMÉLIORATION] "
+labels: ["amelioration", "a-arbitrer"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ce modèle sert à consigner les propositions d'évolution **et leur
+        justification chiffrée** : une amélioration qui ne s'appuie ni sur un
+        retour utilisateur ni sur un indicateur mesuré ne peut pas être arbitrée.
+
+  - type: dropdown
+    id: origine
+    attributes:
+      label: Origine de la proposition
+      options:
+        - Retour utilisateur
+        - Indicateur de performance (Speed Insights / Lighthouse)
+        - Indicateur de supervision (latence, disponibilité)
+        - Dette technique identifiée en revue
+        - Veille (dépendance, sécurité, accessibilité)
+    validations:
+      required: true
+
+  - type: textarea
+    id: constat
+    attributes:
+      label: Constat
+      description: Le fait observé, avec sa source. Citer la mesure ou le verbatim.
+      placeholder: "LCP mobile à 3,4 s sur l'accueil (Speed Insights, 30 derniers jours)."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposition
+    attributes:
+      label: Proposition
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefice
+    attributes:
+      label: Bénéfice attendu et indicateur de succès
+      description: Comment saura-t-on que l'amélioration a produit son effet ?
+      placeholder: "LCP mobile sous 2,5 s (seuil « bon » Core Web Vitals), mesuré 15 jours après mise en production."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Effort estimé
+      options:
+        - "Faible (< 1 j)"
+        - "Moyen (1 à 3 j)"
+        - "Élevé (> 3 j)"
+    validations:
+      required: true

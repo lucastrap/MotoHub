@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PhotoField } from "@/components/moto/PhotoField";
+import { aujourdhui } from "@/lib/schemas/maintenance";
 import { formatPlate } from "@/lib/formatPlate";
 import {
   BRANDS,
@@ -18,6 +20,7 @@ import {
   filterModels,
   buildModelsUrl,
   parseSubmitError,
+  enterAction,
 } from "./wizardLogic";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -48,6 +51,9 @@ export default function AddMotorcyclePage() {
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string>("");
+
+  // Photo
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   // Immatriculation
   const [plateInput, setPlateInput] = useState("");
@@ -124,7 +130,7 @@ export default function AddMotorcyclePage() {
       const res = await fetch("/api/motorcycles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, photoUrl: photoUrl ?? undefined }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -168,7 +174,16 @@ export default function AddMotorcyclePage() {
         </div>
 
         {/* Card */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return;
+            const action = enterAction((e.target as HTMLElement).tagName, step, STEPS.length - 1);
+            if (action === "ignore") return;
+            e.preventDefault();
+            if (action === "next") void goNext();
+          }}
+        >
           <div className="bg-[#0e0e0e] border border-white/[0.07] rounded-2xl p-8 space-y-6">
 
             {/* ── STEP 0 : Identité ── */}
@@ -185,14 +200,13 @@ export default function AddMotorcyclePage() {
                         key={b.name}
                         type="button"
                         onClick={() => setValue("brand", b.name, { shouldValidate: true })}
-                        className={`py-2 px-1 rounded-xl text-xs font-bold text-center transition-all border flex flex-col items-center gap-0.5 ${
+                        className={`py-2.5 px-1 rounded-xl text-xs font-bold text-center transition-all border ${
                           watchBrand === b.name
                             ? "bg-primary/10 border-primary text-primary"
                             : "bg-white/[0.03] border-white/[0.06] text-white/50 hover:border-white/20 hover:text-white"
                         }`}
                       >
-                        {b.origin && <span className="text-base leading-none">{b.origin}</span>}
-                        <span>{b.name}</span>
+                        {b.name}
                       </button>
                     ))}
                   </div>
@@ -263,15 +277,8 @@ export default function AddMotorcyclePage() {
 
                   {/* Feedback */}
                   {modelValid === false && modelInput && (
-                    <p className="text-xs text-yellow-500/80 flex items-center gap-1.5">
-                      <FontAwesomeIcon icon={faTriangleExclamation} className="h-3 w-3" />
-                      Modèle non reconnu pour {watchBrand}   vérifiez l'orthographe ou continuez quand même.
-                    </p>
-                  )}
-                  {modelValid === true && (
-                    <p className="text-xs text-green-500/80 flex items-center gap-1.5">
-                      <FontAwesomeIcon icon={faCheck} className="h-3 w-3" />
-                      Modèle vérifié dans la base de données.
+                    <p className="text-xs text-yellow-500/80">
+                      Modèle inconnu pour {watchBrand}. Vous pouvez continuer.
                     </p>
                   )}
                   {errors.model && <FieldError>{errors.model.message}</FieldError>}
@@ -313,6 +320,15 @@ export default function AddMotorcyclePage() {
               <>
                 <SectionTitle>Caractéristiques</SectionTitle>
 
+                {/* Photo */}
+                <div className="space-y-2">
+                  <FieldLabel>
+                    Photo{" "}
+                    <span className="text-white/30 font-normal text-xs">(optionnel)</span>
+                  </FieldLabel>
+                  <PhotoField value={photoUrl} onChange={setPhotoUrl} />
+                </div>
+
                 {/* Couleur */}
                 <div className="space-y-3">
                   <FieldLabel>Couleur principale</FieldLabel>
@@ -351,8 +367,8 @@ export default function AddMotorcyclePage() {
                 {/* Immatriculation */}
                 <div className="space-y-2">
                   <FieldLabel>
-                    Immatriculation
-                    <span className="text-white/25 font-normal text-xs ml-2">  format SIV (ex: AB-123-CD)</span>
+                    Immatriculation{" "}
+                    <span className="text-white/25 font-normal text-xs">(optionnel)</span>
                   </FieldLabel>
                   <div className="relative">
                     <StyledInput
@@ -371,16 +387,9 @@ export default function AddMotorcyclePage() {
                       {plateValid === false && <FontAwesomeIcon icon={faTriangleExclamation} className="h-3.5 w-3.5 text-destructive" />}
                     </span>
                   </div>
-                  {plateValid === true && (
-                    <p className="text-xs text-green-500/80 flex items-center gap-1.5">
-                      <FontAwesomeIcon icon={faCheck} className="h-3 w-3" />
-                      Format valide
-                    </p>
-                  )}
                   {plateValid === false && (
-                    <p className="text-xs text-destructive/80 flex items-center gap-1.5">
-                      <FontAwesomeIcon icon={faTriangleExclamation} className="h-3 w-3" />
-                      Format attendu : AB-123-CD (2 lettres · 3 chiffres · 2 lettres)
+                    <p className="text-xs text-destructive/80">
+                      Format attendu : AB-123-CD
                     </p>
                   )}
                   {errors.licensePlate && !plateValid && (
@@ -391,8 +400,8 @@ export default function AddMotorcyclePage() {
                 {/* VIN */}
                 <div className="space-y-2">
                   <FieldLabel>
-                    Numéro de série (VIN)
-                    <span className="text-white/30 font-normal text-xs ml-2">  optionnel</span>
+                    Numéro de série (VIN){" "}
+                    <span className="text-white/30 font-normal text-xs">(optionnel)</span>
                   </FieldLabel>
                   <StyledInput
                     id="vin"
@@ -412,7 +421,13 @@ export default function AddMotorcyclePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <FieldLabel>Date d'achat</FieldLabel>
-                    <StyledInput id="purchaseDate" type="date" {...register("purchaseDate")} />
+                    <StyledInput
+                      id="purchaseDate"
+                      type="date"
+                      max={aujourdhui()}
+                      {...register("purchaseDate")}
+                    />
+                    {errors.purchaseDate && <FieldError>{errors.purchaseDate.message}</FieldError>}
                   </div>
                   <div className="space-y-2">
                     <FieldLabel>Prix d'achat</FieldLabel>
@@ -470,7 +485,12 @@ export default function AddMotorcyclePage() {
               </button>
             ) : (
               <button
-                type="submit"
+                // Volontairement pas `type="submit"` : React réutilise ce nœud
+                // DOM entre les étapes, et basculer l'attribut pendant le clic
+                // sur « Suivant » déclenchait l'envoi du formulaire dès
+                // l'arrivée sur l'étape, avant toute saisie du prix.
+                type="button"
+                onClick={handleSubmit(onSubmit)}
                 disabled={isSubmitting}
                 className="flex items-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary/20"
               >

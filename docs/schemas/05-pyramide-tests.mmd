@@ -1,0 +1,20 @@
+---
+title: "S5 · Pyramide de tests   MotoTrack (§6.2)"
+---
+flowchart TB
+    E2E["E2E   Playwright · 22 tests<br/>parcours réels en navigateur"]
+    INT["Intégration   routes API<br/>contrats HTTP, cloisonnement, codes d'erreur"]
+    UNIT["Unitaires   logique pure (lib/)<br/>validation, sécurité, cas limites"]
+
+    E2E --> INT --> UNIT
+
+    LEGEND["142 tests unitaires & d'intégration (23 suites) · 22 tests e2e   ratio ~6:1.<br/>Plus on descend : tests plus nombreux, plus rapides, moins coûteux."]
+
+    classDef top fill:#3b0a0a,stroke:#ef4444,color:#fca5a5;
+    classDef mid fill:#1f2937,stroke:#f59e0b,color:#f2f2f2;
+    classDef base fill:#0a0a0a,stroke:#22c55e,color:#f2f2f2;
+    classDef note fill:none,stroke:none,color:#9ca3af,font-size:12px;
+    class E2E top;
+    class INT mid;
+    class UNIT base;
+    class LEGEND note;

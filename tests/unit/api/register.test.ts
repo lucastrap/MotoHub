@@ -34,7 +34,7 @@ describe("POST /api/auth/register", () => {
     (prisma.user.findUnique as jest.Mock).mockResolvedValue({ id: "u1" });
     const res = await POST(makeReq({ email: "a@b.fr", password: "secret" }));
     expect(res.status).toBe(400);
-    expect(await res.json()).toEqual({ error: "User already exists" });
+    expect(await res.json()).toEqual({ error: "Inscription impossible avec ces informations." });
   });
 
   it("retourne 201 et hache le mot de passe avec bcrypt si succès", async () => {

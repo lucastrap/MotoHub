@@ -5,6 +5,7 @@ import { signToken } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import z from "zod";
 import { cookies } from "next/headers";
+import logger from "@/lib/logger";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
       name: "token",
       value: token,
       httpOnly: true,
+      sameSite: "lax", 
       path: "/",
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24, // 24 hours
@@ -66,6 +68,7 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
+    logger.error("POST /api/auth/login a échoué", { error });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

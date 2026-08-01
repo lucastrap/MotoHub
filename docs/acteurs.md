@@ -36,8 +36,8 @@ les arbitrages fonctionnels (« un membre du club aurait-il besoin de ceci ? »)
 
 | Acteur | Rôle | Implication |
 |---|---|---|
-| Ynov Campus | Cadre pédagogique et évaluation du projet | Présentation finale |
-| Référents pédagogiques | Accompagnement méthodologique | Intermittente, aux jalons |
+| Ynov Campus   Jury | Évalue la conformité du projet aux blocs de compétences | Soutenance finale |
+| Référents pédagogiques | Accompagnement méthodologique | Intermittente   jalons |
 | Vercel | Hébergement de l'application (production et previews) | Technique uniquement |
 | Supabase | Base de données PostgreSQL managée en production | Technique uniquement |
 

@@ -11,7 +11,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "test": "jest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "doc:html": "node scripts/rapport-html.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
@@ -24,6 +25,7 @@
     "@react-three/drei": "^9.109.0",
     "@react-three/fiber": "^8.17.0",
     "@sentry/nextjs": "^10.68.0",
+    "@vercel/blob": "^2.6.1",
     "@vercel/speed-insights": "^2.0.0",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",

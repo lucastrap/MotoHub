@@ -17,12 +17,12 @@ export function AppLayout({ children, title }: { children: React.ReactNode; titl
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/dashboard", label: "Tableau de Bord", icon: faGaugeHigh },
-    { href: "/garage", label: "Mon Garage", icon: faMotorcycle },
-    { href: "/maintenance", label: "Historique", icon: faWrench },
-    { href: "/pieces", label: "Pièces & Achat", icon: faCogs },
-    { href: "/news", label: "Actu Moto", icon: faNewspaper },
-    { href: "/weather", label: "Météo Pilote", icon: faCloudSun },
+    { href: "/dashboard", label: "Tableau de bord", icon: faGaugeHigh },
+    { href: "/garage", label: "Mon garage", icon: faMotorcycle },
+    { href: "/maintenance", label: "Entretien", icon: faWrench },
+    { href: "/pieces", label: "Pièces", icon: faCogs },
+    { href: "/news", label: "Actualités", icon: faNewspaper },
+    { href: "/weather", label: "Météo", icon: faCloudSun },
   ];
 
   return (

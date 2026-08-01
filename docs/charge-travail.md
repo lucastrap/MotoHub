@@ -1,4 +1,4 @@
-# Estimation de la charge de travail — MotoTrack
+# Estimation de la charge de travail   MotoTrack
 
 ## Méthode
 
@@ -8,14 +8,14 @@ Le chiffrage initial a été posé au démarrage, avant écriture de la premièr
 puis confronté au temps réellement passé.
 
 L'estimation étant faite par la seule personne qui allait réaliser les tâches, elle ne
-bénéficie d'aucun contradicteur — ce qui explique en grande partie l'optimisme constaté
+bénéficie d'aucun contradicteur   ce qui explique en grande partie l'optimisme constaté
 sur le développement (voir l'analyse des écarts).
 
 ---
 
 ## Détail par module
 
-### BLOC 1 — Cadrage et architecture
+### BLOC 1   Cadrage et architecture
 
 | Tâche | Estimé | Réel |
 |---|---|---|
@@ -26,12 +26,12 @@ sur le développement (voir l'analyse des écarts).
 | Schéma d'architecture | 0,5 j | 0,5 j |
 | **Sous-total** | **3,5 j** | **4,5 j** |
 
-> 🔲 **À CONFIRMER** — la ligne « conception de l'interface » suppose qu'aucune maquette
+> 🔲 **À CONFIRMER**   la ligne « conception de l'interface » suppose qu'aucune maquette
 > formelle (Figma ou autre) n'a été produite et que le design a été itéré directement en
 > code. Si des maquettes existent, remplacer le libellé ; sinon, cette formulation est la
 > bonne et l'arbitrage est expliqué au §4.5 du dossier.
 
-### BLOC 2 — Développement
+### BLOC 2   Développement
 
 | Tâche | Estimé | Réel |
 |---|---|---|
@@ -39,8 +39,8 @@ sur le développement (voir l'analyse des écarts).
 | Authentification (register, login, JWT, middleware) | 1 j | 1,5 j |
 | API motorcycles + maintenances | 1 j | 1,5 j |
 | Wizard ajout moto (validation Zod, NHTSA, format plaque) | 2 j | 3 j |
-| Module Entretien — formulaire + historique | 1,5 j | 2 j |
-| Tableau de bord — données réelles + échéances | 1 j | 1,5 j |
+| Module Entretien   formulaire + historique | 1,5 j | 2 j |
+| Tableau de bord   données réelles + échéances | 1 j | 1,5 j |
 | Module Actualités (Google News RSS) | 0,5 j | 1 j |
 | Module Pièces & achats | 0,5 j | 1 j |
 | Scène 3D accueil (Three.js / R3F) | 1 j | 2 j |
@@ -49,7 +49,7 @@ sur le développement (voir l'analyse des écarts).
 | Harnais de tests unitaires (Jest) | 1 j | 1 j |
 | **Sous-total** | **12,5 j** | **18 j** |
 
-### BLOC 3 — Gestion de projet
+### BLOC 3   Gestion de projet
 
 | Tâche | Estimé | Réel |
 |---|---|---|
@@ -57,7 +57,7 @@ sur le développement (voir l'analyse des écarts).
 | Revue de PR et arbitrages | 0,5 j | 0,5 j |
 | **Sous-total** | **1,5 j** | **1,5 j** |
 
-### BLOC 4 — Maintenance et documentation
+### BLOC 4   Maintenance et documentation
 
 | Tâche | Estimé | Réel |
 |---|---|---|

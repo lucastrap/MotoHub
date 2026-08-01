@@ -4,23 +4,8 @@ import { Prisma } from "@prisma/client";
 import z from "zod";
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth";
-
-const maintenanceSchema = z.object({
-  motorcycleId: z.string().uuid(),
-  type: z.enum([
-    "OIL_CHANGE", 
-    "TIRE_CHANGE", 
-    "BRAKE_SERVICE", 
-    "CHAIN_SERVICE", 
-    "GENERAL_SERVICE", 
-    "REPAIR", 
-    "OTHER"
-  ]),
-  date: z.string(),
-  mileage: z.coerce.number().min(0),
-  description: z.string().min(1),
-  cost: z.coerce.number().optional()
-});
+import logger from "@/lib/logger";
+import { maintenanceSchema } from "@/lib/schemas/maintenance";
 
 async function getUser() {
   const token = cookies().get("token")?.value;
@@ -64,6 +49,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(maintenances, { status: 200 });
   } catch (error) {
+    logger.error("GET /api/maintenances a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -90,11 +76,14 @@ export async function POST(req: Request) {
     const maintenance = await prisma.maintenance.create({
       data: {
         ...parsedData,
+        // La colonne est NOT NULL : une description omise est stockée vide.
+        description: parsedData.description ?? "",
         date: new Date(parsedData.date),
       },
     });
-    
-    // Update the motorcycle's current mileage if this service mileage is higher
+
+    // Le kilométrage de la moto ne recule jamais : une intervention saisie
+    // après coup, à un kilométrage inférieur, ne doit pas l'écraser.
     if (parsedData.mileage > motoOwnership.currentMileage) {
       await prisma.motorcycle.update({
         where: { id: motoOwnership.id },
@@ -107,6 +96,7 @@ export async function POST(req: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors }, { status: 400 });
     }
+    logger.error("POST /api/maintenances a échoué", { error });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

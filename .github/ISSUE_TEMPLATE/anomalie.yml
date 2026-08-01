@@ -1,0 +1,117 @@
+name: Anomalie
+description: Signaler un dysfonctionnement de MotoTrack
+title: "[BUG] "
+labels: ["anomalie", "a-qualifier"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ce formulaire est le **point d'entrée unique** des anomalies, quelle que soit
+        leur origine (utilisateur, support, recette, sonde de supervision, CI).
+        Les champs obligatoires sont ceux sans lesquels le diagnostic ne peut pas
+        démarrer : version, environnement, étapes de reproduction.
+
+  - type: dropdown
+    id: canal
+    attributes:
+      label: Canal de détection
+      description: D'où vient le signalement ?
+      options:
+        - Retour utilisateur (support)
+        - Recette manuelle (cahier de recettes)
+        - Sonde de supervision / alerte
+        - Échec de pipeline CI
+        - Collecteur d'erreurs Sentry
+        - Revue de code
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severite
+    attributes:
+      label: Sévérité proposée
+      description: |
+        Bloquant   fonctionnalité critique inutilisable, aucun contournement.
+        Majeur   fonctionnalité dégradée, contournement pénible.
+        Mineur   gêne cosmétique ou d'ergonomie.
+        La sévérité définitive est arbitrée à la qualification.
+      options:
+        - Bloquant
+        - Majeur
+        - Mineur
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environnement
+    attributes:
+      label: Environnement
+      options:
+        - Production
+        - Preview (staging)
+        - Développement local
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version de l'application
+      description: Visible dans la réponse de `/api/health` (champs `version` et `commit`).
+      placeholder: "1.2.0 (a265c88)"
+    validations:
+      required: true
+
+  - type: input
+    id: contexte
+    attributes:
+      label: Contexte technique
+      description: Navigateur, système, appareil. Préciser si l'application est installée en PWA.
+      placeholder: "Chrome 138 / Android 15 / PWA installée"
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes de reproduction
+      description: Numéroter les étapes, en partant d'un état connu (par exemple « connecté, garage contenant une moto »).
+      placeholder: |
+        1. Se connecter avec un compte disposant d'au moins une moto
+        2. Ouvrir Garage > Ajouter une moto
+        3. Laisser le champ Immatriculation vide
+        4. Valider
+    validations:
+      required: true
+
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+
+  - type: textarea
+    id: observe
+    attributes:
+      label: Comportement observé
+      description: Message d'erreur exact, code HTTP, capture d'écran si disponible.
+    validations:
+      required: true
+
+  - type: input
+    id: frequence
+    attributes:
+      label: Reproductibilité
+      placeholder: "Systématique / 1 fois sur 3 / observé une seule fois"
+    validations:
+      required: false
+
+  - type: textarea
+    id: traces
+    attributes:
+      label: Traces
+      description: Lien vers l'événement Sentry, extrait des logs Vercel, ou sortie de `/api/health` au moment de l'incident.
+      render: text
+    validations:
+      required: false

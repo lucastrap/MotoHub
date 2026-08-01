@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import logger from "@/lib/logger";
 
 // API NHTSA (National Highway Traffic Safety Administration)   gratuite, sans clé
 // https://vpic.nhtsa.dot.gov/api/
@@ -69,7 +70,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ models });
   } catch (err) {
-    console.error("[motorcycle-models]", err);
+    logger.error("[motorcycle-models] échec NHTSA", { err });
     return NextResponse.json({ models: [] }, { status: 200 });
   }
 }

@@ -11,7 +11,7 @@ test.describe("API de supervision /api/health", () => {
     expect(body).toHaveProperty("db");
     expect(typeof body.latencyMs).toBe("number");
 
-    // Avec la base disponible (environnement CI/prod) : 200 + status ok|degraded
+    // Avec la base disponible (environnement CI/prod) : 200 + status ok
     // Sans base : 503 + status error   les deux cas restent contractuels
     expect([200, 503]).toContain(res.status());
     if (res.status() === 200) {

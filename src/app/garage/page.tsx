@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMotorcycle } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { formatKm } from "@/lib/format";
 
 type Motorcycle = {
   id: string;
@@ -14,6 +18,7 @@ type Motorcycle = {
   currentMileage: number;
   licensePlate: string | null;
   isPrimary: boolean;
+  photoUrl: string | null;
 };
 
 export default function GaragePage() {
@@ -57,7 +62,7 @@ export default function GaragePage() {
   }
 
   return (
-    <AppLayout title="Mon Garage">
+    <AppLayout title="Mon garage">
       <div className="mb-6 flex items-center justify-between">
         <p className="text-muted-foreground text-sm">
           {motorcycles.length > 0
@@ -65,7 +70,7 @@ export default function GaragePage() {
             : "Aucune moto"}
         </p>
         <Button asChild>
-          <Link href="/garage/new">+ Ajouter une moto</Link>
+          <Link href="/garage/new">Ajouter une moto</Link>
         </Button>
       </div>
 
@@ -86,15 +91,28 @@ export default function GaragePage() {
           {motorcycles.map((moto) => (
             <div
               key={moto.id}
-              className={`bg-card rounded-xl border p-6 shadow-sm flex flex-col relative overflow-hidden transition-colors ${
-                moto.isPrimary ? "border-primary/50 ring-1 ring-primary/20" : "hover:border-border/80"
+              className={`bg-card rounded-xl border shadow-sm flex flex-col overflow-hidden transition-colors ${
+                moto.isPrimary ? "border-primary/50" : "hover:border-border/80"
               }`}
             >
-              {/* Gradient accent for primary */}
-              {moto.isPrimary && (
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary via-primary/60 to-transparent" />
-              )}
+              {/* Photo, ou repli sobre quand la moto n'en a pas */}
+              <div className="relative aspect-[16/10] w-full bg-muted/30">
+                {moto.photoUrl ? (
+                  <Image
+                    src={moto.photoUrl}
+                    alt={`${moto.brand} ${moto.model}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <FontAwesomeIcon icon={faMotorcycle} className="h-8 w-8 text-muted-foreground/30" />
+                  </div>
+                )}
+              </div>
 
+              <div className="p-6 flex flex-col flex-1">
               <div className="mb-4">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="text-xl font-bold leading-tight">
@@ -102,7 +120,7 @@ export default function GaragePage() {
                   </h3>
                   {moto.isPrimary && (
                     <span className="shrink-0 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      ⭐ Principale
+                      Principale
                     </span>
                   )}
                 </div>
@@ -112,7 +130,7 @@ export default function GaragePage() {
               <div className="space-y-2 mt-auto text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Kilométrage</span>
-                  <span className="font-medium">{moto.currentMileage.toLocaleString()} km</span>
+                  <span className="font-medium">{formatKm(moto.currentMileage)} km</span>
                 </div>
                 {moto.color && (
                   <div className="flex justify-between">
@@ -134,7 +152,7 @@ export default function GaragePage() {
                     <Link href={`/maintenance?motoId=${moto.id}`}>Historique</Link>
                   </Button>
                   <Button className="flex-1" asChild>
-                    <Link href={`/maintenance/new?motoId=${moto.id}`}>+ Entretien</Link>
+                    <Link href={`/maintenance/new?motoId=${moto.id}`}>Entretien</Link>
                   </Button>
                 </div>
                 {!moto.isPrimary && (
@@ -144,9 +162,10 @@ export default function GaragePage() {
                     onClick={() => setPrimary(moto.id)}
                     disabled={settingPrimary === moto.id}
                   >
-                    {settingPrimary === moto.id ? "Mise à jour..." : "⭐ Définir comme moto principale"}
+                    {settingPrimary === moto.id ? "Mise à jour..." : "Définir comme principale"}
                   </Button>
                 )}
+              </div>
               </div>
             </div>
           ))}
