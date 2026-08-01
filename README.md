@@ -147,7 +147,7 @@ L'endpoint `GET /api/health` interroge réellement la base et renvoie l'état de
   "commit": "a265c88",
   "uptimeSeconds": 1042,
   "checks": {
-    "database": { "status": "ok", "latencyMs": 38, "thresholdMs": 500 }
+    "database": { "status": "ok", "latencyMs": 420, "thresholdMs": 1000 }
   }
 }
 ```

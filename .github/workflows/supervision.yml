@@ -113,7 +113,7 @@ jobs:
               `| Indicateur | Valeur |`,
               `|---|---|`,
               `| Statut applicatif | \`${p.status}\` |`,
-              `| Latence base | ${p.db_latency} ms (seuil : 500 ms) |`,
+              `| Latence base | ${p.db_latency} ms (seuil : 1000 ms) |`,
               `| Temps de réponse | ${p.response_time} s |`,
               `| Version déployée | ${p.version} (\`${p.commit}\`) |`,
               `| Exécutions consécutives dégradées | ${consecutives} |`,

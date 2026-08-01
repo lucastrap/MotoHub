@@ -94,9 +94,9 @@ démontrent séparément.
 
 Pour exercer celui-là sans ralentir la base pour de vrai, abaisser temporairement le
 seuil au lieu de dégrader le service : dans `src/lib/supervision.ts`, passer
-`DB_LATENCY_DEGRADED_MS` de 500 à 1, déployer, et toute réponse normale sera lue comme
+`DB_LATENCY_DEGRADED_MS` de 1000 à 1, déployer, et toute réponse normale sera lue comme
 dégradée. Trois exécutions planifiées plus tard   45 minutes   l'issue `[DÉGRADATION]`
-s'ouvre seule. Rétablir ensuite la valeur à 500 : l'exécution suivante commente le retour
+s'ouvre seule. Rétablir ensuite la valeur à 1000 : l'exécution suivante commente le retour
 à la normale et referme l'issue.
 
 Preuves à capturer : les trois exécutions successives montrant le compteur monter
@@ -104,7 +104,7 @@ Preuves à capturer : les trois exécutions successives montrant le compteur mon
 avec son tableau d'indicateurs, et le commentaire de clôture.
 
 Cet exercice modifie une constante du code : il se mène sur une branche, pas sur `main`,
-et le retour à 500 doit être vérifié avant toute autre livraison. Comme le précédent, il
+et le retour à 1000 doit être vérifié avant toute autre livraison. Comme le précédent, il
 se déclare pour ce qu'il est   un seuil abaissé volontairement, pas une base réellement
 lente.
 

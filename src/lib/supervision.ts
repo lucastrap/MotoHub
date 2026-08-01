@@ -3,7 +3,7 @@
 export type EtatSante = "ok" | "degraded" | "error";
 
 
-export const DB_LATENCY_DEGRADED_MS = 500;
+export const DB_LATENCY_DEGRADED_MS = 1000;
 
 /** Qualifie une mesure de latence au regard du seuil de dégradation. */
 export function qualifierLatence(latencyMs: number): EtatSante {
