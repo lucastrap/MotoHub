@@ -78,7 +78,8 @@ export async function POST(req: Request) {
         ...parsedData,
         // La colonne est NOT NULL : une description omise est stockée vide.
         description: parsedData.description ?? "",
-        date: new Date(parsedData.date),
+        // Enregistre la date au format jour/mois/année.
+        date: new Date(parsedData.date.split("-").reverse().join("/")),
       },
     });
 
