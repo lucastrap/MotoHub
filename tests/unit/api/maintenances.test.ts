@@ -123,4 +123,17 @@ describe("POST /api/maintenances", () => {
     const res = await POST(makeReq("http://localhost/api/maintenances", validMaint));
     expect(res.status).toBe(500);
   });
+
+  it("transmet une date valide à Prisma, jour > 12 compris (non-régression MCO-06)", async () => {
+    authAs("u1");
+    (prisma.motorcycle.findFirst as jest.Mock).mockResolvedValue({ id: "m1", currentMileage: 0 });
+    (prisma.maintenance.create as jest.Mock).mockResolvedValue({ id: "int1" });
+    // 15/04 : le jour dépasse 12, une date jj/mm/aaaa mal reconstruite devient Invalid Date.
+    await POST(makeReq("http://localhost/api/maintenances", { ...validMaint, date: "2026-04-15" }));
+    const arg = (prisma.maintenance.create as jest.Mock).mock.calls[0][0];
+    const date = arg.data.date;
+    expect(date).toBeInstanceOf(Date);
+    expect(Number.isNaN(date.getTime())).toBe(false);
+    expect(date.toISOString().slice(0, 10)).toBe("2026-04-15");
+  });
 });
