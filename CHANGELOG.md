@@ -5,6 +5,21 @@ Les correctifs citent le commit qui les porte : `git show <commit>` permet de v�
 
 ---
 
+## [1.3.2] 2026-08-18
+
+Correctif à chaud d'un défaut **introduit volontairement**, dans le cadre de l'exercice de
+validation de la procédure de correctif à chaud (`docs/exercice-hotfix.md`, MCO-06). Le défaut
+est déclaré comme tel ici comme il l'est dans le registre des anomalies et le rapport (§4.5).
+
+- **Correctif** : la saisie d'une intervention d'entretien échouait en production. La date, reçue
+  au format ISO `YYYY-MM-DD`, était reformatée en `jj/mm/aaaa` avant `new Date`, qui interprétait
+  alors le jour comme un mois : `Invalid Date` rejetée par PostgreSQL dès que le jour dépassait 12,
+  date silencieusement permutée sinon. La chaîne ISO est de nouveau passée directement à `new Date`
+  (`24a8d85`).
+- La route rattrapait l'erreur en 500 propre, laissant `/api/health` en `ok` : le défaut n'était
+  visible que par Sentry. Un test de non-régression assère désormais que la date transmise à Prisma
+  est valide, cas `jour > 12` compris (`21572de`) — le trou exact qui avait laissé passer la régression.
+
 ## [1.3.1] 2026-07-29
 
 Rien de nouveau côté utilisateur : cette version corrige un angle mort de la supervision
