@@ -20,13 +20,21 @@ Cible : `POST /api/maintenances`, la construction de la date d'intervention.
 
 ```
 -      date: new Date(parsedData.date),
-+      // Fige l'heure à minuit pour éviter les décalages de fuseau à l'affichage.
-+      date: new Date(`${parsedData.date}T24:00:00`),
++      // Enregistre la date au format jour/mois/année.
++      date: new Date(parsedData.date.split("-").reverse().join("/")),
 ```
 
-Cause racine réelle : en ISO 8601, minuit se note `T00:00:00`, pas `T24:00:00`.
-`new Date("2026-04-15T24:00:00")` produit une **Invalid Date**, que PostgreSQL rejette à
-l'écriture. Toute saisie d'entretien échoue donc en production.
+Cause racine réelle : la date arrive en ISO `YYYY-MM-DD`. La reformater en `jj/mm/aaaa` puis
+la repasser à `new Date` est un piège classique : `new Date("15/04/2026")` interprète le
+premier nombre comme le **mois**. Pour tout jour supérieur à 12, c'est une **Invalid Date**
+que PostgreSQL rejette à l'écriture ; pour un jour inférieur ou égal à 12, la date est
+silencieusement fausse (jour et mois permutés). Le défaut échoue donc franchement dans la
+majorité des cas et corrompt en silence dans les autres.
+
+Note de vérification : une première rédaction visait `T24:00:00` (censé être « minuit »),
+écartée après contrôle — `new Date` fait rouler `T24:00:00` au lendemain minuit sans erreur,
+PostgreSQL l'accepterait et rien ne remonterait. Le contrôle a été fait avant d'introduire le
+défaut, pas après.
 
 Ce défaut a été choisi pour quatre raisons, chacune exigée par l'exercice :
 
@@ -37,7 +45,8 @@ Ce défaut a été choisi pour quatre raisons, chacune exigée par l'exercice :
 | Vu par Sentry, pas par la sonde | La route rattrape l'erreur et répond proprement en 500 (`logger.error` → transport Winston → `captureException`). `/api/health` ne fait qu'un `SELECT 1` : il reste `ok`. Seul le quatrième niveau du dispositif (Sentry) voit le défaut. |
 | Retour arrière sans migration | Le schéma de base n'est pas modifié : la promotion du déploiement précédent suffit, aucune migration corrective n'est requise. |
 
-Le correctif consiste à rétablir `T00:00:00` (ou la forme d'origine `new Date(parsedData.date)`).
+Le correctif consiste à rétablir la forme d'origine `new Date(parsedData.date)`, qui reçoit la
+chaîne ISO `YYYY-MM-DD` sans permutation.
 Le test de non-régression, écrit **avant** le correctif, vérifie que la date transmise à
 `prisma.maintenance.create` est valide (`Number.isNaN(date.getTime()) === false`) : il échoue
 avec le défaut, passe après. Il comble exactement le trou qui a laissé passer la régression.
